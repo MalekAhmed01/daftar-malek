@@ -1022,15 +1022,21 @@ async function aiCall(userText){
   const msgs=[{role:"system",content:AI_SYS+"\n\nحالة الدفتر دلوقتي:\n"+ctx},...hist,{role:"user",content:userText}];
   let raw="";
   const tryModels=[aiCfg.model,...(aiCfg.models||[]).filter(m=>m!==aiCfg.model&&/flash/i.test(m)).sort((a,b)=>aiRank(a)-aiRank(b)).slice(0,2)];
-  for(let k=0;k<tryModels.length;k++){try{raw=await aiOnce(msgs,tryModels[k]);break}catch(e){if(!(e.message==="limit"||e.message==="busy")||k===tryModels.length-1)throw e}}
+  for(let k=0;k<tryModels.length;k++){try{raw=await aiOnce(msgs,tryModels[k]);break}catch(e){if(!(e.message==="limit"||e.message==="busy"||e.message==="model"||(e.message==="net"&&/^400/.test(e.detail||"")))||k===tryModels.length-1)throw e}}
   return aiParse(raw);
 }
 const aiRank=m=>{const p=[/flash-lite$/i,/flash$/i,/flash-lite/i,/flash/i];const i=p.findIndex(x=>x.test(m));return i<0?9:i};
+const aiErr=(k,d)=>{const e=new Error(k);e.detail=String(d||"").slice(0,180);return e};
 async function aiOnce(msgs,model){let raw="";
   if(aiCfg.prov==="gemini"){
     const body={systemInstruction:{parts:[{text:msgs[0].content}]},contents:msgs.slice(1).map(m=>({role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]})),generationConfig:{responseMimeType:"application/json",temperature:.4}};
-    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(aiCfg.key)}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    if(r.status===429)throw new Error("limit");if(r.status===503||r.status===500)throw new Error("busy");if(r.status===400||r.status===403)throw new Error("key");if(!r.ok)throw new Error("net");
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(aiCfg.key)}`;
+    let r;
+    try{r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}
+    catch(_){try{r=await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify(body)})}catch(e2){throw aiErr("net","مش قادر يوصل لـ generativelanguage.googleapis.com ("+(e2.message||"fetch")+")")}}
+    if(!r.ok){let m="";try{m=((await r.json()).error||{}).message||""}catch(_){}
+      if(r.status===429)throw aiErr("limit",m);if(r.status>=500)throw aiErr("busy",m);if(r.status===404)throw aiErr("model",m);
+      if(r.status===400&&/api key|API_KEY/i.test(m))throw aiErr("key",m);if(r.status===403)throw aiErr("key",m);throw aiErr("net",r.status+": "+m)}
     const j=await r.json();raw=((j.candidates||[])[0]?.content?.parts||[]).map(p=>p.text||"").join("");
   }else{
     const r=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+aiCfg.key,"X-Title":"Daftar Malek"},body:JSON.stringify({model,messages:msgs,temperature:.4})});
@@ -1107,7 +1113,7 @@ async function aiSend(text){text=String(text||"").trim();if(!text||aiBusy)return
   if(aiFocus){const t=tasks.find(x=>x.id===aiFocus);if(t)text+=`\n(التاسك المقصود: ${t.id} «${t.title}»)`;aiFocus=""}
   aiMsgs.push({role:"user",text});aiBusy=true;paintAi();const t=$("#ai-text");if(t)t.value="";
   try{const r=await aiCall(text);aiMsgs.push({role:"ai",text:r.reply,actions:r.actions})}
-  catch(e){aiMsgs.push({role:"ai",text:e.message==="key"?"المفتاح مش شغال. افتح «إعدادات المساعد» وحط مفتاح جديد.":e.message==="limit"?"خلصت الحدود المجانية للنهارده أو للدقيقة دي. جرّب كمان شوية، أو غيّر الموديل من الإعدادات.":"مقدرتش أوصل للخدمة. اتأكد إن النت شغال وجرّب تاني.",actions:[]})}
+  catch(e){aiMsgs.push({role:"ai",text:e.message==="key"?"المفتاح مش شغال. افتح «إعدادات المساعد» وحط مفتاح جديد.":e.message==="limit"?"خلصت الحدود المجانية للنهارده أو للدقيقة دي. جرّب كمان شوية، أو غيّر الموديل من الإعدادات.":e.message==="model"?"الموديل ده مش متاح على حسابك. غيّره من «إعدادات المساعد».":"مقدرتش أوصل للخدمة. جرّب تاني، ولو فضلت ابعت الرسالة دي لكلود."+(e.detail?"\n("+e.detail+")":""),actions:[]})}
   aiBusy=false;aiKeep();paintAi()}
 function openAi(q,focusId){aiOpen=true;aiShowSet=false;aiFocus=focusId||"";paintAi();if(q&&aiCfg&&aiCfg.key)aiSend(q);else setTimeout(()=>{const t=$("#ai-text")||$("#ai-key");t&&t.focus()},30)}
 document.addEventListener("click",async e=>{
@@ -1135,6 +1141,13 @@ document.addEventListener("submit",async e=>{
   try{if(!c.models.length||c.key!==base.key){c.models=await aiModels(c);c.model=aiPickModel(c.models)}}
   catch(err){(document.getElementById("ai-form")||box).outerHTML=aiSetupHtml(err.message==="key"?"المفتاح ده مش شغال. اتأكد إنك نسخته كامل.":"مقدرتش أوصل للخدمة. جرّب تاني.");return}
   if(!c.models.length){box.outerHTML=aiSetupHtml("ملقتش موديلات مجانية على الحساب ده.");return}
+  const old=aiCfg;aiCfg=c;let okModel="";
+  for(const m of [c.model,...c.models.filter(x=>x!==c.model&&/flash/i.test(x)).sort((a,b)=>aiRank(a)-aiRank(b)).slice(0,3)]){
+    try{await aiOnce([{role:"system",content:'رد بـ JSON بس: {"reply":"تمام","actions":[]}'},{role:"user",content:"تجربة"}],m);okModel=m;break}
+    catch(err){if(err.message==="key"){aiCfg=old;(document.getElementById("ai-form")||box).outerHTML=aiSetupHtml("المفتاح ده مش شغال. "+(err.detail||""));return}
+      if(m===c.model)c.lastErr=err.message+": "+(err.detail||"")}}
+  if(!okModel){aiCfg=old;(document.getElementById("ai-form")||box).outerHTML=aiSetupHtml("المفتاح اتقبل، بس مقدرتش أكلم الموديل. ابعت الرسالة دي لكلود: "+(c.lastErr||""));return}
+  c.model=okModel;delete c.lastErr;
   aiSave(c);toast("المساعد اتربط ✓");aiShowSet=false;if(view==="settings")render();paintAi();
 });
 
