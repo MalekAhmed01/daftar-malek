@@ -260,14 +260,16 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+.qa-meet{margin:-4px 16px 12px;padding:8px 12px;border-radius:9px;background:var(--accent-soft);color:var(--ink);font-size:13.5px;display:flex;flex-wrap:wrap;gap:4px 10px}
+.qa-meet .qm-to{color:var(--muted);font-size:12.5px}.qa-meet a,.note a{color:var(--accent)}
 .tag.meet{color:var(--accent);background:var(--accent-soft)}
 a.tag.cal{color:var(--accent);text-decoration:none;border:1px solid var(--accent-soft)}
 a.tag.cal:hover{background:var(--accent-soft)}
-.dnav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 16px 10px}
-.dnav button{all:unset;cursor:pointer;width:30px;height:30px;display:grid;place-items:center;border-radius:8px;border:1px solid var(--line);color:var(--ink);font-size:16px}
+.dnav{display:flex;align-items:flex-start;justify-content:center;gap:4px;padding:0 16px 10px}
+.dnav>button{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:999px;color:var(--muted);font-size:20px;line-height:1}
 .dnav button:hover{background:var(--paper)}.dnav button:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 .dnav button[disabled]{opacity:.35;cursor:default}
-.dnav .dlab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+.dnav .dlab{display:flex;min-width:11em;flex-direction:column;align-items:center;gap:2px;position:relative}
 .dnav .dlab button{all:unset;cursor:pointer;font-weight:600;padding:4px 10px;border-radius:8px;width:auto;height:auto;border:0}
 .dnav .dlab button:hover{background:var(--paper)}
 .dnav .dlab .dtoday{font-weight:400;font-size:12px;color:var(--accent);padding:0 6px}
@@ -380,7 +382,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
       <div class="field"><label for="f-due">اليوم / الديدلاين</label><input id="f-due" type="date"></div>
       <div class="field"><label for="f-time">الساعة <span class="note">(للميتنج)</span></label><input id="f-time" type="time"></div>
     </div>
-    <div class="note" id="time-note" hidden>ميتنج: لما تحفظ، الكالندر هيفتح والاسم واليوم والساعة متكتبين. دوس Save هناك.</div>
+    <div class="note" id="time-note" hidden>ميتنج: لما تحفظ هيتضاف على الكالندر. <a href="#" data-calsetup="1">ربط الكالندر</a></div>
     <label class="note" style="display:flex;gap:8px;align-items:center;min-height:32px"><input type="checkbox" id="f-today" style="width:auto"> حطه في خطة النهارده</label>
     <div hidden>
       <div id="stage-wrap"><select id="f-stage"><option value="">—</option><option value="draft">درافت</option><option value="edits">تعديلات</option><option value="delivery">تسليم</option></select></div>
@@ -473,7 +475,7 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   if(!noArea)meta.push(`<span class="tag">${esc(AREA[t.area]||"")}</span>`);
   if(t.client&&!parent&&!noClient)meta.push(`<span class="tag">${esc(t.client)}</span>`);
   if(kindName(t)&&!parent)meta.push(`<span class="tag">${esc(kindName(t))}</span>`);
-  if(t.due&&t.time)meta.push(`<span class="tag meet">ميتنج ${esc(fmtDay(t.due))}، ${fmtTime(t.time)}</span>`,done?"":`<a class="tag cal" href="${esc(calUrl(t))}" target="_blank" rel="noopener">+ الكالندر</a>`);
+  if(t.due&&t.time)meta.push(`<span class="tag meet">ميتنج ${esc(fmtDay(t.due))}، ${fmtTime(t.time)}</span>`,done?"":t.calId&&calCfg?`<span class="tag">✓ على الكالندر</span>`:`<a class="tag cal" href="${esc(calUrl(t))}" target="_blank" rel="noopener">+ الكالندر</a>`);
   else if(t.due)meta.push(`<span class="tag ${overdue?"late":""}">ديدلاين ${esc(fmtDay(t.due))}</span>`);
   if(done&&t.doneDate&&t.doneDate!==today()&&!noDone)meta.push(`<span class="tag">خلص ${esc(fmtDay(t.doneDate))}</span>`);
   if(late)meta.push(`<span class="tag late">متأجل من ${esc(fmtDay(t.planDate))}</span>`);
@@ -513,7 +515,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-fold]");if
 let doneDay="";
 const prevDay=d=>ymd(new Date(new Date(d+"T12:00").getTime()-864e5));
 const nextDay=d=>ymd(new Date(new Date(d+"T12:00").getTime()+864e5));
-const dayName=d=>d===today()?"النهارده":d===prevDay(today())?"امبارح":fmtDay(d);
+const dayName=d=>d===today()?"النهارده":d===prevDay(today())?"امبارح":d===nextDay(today())?"بكره":fmtDay(d);
 function doneDayView(){
   const d=doneDay&&doneDay<today()?doneDay:today();
   const l=tasks.filter(t=>t.status==="done"&&isTop(t)&&t.doneDate===d).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
@@ -544,6 +546,128 @@ function calUrl(t){const d=t.due.replace(/-/g,""),[h,m]=t.time.split(":").map(Nu
   return "https://calendar.google.com/calendar/render?"+q}
 document.addEventListener("input",e=>{if(e.target.id!=="f-time"&&e.target.id!=="f-due")return;const m=$("#f-due").value&&$("#f-time").value;
   $("#time-note").hidden=!m;if(m&&$("#f-due").value>today())$("#f-today").checked=false});
+/* reads «ميتنج مع محمد بكره الساعة 5» → {title:"ميتنج مع محمد", date:"2026-10-21", time:"17:00"}.
+   only for text that says it's a meeting/call; needs a time. day defaults to today, or tomorrow if that time has passed. */
+const MEET_RE=/(ميتنج|ميتينج|مييتنج|اجتماع|مقابلة|مقابله|انترفيو|إنترفيو|مكالمة|مكالمه|كول|call|meeting|zoom|زوم)/i;
+const AR_DAYS=[["الأحد","الاحد","الحد","حد"],["الاثنين","الإثنين","الاتنين","اتنين","اثنين"],["الثلاثاء","التلات","الثلاث","التلاتاء","تلات"],["الأربعاء","الاربعاء","الأربع","الاربع","اربع"],["الخميس","خميس"],["الجمعة","الجمعه","جمعة","جمعه"],["السبت","سبت"]];
+const AR_MONTHS={"يناير":1,"فبراير":2,"مارس":3,"ابريل":4,"أبريل":4,"مايو":5,"يونيو":6,"يوليو":7,"اغسطس":8,"أغسطس":8,"سبتمبر":9,"اكتوبر":10,"أكتوبر":10,"نوفمبر":11,"ديسمبر":12};
+function parseMeet(raw,now){
+  now=now||new Date();
+  let s=String(raw).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/\s+/g," ").trim();
+  if(!MEET_RE.test(s))return null;
+  const cut=re=>{const m=s.match(re);if(m)s=(s.slice(0,m.index)+" "+s.slice(m.index+m[0].length)).replace(/\s+/g," ").trim();return m};
+  const base=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const addD=n=>new Date(base.getFullYear(),base.getMonth(),base.getDate()+n);
+  let day=null,h=null,mi=0,ampm="",m;
+  // dates with numbers first, so their numbers aren't read as the time
+  {m=cut(/(\d{1,2})\s*[\/\-]\s*(\d{1,2})/);if(m){day=new Date(base.getFullYear(),+m[2]-1,+m[1]);if(day<base)day.setFullYear(day.getFullYear()+1)}}
+  if(!day){m=cut(new RegExp("(\\d{1,2})\\s*("+Object.keys(AR_MONTHS).join("|")+")"));if(m){day=new Date(base.getFullYear(),AR_MONTHS[m[2]]-1,+m[1]);if(day<base)day.setFullYear(day.getFullYear()+1)}}
+  const T="(\\d{1,2})(?:[:.](\\d{2}))?\\s*(?:و\\s*(نص|ربع|تلت|ثلث))?\\s*(?:(إلا|الا)\\s*(ربع|تلت|ثلث))?";
+  const AP="(صباحاً|صباحا|الصبح|الصبحية|صباح|ص|الضهر|الظهر|ضهر|ظهر|العصر|عصر|المغرب|مغرب|بالليل|بليل|الليل|مساءً|مساء|م|pm|am)";
+  m=cut(new RegExp("(?:ال)?(?:الساعه|الساعة|ساعة|ساعه)\\s*"+T+"\\s*"+AP+"?(?=\\s|$)","i"))||cut(new RegExp("(?:^|\\s)"+T+"\\s*"+AP+"(?=\\s|$)","i"))||cut(new RegExp("(?:^|\\s)"+T+"(?=\\s|$)"));
+  if(m){h=+m[1];mi=m[2]?+m[2]:0;
+    if(m[3])mi={"نص":30,"ربع":15,"تلت":20,"ثلث":20}[m[3]];
+    if(m[4]){mi=60-{"ربع":15,"تلت":20,"ثلث":20}[m[5]];h=h-1}
+    ampm=(m[6]||"").toLowerCase();}
+  if(h==null||h>23||mi>59)return null;
+  const morning=/^(صباحاً|صباحا|الصبح|الصبحية|ص|صباح|am)$/.test(ampm);
+  if(h>=1&&h<=11&&!morning)h+=12;           // 1–11 with no "ص" = afternoon/evening
+  if(h===12&&morning)h=0;
+  if(h===24)h=12;
+  // day
+  if(cut(/بعد\s*(بكره|بكرة|بكرا)/))day=addD(2);
+  else if(cut(/(بكره|بكرة|بكرا|غدا|غداً)/))day=addD(1);
+  else if(cut(/(النهارده|النهاردة|انهارده|اليوم ده|النهار ده)/))day=addD(0);
+  if(!day){for(let i=0;i<7&&!day;i++)for(const w of AR_DAYS[i]){const r=new RegExp("(?:يوم\\s*)?(?:^|\\s)"+w+"(?=\\s|$)");if(r.test(s)){cut(r);let n=(i-base.getDay()+7)%7;day=addD(n);break}}}
+  cut(/(?:^|\s)يوم(?=\s|$)/);
+  if(!day){day=addD(0);if(h*60+mi<=now.getHours()*60+now.getMinutes())day=addD(1)}
+  const title=s.replace(/\s+(في|على|الساعة|الساعه)$/,"").trim()||"ميتنج";
+  const p2=n=>String(n).padStart(2,"0");
+  return {title,date:`${day.getFullYear()}-${p2(day.getMonth()+1)}-${p2(day.getDate())}`,time:`${p2(h)}:${p2(mi)}`};
+}
+
+let calCfg=null;
+const calKey=()=>{const a=new Uint8Array(18);crypto.getRandomValues(a);return [...a].map(x=>"abcdefghijkmnpqrstuvwxyz23456789"[x%32]).join("")};
+const meetLine=m=>`${esc(m.title)} · ${esc(dayName(m.date))}${m.date>nextDay(today())?"":""} · ${fmtTime(m.time)}`;
+async function calCall(body){
+  const r=await fetch(calCfg.url,{method:"POST",body:JSON.stringify({...body,key:calCfg.key})});
+  const j=await r.json();if(!j.ok)throw new Error(j.err||"failed");return j}
+function calTimes(t){const [y,mo,d]=t.due.split("-").map(Number),[h,mi]=t.time.split(":").map(Number);const st=new Date(y,mo-1,d,h,mi);return {start:st.toISOString(),end:new Date(st.getTime()+3600e3).toISOString()}}
+async function calSave(id){const t=tasks.find(x=>x.id===id);if(!t||!calCfg||!t.due||!t.time)return;
+  try{const j=await calCall({action:"save",id:t.calId||"",title:t.title,...calTimes(t),details:[t.client,t.notes].filter(Boolean).join("\n")});
+    if(j.id&&j.id!==t.calId)await write(id,{calId:j.id});toast(t.calId?"اتعدل على الكالندر ✓":"اتضاف على الكالندر ✓")}
+  catch(e){toast(e.message==="key"?"مفتاح الكالندر مش مظبوط، اربطه تاني":"ماتضافش على الكالندر، النت أو الربط")}}
+async function calDelete(calId){if(!calId||!calCfg)return;try{await calCall({action:"delete",id:calId})}catch(_){}}
+function calScript(key){return `// دفتر مالك: بيضيف الميتنجات على Google Calendar بتاعك
+const KEY = "${key}";
+function doPost(e) {
+  let d; try { d = JSON.parse(e.postData.contents); } catch (_) { return out({ok:false, err:"bad"}); }
+  if (d.key !== KEY) return out({ok:false, err:"key"});
+  const cal = CalendarApp.getDefaultCalendar();
+  if (d.action === "ping") return out({ok:true, name: cal.getName()});
+  let ev = null; if (d.id) { try { ev = cal.getEventById(d.id); } catch (_) {} }
+  if (d.action === "delete") { if (ev) ev.deleteEvent(); return out({ok:true}); }
+  const st = new Date(d.start), en = new Date(d.end);
+  if (ev) { ev.setTitle(d.title); ev.setTime(st, en); ev.setDescription(d.details || ""); }
+  else { ev = cal.createEvent(d.title, st, en, {description: d.details || ""}); ev.addPopupReminder(30); }
+  return out({ok:true, id: ev.getId()});
+}
+function doGet() { return out({ok:true, app:"daftar-malek"}); }
+function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }`}
+let calDraftKey="";
+function calSetupView(msg){
+  calDraftKey=calDraftKey||(calCfg&&calCfg.key)||calKey();
+  return `<section class="section"><form class="gh" id="cal-form" autocomplete="off">
+    <h2>ربط Google Calendar</h2>
+    ${calCfg?`<div class="note" style="color:var(--done)">الكالندر متربط ✓ الميتنجات بتتضاف لوحدها.</div>`:`<div class="note">خطوة واحدة أول مرة بس. بعدها أي ميتنج تكتبه يتضاف على الكالندر لوحده.</div>`}
+    <ol>
+      <li>افتح <a href="https://script.google.com/home/projects/create" target="_blank" rel="noopener">script.google.com</a> بنفس حساب Google اللي عليه الكالندر.</li>
+      <li>امسح الكود اللي هناك، وانسخ الكود ده مكانه: <button class="mini" type="button" id="cal-copy">انسخ الكود</button></li>
+      <li>دوس <b>Deploy</b> ← <b>New deployment</b>، واختار النوع <b>Web app</b>.</li>
+      <li>خلي <b>Execute as: Me</b>، و<b>Who has access: Anyone</b>، ودوس Deploy.</li>
+      <li>هيطلب إذن: Authorize ← اختار حسابك ← Advanced ← Go to … (unsafe) ← Allow. ده سكريبتك انت، محدش غيرك يقدر يستخدمه من غير المفتاح اللي جواه.</li>
+      <li>انسخ الـ <b>Web app URL</b> وحطه هنا:</li></ol>
+    <textarea id="cal-code" readonly style="direction:ltr;text-align:left;font-family:ui-monospace,monospace;font-size:12px;height:110px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px">${esc(calScript(calDraftKey))}</textarea>
+    <label>Web app URL<input id="cal-url" value="${esc(calCfg?calCfg.url:"")}" placeholder="https://script.google.com/macros/s/…/exec" spellcheck="false"></label>
+    ${msg?`<div class="err">${esc(msg)}</div>`:""}
+    <div class="actions"><div class="grow"><button class="btn primary" type="submit">${calCfg?"احفظ":"اربط"}</button><button class="btn" type="button" data-goto="today">رجوع</button></div>
+    ${calCfg?`<button class="btn danger" type="button" id="cal-off">افصل الكالندر</button>`:""}</div>
+  </form></section>`}
+document.addEventListener("click",async e=>{
+  if(e.target.closest("[data-calsetup]")){e.preventDefault();view="calendar";setTabs();render();scrollTo(0,0);return}
+  if(e.target.id==="cal-copy"){const ta=$("#cal-code");try{await navigator.clipboard.writeText(ta.value);toast("الكود اتنسخ")}catch(_){ta.select();toast("اتعلّم، اعمل نسخ")}return}
+  if(e.target.id==="cal-off"){if(e.target.dataset.sure!=="1"){e.target.dataset.sure="1";e.target.textContent="متأكد؟ اضغط تاني";return}
+    try{await setCol.doc("calendar").delete()}catch(_){}calCfg=null;render();toast("الكالندر اتفصل")}
+});
+document.addEventListener("submit",async e=>{if(e.target.id!=="cal-form")return;e.preventDefault();
+  const url=$("#cal-url").value.trim();
+  if(!url.startsWith("https://script.google.com/")&&!url.startsWith("https://script.googleusercontent.com/")){$("#view").innerHTML=calSetupView("ده مش لينك Web app. لازم يبدأ بـ https://script.google.com/macros/s/ ويخلص بـ /exec");return}
+  const old=calCfg;calCfg={url,key:calDraftKey};
+  try{await calCall({action:"ping"})}catch(err){calCfg=old;$("#view").innerHTML=calSetupView(err.message==="key"?"الكود اللي في السكريبت مش نفس الكود اللي هنا. انسخ الكود تاني، ولزقه، واعمل Deploy ← Manage deployments ← Edit ← New version.":"مقدرتش أوصل للسكريبت. اتأكد إنك اخترت Who has access: Anyone، وإن اللينك آخره /exec.");$("#cal-url").value=url;return}
+  try{await setCol.doc("calendar").set({url,key:calDraftKey,at:Date.now()})}catch(_){}
+  toast("الكالندر اتربط ✓");view="today";setTabs();render();
+});
+// quick box: understand meetings as you type
+document.addEventListener("input",e=>{if(e.target.id!=="qa-title")return;const m=parseMeet(e.target.value);const el=$("#qa-meet");if(!el)return;
+  el.hidden=!m;if(m)el.innerHTML=`<b>ميتنج:</b> ${meetLine(m)}<span class="qm-to">${calCfg?"هيتضاف على الكالندر لوحده":`هيفتح الكالندر متكتب · <a href="#" data-calsetup="1">اربطه عشان يتضاف لوحده</a>`}</span>`});
+function notesView(){
+  const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
+  const by=(a,b)=>(b.createdAt||0)-(a.createdAt||0);
+  const open=notes.filter(n=>!n.resolved).sort(by), closed=notes.filter(n=>n.resolved).sort((a,b)=>(b.resolvedAt||b.createdAt||0)-(a.resolvedAt||a.createdAt||0)).slice(0,60);
+  const card=n=>`<article class="note-card">
+      <div class="note-top"><span class="by ${n.by==="claude"?"claude":""}">${n.by==="claude"?"كلود":"أنا"}</span><span>${esc(fmtShort(n.d||""))}</span>${n.area?`<span>${esc(AREA[n.area]||"")}</span>`:""}${n.resolved?`<span>${n.taskId||tasks.some(t=>t.noteId===n.id&&t.noteKind==="task")?"اتعملت تاسك":"خلصت"}</span>`:""}</div>
+      <div class="note-text">${esc(n.text)}</div>
+      <div class="note-actions">${n.resolved?`<button class="mini" type="button" data-nreopen="${n.id}">رجّعها</button>`
+        :`<button class="mini" type="button" data-ntask="${n.id}">اعملها تاسك</button><button class="mini" type="button" data-nresolve="${n.id}">خلصت</button>`}
+        <button class="mini danger" type="button" data-ndel="${n.id}">امسح</button></div></article>`;
+  const shut=!folded.has("notes-done-open");
+  return `<form class="compose" id="note-form">
+      <textarea id="n-text" maxlength="2000" placeholder="اكتب أي حاجة عايز ترجعلها، فكرة أو حاجة تقراها أو تعملها بعدين" aria-label="نوت جديدة"></textarea>
+      <div class="compose-row"><select id="n-area" aria-label="القسم">${areaOpts}</select><span style="flex:1"></span><button class="btn primary" type="submit">احفظ النوت</button></div></form>
+    <section class="section"><h2>النوتس<small>${open.length}</small></h2>${open.length?open.map(card).join(""):`<div class="empty">مفيش نوتس مفتوحة.</div>`}</section>
+    ${closed.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="notes-done-open" aria-expanded="${!shut}">${ARR}خلصت</button><small>${closed.length}</small></h2>${shut?"":closed.map(card).join("")}</section>`:""}`;
+}
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-nreopen]");if(!b)return;await writeNote(b.dataset.nreopen,{resolved:false,resolvedAt:null});toast("رجعت للنوتس")});
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -566,10 +690,10 @@ function renderInner(){
     const mine=sortTasks(todayList.filter(t=>PERSONAL.has(t.area)));
     const doneShown=doneToday.filter(isTop);
     const rd=(routineDays[today()]||{}).done||{};
-    const pendingReview=notes.filter(n=>n.review&&!n.resolved).length;
+    const pendingReview=notes.filter(n=>n.by==="claude"&&!n.resolved).length;
     v.innerHTML=`<section class="section"><h2>الروتين الثابت<small>${routineItems.filter(i=>rd[i.id]).length}/${routineItems.length}</small></h2>
       <div class="routine">${routineItems.map(i=>`<button type="button" class="rt ${rd[i.id]?"on":""}" data-rt="${i.id}" aria-pressed="${!!rd[i.id]}"><span class="box">${rd[i.id]?"✓":""}</span><span>${esc(i.t)}</span></button>`).join("")}</div>
-      ${pendingReview?`<button type="button" class="hint" data-goto="notes">عندك ${pendingReview} حاجة محتاجة مراجعة في النوتس</button>`:""}</section>`+
+      ${pendingReview?`<button type="button" class="hint" data-goto="notes">كلود كاتبلك ${pendingReview===1?"نوت":pendingReview+" نوتس"} في النوتس</button>`:""}</section>`+
       quickAdd()+section("تسكات اليوم",plan,{timer:true},todayList.length?"مفيش غير الشخصي النهارده.":"مفيش تسكات لليوم. اكتب تاسك فوق، أو افتح «التسكات» ودوس «+ النهارده» على اللي هتعمله.")+
       (mine.length?section("شخصي",mine,{timer:true},""):"")+
       (doneShown.length?section("خلص النهارده",doneShown,{showPlan:false},""):"");
@@ -590,16 +714,18 @@ function renderInner(){
       `<form class="proj" id="new-proj"><div class="proj-head"><h3>مشروع جديد</h3></div>
         <div class="inline"><input id="np-name" placeholder="اسم المشروع" maxlength="60" required><select id="np-area" class="btn" style="padding:7px 8px">${areaOpts}</select></div>
         <div class="inline"><input id="np-goal" placeholder="الهدف في سطر (اختياري)" maxlength="160"><button class="btn primary" type="submit">أضف</button></div></form>`;
-  }else if(view==="notes"){
+  }else if(view==="notes"){v.innerHTML=notesView();
+  }else if(view==="notes-old"){
     const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
     const rev=notes.filter(n=>n.review&&!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
     const rest=notes.filter(n=>!(n.review&&!n.resolved)).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,80);
     const card=n=>`<article class="note-card ${n.review&&!n.resolved?"review":""}">
-      <div class="note-top"><span class="by ${n.by==="claude"?"claude":""}">${n.by==="claude"?"كلود":"أنا"}</span><span>${esc(fmtShort(n.d||""))}</span>${n.area?`<span>${esc(AREA[n.area]||"")}</span>`:""}${n.review&&!n.resolved?`<span style="color:var(--yellow)">محتاج مراجعة</span>`:""}${n.resolved?`<span>اتراجع</span>`:""}</div>
+      <div class="note-top"><span class="by ${n.by==="claude"?"claude":""}">${n.by==="claude"?"كلود":"أنا"}</span><span>${esc(fmtShort(n.d||""))}</span>${n.area?`<span>${esc(AREA[n.area]||"")}</span>`:""}${n.review&&!n.resolved?`<span style="color:var(--yellow)">محتاج مراجعة</span>`:""}${n.resolved?`<span>${n.taskId?"اتحولت لتاسك":"اتراجع"}</span>`:""}</div>
       <div class="note-text">${esc(n.text)}</div>
       <div class="note-actions">
         ${n.review&&!n.resolved?`<button class="mini" type="button" data-nresolve="${n.id}">راجعته</button><button class="mini" type="button" data-ntoday="${n.id}">مراجعة النهارده</button>`:""}
         ${!n.review&&!n.resolved?`<button class="mini" type="button" data-nflag="${n.id}">محتاج مراجعة</button>`:""}
+        ${!n.resolved?`<button class="mini" type="button" data-ntask="${n.id}">حوّلها لتاسك</button>`:""}
         <button class="mini danger" type="button" data-ndel="${n.id}">امسح</button></div></article>`;
     v.innerHTML=`<form class="compose" id="note-form">
         <textarea id="n-text" maxlength="2000" placeholder="مثلاً: ذاكرت الـ subnetting بس مش فاهمه كويس، هراجعه تاني" aria-label="نوت جديدة"></textarea>
@@ -619,6 +745,8 @@ function renderInner(){
         <button class="btn primary" type="submit">أضف</button></div></form>`;
   }else if(view==="focus"){
     v.innerHTML=focusView();
+  }else if(view==="calendar"){
+    v.innerHTML=calSetupView("");
   }else if(view==="week"){
     const since=ymd(new Date(Date.now()-6*864e5));
     const days=[...Array(7)].map((_,i)=>ymd(new Date(Date.now()-i*864e5)));
@@ -629,7 +757,7 @@ function renderInner(){
     const max=Math.max(1,...counts.map(c=>c[2]));
     v.innerHTML=(trendMode==="focus"?focusChart(true):trendChart(true))+`<section class="section"><h2>اللي خلص آخر 7 أيام<small>${done.length} تاسك</small></h2>
       <div class="week">${counts.map(([k,n,c,by])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${n}</span><div class="track"><div class="fill" style="width:${c/max*100}%"></div></div><span>${c}</span></div>${c?`<div class="wby">${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([x,y])=>`<span>${esc(x)} ${y}</span>`).join("")}</div>`:""}`).join("")}</div>
-      <div class="empty">الأقسام اللي بالأحمر ماخدتش أي وقت الأسبوع ده.</div></section>
+      ${counts.some(c=>!c[2])?`<div class="empty">${counts.filter(c=>!c[2]).map(c=>c[1]).join(" و")}: مخلصش فيه ولا تاسك آخر 7 أيام.</div>`:""}</section>
       <section class="section"><h2>الروتين الثابت<small>آخر 7 أيام</small></h2>
       <div class="week">${routineRows.map(([n,c])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${esc(n)}</span><div class="track"><div class="fill" style="width:${c/7*100}%;background:var(--done)"></div></div><span>${c}/7</span></div>`).join("")}</div></section>`+doneDayView();
   }else{
@@ -707,12 +835,16 @@ function quickAdd(){
   return `<section class="section"><form class="quick" id="quick-add" style="padding-top:14px">
     <input id="qa-title" maxlength="160" placeholder="تاسك جديد للنهارده… اكتب واضغط Enter" aria-label="تاسك جديد للنهارده">
     <select id="qa-area" aria-label="القسم">${AREAS.map(([k,n])=>`<option value="${k}" ${k===a?"selected":""}>${n}</option>`).join("")}</select>
-    <button class="btn primary" type="submit">أضف</button></form></section>`;
+    <button class="btn primary" type="submit">أضف</button></form><div class="qa-meet" id="qa-meet" hidden></div></section>`;
 }
 document.addEventListener("change",e=>{if(e.target.id==="qa-area")try{LS.setItem("qaArea",e.target.value)}catch(_){}});
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="quick-add")return;e.preventDefault();
   const inp=$("#qa-title");const title=inp.value.trim();if(!title)return;inp.value="";
+  const mt=parseMeet(title);$("#qa-meet").hidden=true;
+  if(mt){if(!calCfg)window.open(calUrl({title:mt.title,due:mt.date,time:mt.time}),"_blank","noopener");
+    const id="t"+sid();await write(id,{title:mt.title,area:$("#qa-area").value,kind:"",pri:"blue",client:"",stage:"",due:mt.date,time:mt.time,notes:"",status:"open",planDate:mt.date,createdAt:Date.now(),doneAt:null,doneDate:null},true);
+    render();if(calCfg)calSave(id);else toast(`اتضاف ${dayName(mt.date)} ${fmtTime(mt.time)}`);return}
   await write("t"+sid(),{title,area:$("#qa-area").value,kind:"",pri:"blue",client:"",stage:"",due:"",notes:"",status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null},true);
   render();toast("اتضاف لخطة النهارده");
 });
@@ -853,7 +985,7 @@ function focusView(){
   const dots=`<div class="fcycle" title="بعد ${pset.every} جلسات بتيجي استراحة طويلة">${[...Array(pset.every)].map((_,i)=>`<i class="${i<(pomo&&pomo.doneAt&&inCycle===0&&cycle?pset.every:inCycle)?"on":""}"></i>`).join("")}<span>جلسات قبل الاستراحة الطويلة</span></div>`;
   const settings=`<details class="fset" id="fset-box"${fsetOpen?" open":""}><summary>الإعدادات</summary><div class="grid">
     <label style="flex-direction:row;align-items:center;gap:6px;grid-column:1/-1"><input id="ps-up" type="checkbox" ${pset.up!==false?"checked":""} style="width:auto"> التايمر بيعد لفوق لحد ما أوقفه</label>
-    <label>${pset.up!==false?"نبّهني بعد (دقيقة)":"التركيز (دقيقة)"}<input id="ps-focus" type="number" min="5" max="180" value="${pset.focus}"></label>
+    <label>${pset.up!==false?"نبّهني بعد (دقيقة)":"التركيز (دقيقة)"}<input id="ps-focus" type="number" min="1" max="600" value="${pset.focus}"></label>
     <label>الاستراحة<input id="ps-brk" type="number" min="1" max="60" value="${pset.brk}"></label>
     <label>الاستراحة الطويلة<input id="ps-long" type="number" min="1" max="90" value="${pset.long}"></label>
     <label>كل كام جلسة<input id="ps-every" type="number" min="2" max="12" value="${pset.every}"></label>
@@ -921,7 +1053,9 @@ document.addEventListener("change",async e=>{
     try{await sesCol.doc(e.target.dataset.sesmin).update({min:m});toast("اتعدلت")}catch(_){toast("ماتعدلتش")}return}
   if(id&&id.startsWith("ps-")){
     const n=(k,d,lo,hi)=>{const v=parseInt($("#ps-"+k).value,10);return v>=lo&&v<=hi?v:d};
-    const next={focus:n("focus",pset.focus,5,180),brk:n("brk",pset.brk,1,60),long:n("long",pset.long,1,90),every:n("every",pset.every,2,12),auto:$("#ps-auto").checked,autoFocus:$("#ps-autoFocus").checked,vol:n("vol",pset.vol??80,0,100),up:$("#ps-up").checked};
+    const bad=["focus","brk","long","every"].find(k=>{const v=parseInt($("#ps-"+k).value,10);return !(v>=+$("#ps-"+k).min&&v<=+$("#ps-"+k).max)});
+    if(bad&&e.type==="change"){toast("الرقم ده مش مقبول، بين "+$("#ps-"+bad).min+" و"+$("#ps-"+bad).max)}
+    const next={focus:n("focus",pset.focus,1,600),brk:n("brk",pset.brk,1,60),long:n("long",pset.long,1,90),every:n("every",pset.every,2,12),auto:$("#ps-auto").checked,autoFocus:$("#ps-autoFocus").checked,vol:n("vol",pset.vol??80,0,100),up:$("#ps-up").checked};
     pset=next;fsetOpen=true;
     if(setCol){try{await setCol.doc("pomo").set(next)}catch(_){toast("الإعدادات ماتحفظتش")}}
     render();return}
@@ -1008,9 +1142,10 @@ async function writeNote(id,data,isNew){
 document.addEventListener("click",async e=>{
   const r=e.target.closest("[data-rt]");if(r){toggleRoutine(r.dataset.rt);return}
   const g=e.target.closest("[data-goto]");if(g){view=g.dataset.goto;setTabs();render();return}
-  const nr=e.target.closest("[data-nresolve]");if(nr){await writeNote(nr.dataset.nresolve,{resolved:true,resolvedAt:Date.now()});toast("تمام");return}
+  const nr=e.target.closest("[data-nresolve]");if(nr){await writeNote(nr.dataset.nresolve,{resolved:true,resolvedAt:Date.now()});toast("اتنقلت لـ«خلصت»");return}
   const nf=e.target.closest("[data-nflag]");if(nf){await writeNote(nf.dataset.nflag,{review:true});return}
   const nt=e.target.closest("[data-ntoday]");if(nt){const n=notes.find(x=>x.id===nt.dataset.ntoday);if(!n)return;
+    const had=tasks.find(t=>t.noteId===n.id&&t.status!=="done");if(had){await write(had.id,{planDate:today()});toast("اتحطت في خطة النهارده");return}
     const short=n.text.length>70?n.text.slice(0,70)+"…":n.text;
     await write("t"+sid(),{title:"مراجعة: "+short,area:n.area||"personal",pri:"blue",client:"",stage:"",due:"",notes:n.text,status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null,noteId:n.id},true);
     toast("اتحطت في خطة النهارده");return}
@@ -1020,7 +1155,7 @@ document.addEventListener("click",async e=>{
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="note-form")return;e.preventDefault();
   const text=$("#n-text").value.trim();if(!text)return;
-  const data={text,area:$("#n-area").value,review:$("#n-review").checked,resolved:false,by:"malek",d:today(),createdAt:Date.now()};
+  const data={text,area:$("#n-area").value,review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()};
   $("#n-text").value="";$("#n-text").blur();
   await writeNote("n"+sid(),data,true);toast("النوت اتحفظت");
 });
@@ -1103,6 +1238,8 @@ document.addEventListener("click",e=>{
   const pl=e.target.closest("[data-plan]");
   if(pl){const t=tasks.find(x=>x.id===pl.dataset.plan);if(!t)return;
     const on=t.planDate&&t.planDate<=today()||t.planDate>today();
+    if(on&&t.noteId&&t.noteKind!=="task"&&t.status!=="done"&&notes.some(n=>n.id===t.noteId)){
+      (async()=>{try{await col.doc(t.id).delete();tasks=tasks.filter(x=>x.id!==t.id);await writeNote(t.noteId,{resolved:false,resolvedAt:null});render();toast("رجعت للنوتس")}catch(_){toast("ماتأجلتش، جرّب تاني")}})();return}
     write(t.id,{planDate:on?"":today()});toast(on?"اتشال من النهارده":"اتحط في خطة النهارده");return}
   const ed=e.target.closest("[data-edit]");
   if(ed){openEditor(tasks.find(x=>x.id===ed.dataset.edit));return}
@@ -1123,8 +1260,13 @@ function clientInfo(){const el=$("#client-info");const n=cname($("#f-client").va
   if($("#f-area").value!=="work"||!n){el.textContent="";return}
   const s=clientStats(n);if(!s.c&&!s.open.length&&!s.done.length){el.textContent="عميل جديد، هيتضاف لصفحة العملاء.";return}
   el.textContent=[`${s.open.length} مفتوح`,`${s.done.length} خلص`,s.pkg?`الباكدج ${s.pkg.done} من ${s.pkg.target}`:""].filter(Boolean).join(" · ")}
+let fromNote=null;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-ntask]");if(!b)return;const n=notes.find(x=>x.id===b.dataset.ntask);if(!n)return;
+  openEditor(null);fromNote=n.id;$("#ed-title").textContent="تاسك من نوت";
+  $("#f-title").value=n.text.replace(/\s+/g," ").slice(0,160);if(n.area&&AREA[n.area])$("#f-area").value=n.area;fillKinds("");
+  $("#f-notes").value=n.text.length>160?n.text:"";$("#notes-wrap").open=n.text.length>160;$("#f-today").checked=false;});
 function openEditor(t){
-  editing=t||null;
+  editing=t||null;fromNote=null;
   const par=parentOf(t);
   $("#ed-title").textContent=par?"تعديل تاسك فرعي":(t?"تعديل التاسك":"تاسك جديد");
   $("#ed-parent").hidden=!par;$("#ed-parent").textContent=par?`↳ تحت: ${par.title}`:"";
@@ -1164,7 +1306,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeEditor();close
 $("#ed-delete").addEventListener("click",async()=>{
   const b=$("#ed-delete");const subs=subsOf(editing.id);
   if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent=subs.length?`متأكد؟ هيتمسح معاه ${subs.length} فرعي`:"متأكد؟ اضغط تاني";setTimeout(()=>{b.dataset.sure="";b.textContent="امسح"},3000);return}
-  const id=editing.id, pid=editing.parentId;closeEditor();
+  const id=editing.id, pid=editing.parentId, calId=editing.calId;closeEditor();calDelete(calId);
   try{for(const s of subs)await col.doc(s.id).delete();await col.doc(id).delete();tasks=tasks.filter(x=>x.id!==id&&x.parentId!==id);toast("اتمسح");if(pid)await syncParent(pid);else render()}catch(e){toast("ماتمسحش، جرّب تاني")}
 });
 $("#editor").addEventListener("submit",async e=>{
@@ -1174,7 +1316,8 @@ $("#editor").addEventListener("submit",async e=>{
   const area=par?par.area:$("#f-area").value;
   const wantToday=$("#f-today").checked;
   const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",due:$("#f-due").value,time:$("#f-due").value?$("#f-time").value:"",notes:$("#f-notes").value.trim()};
-  if(data.due&&data.time&&(!editing||editing.due!==data.due||(editing.time||"")!==data.time))window.open(calUrl({...editing,...data}),"_blank","noopener");
+  const meetGo=!!(data.due&&data.time&&(!editing||editing.due!==data.due||(editing.time||"")!==data.time||(calCfg&&editing.calId&&editing.title!==data.title)));
+  if(meetGo&&!calCfg)window.open(calUrl({...editing,...data}),"_blank","noopener");
   let doneOn=$("#f-done").value, needResolve=false;
   if(doneOn&&editing&&!par&&editing.status!=="done"&&subsOf(editing.id).some(s=>s.status!=="done")){doneOn="";needResolve=true}
   if(doneOn){const was=editing&&editing.status==="done"&&editing.doneDate===doneOn;
@@ -1185,14 +1328,15 @@ $("#editor").addEventListener("submit",async e=>{
     if(wantToday!==was)data.planDate=wantToday?today():"";
     if(data.time&&data.due>=today()&&(editing.due!==data.due||(editing.time||"")!==data.time))data.planDate=data.due;
     const id=editing.id, subs=par?[]:subsOf(id);closeEditor();
-    if(await write(id,data,false)){
+    if(await write(id,data,false)){if(meetGo&&calCfg)calSave(id);
       for(const s of subs)if(s.area!==data.area||(s.client||"")!==data.client||(s.kind||"")!==data.kind)await write(s.id,{area:data.area,client:data.client,kind:data.kind});
       if(par)await syncParent(par.id);
       if(needResolve)openResolve(id);else toast("اتحفظ")}
   }else{
     Object.assign(data,doneOn?{planDate:"",createdAt:Date.now()}:{status:"open",planDate:data.time&&data.due>=today()?data.due:wantToday?today():"",createdAt:Date.now(),doneAt:null,doneDate:null});
     const id="t"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-    closeEditor();await write(id,data,true);toast("اتضاف");
+    const nid=fromNote;if(nid){data.noteId=nid;data.noteKind="task"}
+    closeEditor();await write(id,data,true);if(nid)await writeNote(nid,{review:false,resolved:true,resolvedAt:Date.now(),taskId:id});toast("اتضاف");if(meetGo&&calCfg)calSave(id);
   }
 });
 
@@ -1405,7 +1549,7 @@ document.addEventListener("click",e=>{
   sesCol=db.collection("focus");
   sesCol.onSnapshot(snap=>{sessions=snap.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
   setCol=db.collection("settings");
-  setCol.onSnapshot(snap=>{const d=snap.docs.find(x=>x.id==="pomo");if(d){pset={...pset,...d.data()};render();if(pomo)paintPomo()}},()=>{});
+  setCol.onSnapshot(snap=>{const cc=snap.docs.find(x=>x.id==="calendar");calCfg=cc&&cc.data().url?cc.data():null;const d=snap.docs.find(x=>x.id==="pomo");if(d){pset={...pset,...d.data()};render();if(pomo)paintPomo()}},()=>{});
   clientsCol=db.collection("clients");
   clientsCol.onSnapshot(snap=>{clients=snap.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
 })();
