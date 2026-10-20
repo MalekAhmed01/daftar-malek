@@ -13,6 +13,7 @@
   الصفحة بتوصل للداتا بمفتاح GitHub بيتحفظ في متصفح مالك بس.
 -->
 <title>دفتر مالك</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='4' width='52' height='56' rx='12' fill='%232747A0'/%3E%3Crect x='14' y='4' width='4' height='56' fill='%231B3478'/%3E%3Cpath d='M27 33l7 7 14-15' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap">
@@ -242,7 +243,7 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .sync{font-size:12.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 11px;background:var(--sheet);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .sync i{width:7px;height:7px;border-radius:50%;background:var(--done)}
 .sync.busy i{background:var(--blue)}
-.sync.err{color:var(--red);border-color:var(--red)}
+.sync.err{color:var(--red);border-color:var(--red);cursor:pointer}
 .sync.err i{background:var(--red)}
 .gh{padding:18px 16px;display:flex;flex-direction:column;gap:12px}
 .gh h2{margin:0;font-size:20px;font-weight:600}
@@ -254,6 +255,88 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .gh a{color:var(--accent)}
 .foot{display:flex;justify-content:center;gap:16px;padding:6px 0 0}
 .foot button{border:0;background:none;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.fold{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border-radius:6px}
+.fold:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.fold .arr{width:22px;height:22px;display:inline-grid;place-items:center;border-radius:6px;color:var(--muted);transition:transform .15s}
+.fold:hover .arr{background:var(--paper);color:var(--ink)}
+.fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
+.section.folded{padding-bottom:4px}
+.wrap>header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.wrap>header>div:first-child{flex:1 1 auto;min-width:0}
+.wrap>header #sync{order:1}.wrap>header .gear{order:2}
+.wrap>header .counts{order:3;flex-basis:100%}
+.wrap .foot{display:none}
+.wrap .legend{display:none}
+.h-t{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
+.h-link{all:unset;cursor:pointer;font-family:var(--f-body);font-size:12.5px;font-weight:400;color:var(--accent);padding:2px 8px;border-radius:6px;border:1px solid var(--line)}
+.h-link:hover{background:var(--paper)}.h-link:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.section .quick{padding:2px 16px 12px!important}
+.hint.hint-top{display:block;width:100%;text-align:start;margin:0}
+.sets .kinds .x{width:auto;padding:0 6px;font-size:12px}
+.wrap .dnav{display:flex;width:max-content;max-width:calc(100% - 32px);margin:0 auto 12px;padding:0;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;align-items:stretch}
+.wrap .dnav>button{all:unset;cursor:pointer;width:40px;display:grid;place-items:center;font-size:18px;color:var(--ink);border-radius:0}
+.wrap .dnav>button:hover:not([disabled]),.wrap .dnav .dlab>button:hover{background:var(--paper)}
+.wrap .dnav>button[disabled]{color:var(--line);cursor:default}
+.wrap .dnav .dlab{position:relative;display:flex;min-width:0;flex:0 1 auto;border-inline:1px solid var(--line)}
+.wrap .dnav .dlab>button{all:unset;cursor:pointer;padding:7px 16px;font-weight:600;min-width:8em;text-align:center;white-space:nowrap}
+.wrap .dnav .car{color:var(--muted);font-size:11px;margin-inline-start:4px}
+.wrap .dnav>button:focus-visible,.wrap .dnav .dlab>button:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+@media (max-width:480px){
+  .tabs{overflow:visible}
+  .tabs button{flex:1 1 0!important;min-width:0;padding:8px 1px!important;font-size:13px!important;letter-spacing:-.2px}
+  .task>.tools{grid-column:auto!important;flex-direction:column;align-items:stretch;gap:6px}
+  .task>.tools .mini{justify-content:center}
+  .pn{display:none}
+  .section .quick select{flex:1 1 auto}
+}
+.meets h2{padding-bottom:4px}
+.meet{display:flex;align-items:center;gap:6px;padding:2px 10px 2px 16px;border-top:1px solid var(--line)}
+.meet-b{all:unset;cursor:pointer;flex:1;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:10px 0;min-width:0}
+.meet-t{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}.meet-n{flex:1;min-width:8em}.meet-w{color:var(--muted);font-size:12.5px;white-space:nowrap}
+.meet.soon .meet-t,.meet.soon .meet-w{color:var(--accent)}
+.meet .x,.meet-alert .x{all:unset;cursor:pointer;width:28px;height:28px;display:grid;place-items:center;border-radius:6px;color:var(--muted)}
+.meet .x:hover{background:var(--paper)}
+.meet-ed{padding:8px 16px;flex-wrap:wrap}.meet-ed input[type=date],.meet-ed input[type=time]{flex:0 0 auto}
+.meet-alert{display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--accent);color:#fff;border-radius:10px;padding:10px 14px;margin:0 0 10px;font-weight:500}
+.meet-alert[hidden]{display:none}.meet-alert .x{color:#fff}
+.fbig.over,#pomo-t{direction:ltr;unicode-bidi:isolate}.fcard .fbig.over{color:var(--done)}
+.gear{all:unset;cursor:pointer;width:36px;height:36px;display:grid;place-items:center;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--sheet)}
+.gear:hover,.gear[aria-pressed="true"]{color:var(--ink);background:var(--paper)}.gear:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.sets{padding:4px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.sets .srow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sets input[type=text]{font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:7px 10px;flex:1 1 140px;min-width:0}
+.sets .kinds{display:flex;flex-wrap:wrap;gap:6px;padding-inline-start:12px}
+.sets .kinds input[type=text]{flex:0 1 130px;font-size:13.5px;padding:5px 8px}
+.sets .k{display:inline-flex;align-items:center;gap:4px}
+.sets .k.off input[type=text]{opacity:.45;text-decoration:line-through}
+.sets .x{all:unset;cursor:pointer;width:26px;height:26px;display:grid;place-items:center;border-radius:6px;color:var(--muted)}
+.sets .x:hover{background:var(--paper);color:var(--ink)}
+.sets .lab{font-size:13px;color:var(--muted)}
+.trash-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--line);font-size:14px}
+.trash-row .tt{flex:1;min-width:0}.trash-row small{display:block;color:var(--muted);font-size:12px}
+.course{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;margin-inline-start:32px;padding:6px 0 4px 0;padding-inline-start:12px;border-inline-start:2px solid var(--line)}
+.chap-h{display:flex;align-items:center;gap:8px;font-size:14px}.chap-h span{color:var(--muted);font-size:12.5px;flex:1}
+.lessons{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.les{all:unset;cursor:pointer;min-width:30px;height:30px;padding:0 4px;box-sizing:border-box;display:grid;place-items:center;border-radius:8px;border:1px solid var(--line);font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.les.on{background:var(--done);border-color:var(--done);color:#fff}.les:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.ed-par{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.cl-tools{display:flex;gap:6px}
+.cl-line{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:11px 16px;border-top:1px solid var(--line);font-size:14px}
+.cl-line span{color:var(--muted);font-size:13px}.cl-line:hover{background:var(--paper)}.cl-line:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+.qa-meet{margin:-4px 16px 12px;padding:8px 12px;border-radius:9px;background:var(--accent-soft);color:var(--ink);font-size:13.5px;display:flex;flex-wrap:wrap;gap:4px 10px}
+.qa-meet .qm-to{color:var(--muted);font-size:12.5px;flex-basis:100%}
+.qa-meet{align-items:center}.qa-meet .qm-need{color:var(--accent);font-weight:500}
+.qa-meet input{font:inherit;font-size:13.5px;color:var(--ink);background:var(--sheet);border:1px solid var(--line);border-radius:7px;padding:3px 6px}.qa-meet a,.note a{color:var(--accent)}
+.dnav{display:flex;align-items:flex-start;justify-content:center;gap:4px;padding:0 16px 10px}
+.dnav>button{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:999px;color:var(--muted);font-size:20px;line-height:1}
+.dnav button:hover{background:var(--paper)}.dnav button:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.dnav button[disabled]{opacity:.35;cursor:default}
+.dnav .dlab{display:flex;min-width:11em;flex-direction:column;align-items:center;gap:2px;position:relative}
+.dnav .dlab button{all:unset;cursor:pointer;font-weight:600;padding:4px 10px;border-radius:8px;width:auto;height:auto;border:0}
+.dnav .dlab button:hover{background:var(--paper)}
+.dnav .dlab .dtoday{font-weight:400;font-size:12px;color:var(--accent);padding:0 6px}
+.dnav #dpick{position:absolute;inset:0;opacity:0;pointer-events:none;width:100%}
+.mini.night{font-size:12px}
 select{-webkit-appearance:none;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238a93a2' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")!important;
   background-repeat:no-repeat!important;background-position:left 12px center!important;background-size:12px 8px!important;padding-left:34px!important;padding-right:12px!important}
@@ -267,6 +350,12 @@ select{-webkit-appearance:none;appearance:none;
 .pomo .btn.primary{background:var(--sheet);color:var(--ink);border-color:var(--sheet)}
 body.has-pomo{padding-bottom:110px}
 .pomo-go{font-size:12px}
+.ic{display:inline-block;vertical-align:-1px;margin-inline-end:6px}
+.mini .ic{margin-inline-end:4px;width:10px;height:10px}
+body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pomo{background:#232a38;color:#eef1f6;border-top:1px solid #39425a}
+  :root:not([data-theme="light"]) .pomo .btn{color:#eef1f6;border-color:#4a5470}
+  :root:not([data-theme="light"]) .pomo .btn.primary{background:#eef1f6;color:#1b2130;border-color:#eef1f6}}
 .fcard{padding:4px 16px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
 .fbig{font-size:64px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .fbig.paused{opacity:.45}
@@ -313,6 +402,7 @@ body.has-pomo{padding-bottom:110px}
     </div>
     <div class="counts" id="counts"></div>
     <span class="sync" id="sync" hidden><i></i><span id="sync-t"></span></span>
+    <button type="button" class="gear" id="open-settings" aria-label="الإعدادات" title="الإعدادات"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -335,6 +425,7 @@ body.has-pomo{padding-bottom:110px}
   </div>
 
   <div class="chips" id="chips" hidden></div>
+  <div class="meet-alert" id="meet-alert" hidden role="alert"></div>
   <main id="view" class="sheet"><div class="empty">بيحمّل التسكات…</div></main>
   <div class="foot" id="foot" hidden><button type="button" id="gh-settings">الاتصال بـ GitHub</button></div>
 </div>
@@ -342,13 +433,14 @@ body.has-pomo{padding-bottom:110px}
 <div class="overlay" id="overlay" hidden>
   <form class="editor" id="editor" autocomplete="off">
     <h3 id="ed-title">تاسك جديد</h3>
-    <div class="note parent-of" id="ed-parent" hidden></div>
+    <div class="ed-par" id="ed-par-row" hidden><div class="note parent-of" id="ed-parent" hidden></div><button class="mini" type="button" id="ed-promote">خليه تاسك أساسي</button></div>
     <div class="field"><label for="f-title">التاسك</label><input id="f-title" required maxlength="160" placeholder="مثلاً: تسليم فيديو الطعمية"></div>
     <div class="row2" id="area-row">
       <div class="field"><label for="f-area">القسم</label><select id="f-area"></select></div>
       <div class="field" id="kind-field"><label for="f-kind">النوع</label><select id="f-kind"></select></div>
     </div>
-    <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span></div>
+    <label class="note" id="course-wrap" hidden style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="f-course" style="width:auto"> ده كورس (فصول ودروس)</label>
+    <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span><label class="note" id="nopkg-wrap" hidden style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-nopkg" style="width:auto"> مش محسوب من الباكدج (ميتنج، مراجعة…)</label></div>
     <div class="field"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
     <div class="row2">
       <div class="field"><label for="f-due">الديدلاين</label><input id="f-due" type="date"></div>
@@ -413,12 +505,12 @@ function clientStats(name){const n=cname(name);const c=clients.find(x=>cname(x.n
   const ts=tasks.filter(t=>!t.parentId&&cname(t.client)===n);
   const open=ts.filter(t=>t.status!=="done"), done=ts.filter(t=>t.status==="done");
   let pkg=null;if(c&&c.mode!=="single"&&c.target>0){const since=c.since||"";
-    pkg={target:c.target,since,done:done.filter(t=>t.kind!=="leads"&&(!since||(t.doneDate||"")>=since)).length}}
+    pkg={target:c.target,since,done:done.filter(t=>t.kind!=="leads"&&!t.noPkg&&(!since||(t.doneDate||"")>=since)).length}}
   return {c,open,done,pkg}}
 document.addEventListener("focusout",()=>{if(pendingRender){setTimeout(()=>{const a=document.activeElement;if(!(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA"))){pendingRender=false;render()}},0)}});
 let tasks=[], loaded=false, db=null, col=null, view="today", areaFilter="", editing=null, edPri="blue";
 
-function setTabs(){document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===view))}
+function setTabs(){document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===view));const g=document.getElementById("open-settings");if(g)g.setAttribute("aria-pressed",view==="settings")}
 function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2200)}
 
 const subsOf=id=>tasks.filter(t=>t.parentId===id).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
@@ -431,7 +523,7 @@ const sortTasks=a=>a.slice().sort((x,y)=>(PRI_RANK[x.pri]??9)-(PRI_RANK[y.pri]??
 const isOpen=t=>t.status!=="done";
 const inToday=t=>isOpen(t)&&t.planDate&&t.planDate<=today();
 
-function row(t,{showPlan=true,noArea=false,noClient=false,timer=false}={}){
+function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=false}={}){
   const done=t.status==="done";
   const late=!done&&t.planDate&&t.planDate<today();
   const overdue=!done&&t.due&&t.due<today();
@@ -439,13 +531,15 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false}={}){
   const subs=parent?[]:subsOf(t.id);
   const meta=[];
   if(parent)meta.push(`<span class="tag parent-of">↳ ${esc(clip(parent.title))}</span>`);
+  if(t.course){const [d,n]=courseCount(t.course);
+    meta.push(`<button type="button" class="subprog" data-expand="c:${t.id}" aria-expanded="${expanded.has("c:"+t.id)}"><span class="track"><span class="fill" style="width:${n?d/n*100:0}%"></span></span>${n?`${d}/${n} درس`:"ضيف الفصول"}</button>`)}
   if(subs.length){const d=subs.filter(s=>s.status==="done").length;
     meta.push(`<button type="button" class="subprog" data-expand="${t.id}" aria-expanded="${expanded.has(t.id)}"><span class="track"><span class="fill" style="width:${d/subs.length*100}%"></span></span>${d}/${subs.length}</button>`)}
   if(!noArea)meta.push(`<span class="tag">${esc(AREA[t.area]||"")}</span>`);
   if(t.client&&!parent&&!noClient)meta.push(`<span class="tag">${esc(t.client)}</span>`);
   if(kindName(t)&&!parent)meta.push(`<span class="tag">${esc(kindName(t))}</span>`);
   if(t.due)meta.push(`<span class="tag ${overdue?"late":""}">ديدلاين ${esc(fmtDay(t.due))}</span>`);
-  if(done&&t.doneDate&&t.doneDate!==today())meta.push(`<span class="tag">خلص ${esc(fmtDay(t.doneDate))}</span>`);
+  if(done&&t.doneDate&&t.doneDate!==today()&&!noDone)meta.push(`<span class="tag">خلص ${esc(fmtDay(t.doneDate))}</span>`);
   if(late)meta.push(`<span class="tag late">متأجل من ${esc(fmtDay(t.planDate))}</span>`);
   const fm=focusOf(t);if(fm)meta.push(`<span class="tag" title="وقت التركيز">⏱ ${fmtMin(fm)}</span>`);
   const planned=t.planDate&&t.planDate>=today();
@@ -453,7 +547,7 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false}={}){
   return `<div class="task p-${t.pri||"black"} ${done?"is-done":""}">
     <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}">${done?"✓":""}</button>
     <div class="body" data-edit="${t.id}"><div class="title">${esc(t.title)}</div>${t.closeNote?`<div class="closed-note">اتقفل بنوت: ${esc(t.closeNote)}</div>`:""}<div class="meta">${meta.join("")}</div></div>
-    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ بومودورو على ${esc(t.title)}">▶ ${pset.focus}</button>${planBtn}</div>`:(planBtn||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}</div>`;
+    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}">${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?(pomo.pausedAt?"واقف":"● شغال"):IC.play+`<span class="pn">${pset.focus}</span>`}</button>${planBtn}</div>`:(planBtn||nightFix(t)||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}${t.course&&expanded.has("c:"+t.id)?courseBlock(t):""}</div>`;
 }
 function subRow(s){
   const done=s.status==="done";
@@ -471,6 +565,355 @@ function subsBlock(t,subs){
     <form class="inline" data-addsub="${t.id}"><input id="addsub-${t.id}" placeholder="تاسك فرعي جديد" maxlength="160" aria-label="تاسك فرعي جديد"><button class="btn" type="submit">أضف</button></form></div>`;
 }
 
+let folded=new Set();try{folded=new Set(JSON.parse(localStorage.getItem("folded")||"[]"))}catch(_){}
+const ARR=`<span class="arr" aria-hidden="true"><svg width="12" height="8" viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+function foldSection(key,title,list,opts,emptyMsg){
+  const shut=folded.has(key);
+  return `<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="${key}" aria-expanded="${!shut}">${ARR}${title}</button><small>${list.length}</small></h2>${shut?"":list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-fold]");if(!b)return;const k=b.dataset.fold;
+  folded.has(k)?folded.delete(k):folded.add(k);try{localStorage.setItem("folded",JSON.stringify([...folded]))}catch(_){}
+  render();const nb=document.querySelector(`[data-fold="${k}"]`);if(nb)nb.focus()});
+let doneDay="";
+const prevDay=d=>ymd(new Date(new Date(d+"T12:00").getTime()-864e5));
+const nextDay=d=>ymd(new Date(new Date(d+"T12:00").getTime()+864e5));
+const dayName=d=>d===today()?"النهارده":d===prevDay(today())?"امبارح":d===nextDay(today())?"بكره":fmtDay(d);
+function doneDayView(){
+  const d=doneDay&&doneDay<today()?doneDay:today();
+  const l=tasks.filter(t=>t.status==="done"&&isTop(t)&&t.doneDate===d).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
+  return `<section class="section"><h2><span class="h-t">اللي خلص${d<today()?`<button type="button" class="h-link" data-dday="0">ارجع للنهارده</button>`:""}</span><small>${l.length}</small></h2><div class="dnav">
+    <button type="button" data-dday="-1" aria-label="اليوم اللي قبله">›</button>
+    <span class="dlab"><button type="button" data-dpick="1" title="اختار يوم">${esc(dayName(d))} <span aria-hidden="true" class="car">▾</span></button><input type="date" id="dpick" max="${today()}" value="${d}" aria-label="اختار يوم" tabindex="-1"></span>
+    <button type="button" data-dday="1" aria-label="اليوم اللي بعده" ${d>=today()?"disabled":""}>‹</button></div>
+    ${l.length?l.map(t=>row(t,{showPlan:false,noDone:true})).join(""):`<div class="empty">مفيش حاجة خلصت ${d===today()?"النهارده لسه":"اليوم ده"}.</div>`}</section>`;
+}
+document.addEventListener("click",e=>{if(!e.target.closest("[data-dpick]"))return;const i=$("#dpick");try{i.showPicker()}catch(_){i.style.pointerEvents="auto";i.focus();i.click()}});
+document.addEventListener("change",e=>{if(e.target.id!=="dpick"||!e.target.value)return;doneDay=e.target.value>=today()?"":e.target.value;render()});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-dday]");if(!b||b.disabled)return;const k=+b.dataset.dday;
+  const d=doneDay&&doneDay<today()?doneDay:today();doneDay=k===0?"":k<0?prevDay(d):nextDay(d);if(doneDay>=today())doneDay="";
+  render();const nb=document.querySelector(`[data-dday="${k}"]`);if(nb&&!nb.disabled)nb.focus()});
+function nightFix(t){
+  if(t.status!=="done"||!t.doneAt||!t.doneDate)return "";const at=new Date(t.doneAt);if(at.getHours()>=6)return "";const real=ymd(at);
+  if(t.doneDate===real)return `<button class="mini night" type="button" data-nday="${t.id}" data-to="${prevDay(real)}" title="خلص الساعة ${at.getHours()||12} بالليل">احسبه على ${esc(dayName(prevDay(real)))}</button>`;
+  if(t.doneDate===prevDay(real))return `<button class="mini night on" type="button" data-nday="${t.id}" data-to="${real}" title="محسوب على اليوم اللي قبله">رجّعه لـ${esc(dayName(real))}</button>`;
+  return "";
+}
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-nday]");if(!b)return;
+  if(await write(b.dataset.nday,{doneDate:b.dataset.to}))toast("اتحسب على "+dayName(b.dataset.to))});
+/* reads «ميتنج مع محمد بكره الساعة 5» → {title:"ميتنج مع محمد", date:"2026-10-21", time:"17:00"}.
+   only for text that says it's a meeting/call; needs a time. day defaults to today, or tomorrow if that time has passed. */
+const MEET_RE=/(ميتنج|ميتينج|مييتنج|اجتماع|مقابلة|مقابله|انترفيو|إنترفيو|مكالمة|مكالمه|كول|call|meeting|zoom|زوم)/i;
+const AR_DAYS=[["الأحد","الاحد","الحد","حد"],["الاثنين","الإثنين","الاتنين","اتنين","اثنين"],["الثلاثاء","التلات","الثلاث","التلاتاء","تلات"],["الأربعاء","الاربعاء","الأربع","الاربع","اربع"],["الخميس","خميس"],["الجمعة","الجمعه","جمعة","جمعه"],["السبت","سبت"]];
+const AR_MONTHS={"يناير":1,"فبراير":2,"مارس":3,"ابريل":4,"أبريل":4,"مايو":5,"يونيو":6,"يوليو":7,"اغسطس":8,"أغسطس":8,"سبتمبر":9,"اكتوبر":10,"أكتوبر":10,"نوفمبر":11,"ديسمبر":12};
+function parseMeet(raw,now){
+  now=now||new Date();
+  let s=String(raw).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/\s+/g," ").trim();
+  if(!MEET_RE.test(s))return null;
+  const cut=re=>{const m=s.match(re);if(m)s=(s.slice(0,m.index)+" "+s.slice(m.index+m[0].length)).replace(/\s+/g," ").trim();return m};
+  const base=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const addD=n=>new Date(base.getFullYear(),base.getMonth(),base.getDate()+n);
+  let day=null,h=null,mi=0,ampm="",m;
+  // dates with numbers first, so their numbers aren't read as the time
+  {m=cut(/(\d{1,2})\s*[\/\-]\s*(\d{1,2})/);if(m){day=new Date(base.getFullYear(),+m[2]-1,+m[1]);if(day<base)day.setFullYear(day.getFullYear()+1)}}
+  if(!day){m=cut(new RegExp("(\\d{1,2})\\s*("+Object.keys(AR_MONTHS).join("|")+")"));if(m){day=new Date(base.getFullYear(),AR_MONTHS[m[2]]-1,+m[1]);if(day<base)day.setFullYear(day.getFullYear()+1)}}
+  const T="(\\d{1,2})(?:[:.](\\d{2}))?\\s*(?:و\\s*(نص|ربع|تلت|ثلث))?\\s*(?:(إلا|الا)\\s*(ربع|تلت|ثلث))?";
+  const AP="(صباحاً|صباحا|الصبح|الصبحية|صباح|ص|الضهر|الظهر|ضهر|ظهر|العصر|عصر|المغرب|مغرب|بالليل|بليل|الليل|مساءً|مساء|م|pm|am)";
+  m=cut(new RegExp("(?:ال)?(?:الساعه|الساعة|ساعة|ساعه)\\s*"+T+"\\s*"+AP+"?(?=\\s|$)","i"))||cut(new RegExp("(?:^|\\s)"+T+"\\s*"+AP+"(?=\\s|$)","i"))||cut(new RegExp("(?:^|\\s)"+T+"(?=\\s|$)"));
+  if(m){h=+m[1];mi=m[2]?+m[2]:0;
+    if(m[3])mi={"نص":30,"ربع":15,"تلت":20,"ثلث":20}[m[3]];
+    if(m[4]){mi=60-{"ربع":15,"تلت":20,"ثلث":20}[m[5]];h=h-1}
+    ampm=(m[6]||"").toLowerCase();}
+  const noTime=h==null||h>23||mi>59;if(noTime){h=0;mi=0;ampm="ص"}
+  const morning=/^(صباحاً|صباحا|الصبح|الصبحية|ص|صباح|am)$/.test(ampm);
+  if(h>=1&&h<=11&&!morning)h+=12;           // 1–11 with no "ص" = afternoon/evening
+  if(h===12&&morning)h=0;
+  if(h===24)h=12;
+  // day
+  if(cut(/بعد\s*(بكره|بكرة|بكرا)/))day=addD(2);
+  else if(cut(/(بكره|بكرة|بكرا|غدا|غداً)/))day=addD(1);
+  else if(cut(/(النهارده|النهاردة|انهارده|اليوم ده|النهار ده)/))day=addD(0);
+  if(!day){for(let i=0;i<7&&!day;i++)for(const w of AR_DAYS[i]){const r=new RegExp("(?:يوم\\s*)?(?:^|\\s)"+w+"(?=\\s|$)");if(r.test(s)){cut(r);let n=(i-base.getDay()+7)%7;day=addD(n);break}}}
+  cut(/(?:^|\s)يوم(?=\s|$)/);
+  const dayGiven=!!day;
+  if(!day){day=addD(0);if(!noTime&&h*60+mi<=now.getHours()*60+now.getMinutes())day=addD(1)}
+  const title=s.replace(/\s+(في|على|الساعة|الساعه)$/,"").trim()||"ميتنج";
+  const p2=n=>String(n).padStart(2,"0");
+  const date=`${day.getFullYear()}-${p2(day.getMonth()+1)}-${p2(day.getDate())}`;
+  if(noTime)return {title,date,time:"",partial:true};
+  return {title,date,time:`${p2(h)}:${p2(mi)}`};
+}
+
+const fmtTime=s=>{const [h,m]=String(s).split(":").map(Number);return `${h%12||12}:${String(m).padStart(2,"0")} ${h<12?"ص":"م"}`};
+function calUrl(t){const d=t.date.replace(/-/g,""),[h,m]=t.time.split(":").map(Number);const st=new Date(+t.date.slice(0,4),+t.date.slice(5,7)-1,+t.date.slice(8),h,m),en=new Date(st.getTime()+3600e3);
+  const f=x=>`${x.getFullYear()}${String(x.getMonth()+1).padStart(2,"0")}${String(x.getDate()).padStart(2,"0")}T${String(x.getHours()).padStart(2,"0")}${String(x.getMinutes()).padStart(2,"0")}00`;
+  return "https://calendar.google.com/calendar/render?"+new URLSearchParams({action:"TEMPLATE",text:t.title,dates:f(st)+"/"+f(en),ctz:"Africa/Cairo"})}
+/* ---- meetings: their own list (collection meetings), never tasks. Shown as a reminder strip on «النهارده»;
+   15 minutes before, a banner (and a browser notification if allowed) says so. Past meetings drop off by themselves. */
+let meetings=[], meetCol=null, meetEdit=null;
+const meetAt=m=>{const [y,mo,d]=m.date.split("-").map(Number),[h,mi]=m.time.split(":").map(Number);return new Date(y,mo-1,d,h,mi).getTime()};
+const upcoming=()=>meetings.filter(m=>m.date&&m.time&&meetAt(m)+3600e3>Date.now()).sort((a,b)=>meetAt(a)-meetAt(b));
+function inWords(ms){const m=Math.round(ms/60000);if(m<=0)return "دلوقتي";if(m<60)return `بعد ${m} دقيقة`;const h=Math.round(m/60);if(h<24)return `بعد ${h===1?"ساعة":h===2?"ساعتين":h+" ساعات"}`;const d=Math.round(h/24);return `بعد ${d===1?"يوم":d===2?"يومين":d+" أيام"}`}
+function meetStrip(){const up=upcoming().filter(m=>m.date<=ymd(new Date(Date.now()+6*864e5)));if(!up.length)return "";
+  return `<section class="section meets"><h2>الميتنجات<small>${up.length}</small></h2>${up.map(m=>{const at=meetAt(m),now=Date.now(),live=at<=now;
+    if(meetEdit===m.id)return `<form class="inline meet-ed" data-meetsave="${m.id}"><input id="me-title" value="${esc(m.title)}" maxlength="120" aria-label="اسم الميتنج"><input id="me-date" type="date" value="${m.date}" aria-label="اليوم"><input id="me-time" type="time" value="${m.time}" aria-label="الساعة"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" data-meetcancel="1">إلغاء</button></form>`;
+    return `<div class="meet ${at-now<3*3600e3?"soon":""}"><button type="button" class="meet-b" data-meetedit="${m.id}"><span class="meet-t">${esc(dayName(m.date))} ${fmtTime(m.time)}</span><span class="meet-n">${esc(m.title)}</span><span class="meet-w">${live?"شغال دلوقتي":inWords(at-now)}</span></button>
+      <button type="button" class="x" data-meetdel="${m.id}" aria-label="امسح الميتنج">×</button></div>`}).join("")}</section>`}
+function askNotify(){try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission()}catch(_){}}
+let alerted=new Set();try{alerted=new Set(JSON.parse(localStorage.getItem("meetAlerted")||"[]"))}catch(_){}
+function meetAlerts(){const now=Date.now();const due=upcoming().filter(m=>{const at=meetAt(m);return at-now<=15*60000&&at>now-5*60000&&!alerted.has(m.id+m.date+m.time)});
+  due.forEach(m=>{alerted.add(m.id+m.date+m.time);const txt=`عندك ميتنج «${m.title}» ${inWords(meetAt(m)-now)}، الساعة ${fmtTime(m.time)}`;
+    const b=$("#meet-alert");if(b){b.innerHTML=`<span>${esc(txt)}</span><button type="button" class="x" data-meetok="1" aria-label="تمام">×</button>`;b.hidden=false}
+    try{beep()}catch(_){}try{if("Notification" in window&&Notification.permission==="granted")new Notification("ميتنج",{body:txt})}catch(_){}});
+  if(due.length)try{localStorage.setItem("meetAlerted",JSON.stringify([...alerted].slice(-50)))}catch(_){}}
+setInterval(()=>{meetAlerts();if(view==="today"&&meetings.length&&!document.activeElement?.closest?.("#view form"))render()},30000);
+document.addEventListener("click",async e=>{
+  if(e.target.closest("[data-meetok]")){$("#meet-alert").hidden=true;return}
+  const ed=e.target.closest("[data-meetedit]");if(ed){meetEdit=ed.dataset.meetedit;render();const i=$("#me-title");i&&i.focus();return}
+  if(e.target.closest("[data-meetcancel]")){meetEdit=null;render();return}
+  const dl=e.target.closest("[data-meetdel]");if(dl){if(dl.dataset.sure!=="1"){dl.dataset.sure="1";dl.textContent="؟";setTimeout(()=>{dl.dataset.sure="";dl.textContent="×"},2500);return}
+    const m=meetings.find(x=>x.id===dl.dataset.meetdel);if(!m)return;calDelete(m.calId);try{await meetCol.doc(m.id).delete();toast("الميتنج اتشال")}catch(_){toast("ماتشالش")}return}
+});
+document.addEventListener("submit",async e=>{const f=e.target;if(!f.dataset||!f.dataset.meetsave)return;e.preventDefault();const id=f.dataset.meetsave;
+  const d={title:$("#me-title").value.trim()||"ميتنج",date:$("#me-date").value,time:$("#me-time").value};if(!d.date||!d.time)return;
+  meetEdit=null;try{await meetCol.doc(id).update(d);if(calCfg)calSave(id);else toast("اتعدل")}catch(_){toast("ماتعدلش")}render()});
+let calCfg=null;
+const calKey=()=>{const a=new Uint8Array(18);crypto.getRandomValues(a);return [...a].map(x=>"abcdefghijkmnpqrstuvwxyz23456789"[x%32]).join("")};
+const meetLine=m=>`${esc(m.title)} · ${esc(dayName(m.date))}${m.date>nextDay(today())?"":""} · ${fmtTime(m.time)}`;
+async function calCall(body){
+  const r=await fetch(calCfg.url,{method:"POST",body:JSON.stringify({...body,key:calCfg.key})});
+  const j=await r.json();if(!j.ok)throw new Error(j.err||"failed");return j}
+function calTimes(t){const [y,mo,d]=t.date.split("-").map(Number),[h,mi]=t.time.split(":").map(Number);const st=new Date(y,mo-1,d,h,mi);return {start:st.toISOString(),end:new Date(st.getTime()+3600e3).toISOString()}}
+async function calSave(id){const t=meetings.find(x=>x.id===id);if(!t||!calCfg)return;
+  try{const j=await calCall({action:"save",id:t.calId||"",title:t.title,...calTimes(t),details:""});
+    if(j.id&&j.id!==t.calId)await meetCol.doc(id).update({calId:j.id});toast(t.calId?"اتعدل على الكالندر ✓":"الميتنج اتسجل واتضاف على الكالندر ✓")}
+  catch(e){toast(e.message==="key"?"مفتاح الكالندر مش مظبوط، اربطه تاني":"الميتنج اتسجل، بس ماتضافش على الكالندر")}}
+async function calDelete(calId){if(!calId||!calCfg)return;try{await calCall({action:"delete",id:calId})}catch(_){}}
+function calScript(key){return `// دفتر مالك: بيضيف الميتنجات على Google Calendar بتاعك
+const KEY = "${key}";
+function doPost(e) {
+  let d; try { d = JSON.parse(e.postData.contents); } catch (_) { return out({ok:false, err:"bad"}); }
+  if (d.key !== KEY) return out({ok:false, err:"key"});
+  const cal = CalendarApp.getDefaultCalendar();
+  if (d.action === "ping") return out({ok:true, name: cal.getName()});
+  let ev = null; if (d.id) { try { ev = cal.getEventById(d.id); } catch (_) {} }
+  if (d.action === "delete") { if (ev) ev.deleteEvent(); return out({ok:true}); }
+  const st = new Date(d.start), en = new Date(d.end);
+  if (ev) { ev.setTitle(d.title); ev.setTime(st, en); ev.setDescription(d.details || ""); }
+  else { ev = cal.createEvent(d.title, st, en, {description: d.details || ""}); ev.addPopupReminder(30); }
+  return out({ok:true, id: ev.getId()});
+}
+function doGet() { return out({ok:true, app:"daftar-malek"}); }
+function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }`}
+let calDraftKey="";
+function calSetupView(msg){
+  calDraftKey=calDraftKey||(calCfg&&calCfg.key)||calKey();
+  return `<section class="section"><form class="gh" id="cal-form" autocomplete="off">
+    <h2>ربط Google Calendar</h2>
+    ${calCfg?`<div class="note" style="color:var(--done)">الكالندر متربط ✓ الميتنجات بتتضاف لوحدها.</div>`:`<div class="note">خطوة واحدة أول مرة بس. بعدها أي ميتنج تكتبه يتضاف على الكالندر لوحده.</div>`}
+    <ol>
+      <li>افتح <a href="https://script.google.com/home/projects/create" target="_blank" rel="noopener">script.google.com</a> بنفس حساب Google اللي عليه الكالندر.</li>
+      <li>امسح الكود اللي هناك، وانسخ الكود ده مكانه: <button class="mini" type="button" id="cal-copy">انسخ الكود</button></li>
+      <li>دوس <b>Deploy</b> ← <b>New deployment</b>، واختار النوع <b>Web app</b>.</li>
+      <li>خلي <b>Execute as: Me</b>، و<b>Who has access: Anyone</b>، ودوس Deploy.</li>
+      <li>هيطلب إذن: Authorize ← اختار حسابك ← Advanced ← Go to … (unsafe) ← Allow. ده سكريبتك انت، محدش غيرك يقدر يستخدمه من غير المفتاح اللي جواه.</li>
+      <li>انسخ الـ <b>Web app URL</b> وحطه هنا:</li></ol>
+    <textarea id="cal-code" readonly style="direction:ltr;text-align:left;font-family:ui-monospace,monospace;font-size:12px;height:110px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px">${esc(calScript(calDraftKey))}</textarea>
+    <label>Web app URL<input id="cal-url" value="${esc(calCfg?calCfg.url:"")}" placeholder="https://script.google.com/macros/s/…/exec" spellcheck="false"></label>
+    ${msg?`<div class="err">${esc(msg)}</div>`:""}
+    <div class="actions"><div class="grow"><button class="btn primary" type="submit">${calCfg?"احفظ":"اربط"}</button><button class="btn" type="button" data-goto="today">رجوع</button></div>
+    ${calCfg?`<button class="btn danger" type="button" id="cal-off">افصل الكالندر</button>`:""}</div>
+  </form></section>`}
+document.addEventListener("click",async e=>{
+  if(e.target.closest("[data-calsetup]")){e.preventDefault();view="calendar";setTabs();render();scrollTo(0,0);return}
+  if(e.target.id==="cal-copy"){const ta=$("#cal-code");try{await navigator.clipboard.writeText(ta.value);toast("الكود اتنسخ")}catch(_){ta.select();toast("اتعلّم، اعمل نسخ")}return}
+  if(e.target.id==="cal-off"){if(e.target.dataset.sure!=="1"){e.target.dataset.sure="1";e.target.textContent="متأكد؟ اضغط تاني";return}
+    try{await setCol.doc("calendar").delete()}catch(_){}calCfg=null;render();toast("الكالندر اتفصل")}
+});
+document.addEventListener("submit",async e=>{if(e.target.id!=="cal-form")return;e.preventDefault();
+  const url=$("#cal-url").value.trim();
+  if(!url.startsWith("https://script.google.com/")&&!url.startsWith("https://script.googleusercontent.com/")){$("#view").innerHTML=calSetupView("ده مش لينك Web app. لازم يبدأ بـ https://script.google.com/macros/s/ ويخلص بـ /exec");return}
+  const old=calCfg;calCfg={url,key:calDraftKey};
+  try{await calCall({action:"ping"})}catch(err){calCfg=old;$("#view").innerHTML=calSetupView(err.message==="key"?"الكود اللي في السكريبت مش نفس الكود اللي هنا. انسخ الكود تاني، ولزقه، واعمل Deploy ← Manage deployments ← Edit ← New version.":"مقدرتش أوصل للسكريبت. اتأكد إنك اخترت Who has access: Anyone، وإن اللينك آخره /exec.");$("#cal-url").value=url;return}
+  try{await setCol.doc("calendar").set({url,key:calDraftKey,at:Date.now()})}catch(_){}
+  toast("الكالندر اتربط ✓");view="today";setTabs();render();
+});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.target.id==="qm-time"||e.target.id==="qm-date")){e.preventDefault();$("#quick-add").requestSubmit()}});
+document.addEventListener("click",e=>{if(e.target.closest("[data-qmsave]"))$("#quick-add").requestSubmit()});
+// quick box: understand meetings as you type
+let qaState={t:"",d:"",tm:""};
+function meetPreview(){const m=parseMeet(qaState.t);if(!m)return "";
+  const to=`<span class="qm-to">${calCfg?"هيتضاف على الكالندر لوحده":`هيفتح الكالندر متكتب · <a href="#" data-calsetup="1">اربطه عشان يتضاف لوحده</a>`}</span>`;
+  if(m.partial)return `<b>ميتنج:</b> <span>${esc(m.title)}</span> <span class="qm-need">اختار الساعة:</span><input type="date" id="qm-date" value="${qaState.d||m.date}" min="${today()}" aria-label="يوم الميتنج"><input type="time" id="qm-time" value="${qaState.tm}" aria-label="ساعة الميتنج"><button class="mini" type="button" data-qmsave="1">سجّل الميتنج</button>${to}`;
+  return `<b>ميتنج:</b> ${meetLine(m)}${to}`}
+document.addEventListener("input",e=>{const id=e.target.id;
+  if(id==="qm-date"){qaState.d=e.target.value;return}if(id==="qm-time"){qaState.tm=e.target.value;return}
+  if(id!=="qa-title")return;const was=parseMeet(qaState.t);qaState.t=e.target.value;const m=parseMeet(qaState.t);if(!m){qaState.d="";qaState.tm=""}
+  const el=$("#qa-meet");if(!el)return;el.hidden=!m;
+  if(!m||!(was&&was.partial&&m.partial&&$("#qm-time")))el.innerHTML=meetPreview();});
+function notesView(){
+  const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
+  const by=(a,b)=>(b.createdAt||0)-(a.createdAt||0);
+  const open=notes.filter(n=>!n.resolved).sort(by), closed=notes.filter(n=>n.resolved).sort((a,b)=>(b.resolvedAt||b.createdAt||0)-(a.resolvedAt||a.createdAt||0)).slice(0,60);
+  const card=n=>`<article class="note-card">
+      <div class="note-top"><span class="by ${n.by==="claude"?"claude":""}">${n.by==="claude"?"كلود":"أنا"}</span><span>${esc(fmtShort(n.d||""))}</span>${n.area?`<span>${esc(AREA[n.area]||"")}</span>`:""}${n.resolved?`<span>${n.taskId||tasks.some(t=>t.noteId===n.id&&t.noteKind==="task")?"اتعملت تاسك":"خلصت"}</span>`:""}</div>
+      <div class="note-text">${esc(n.text)}</div>
+      <div class="note-actions">${n.resolved?`<button class="mini" type="button" data-nreopen="${n.id}">رجّعها</button>`
+        :`<button class="mini" type="button" data-ntask="${n.id}">اعملها تاسك</button><button class="mini" type="button" data-nresolve="${n.id}">خلصت</button>`}
+        <button class="mini danger" type="button" data-ndel="${n.id}">امسح</button></div></article>`;
+  const shut=!folded.has("notes-done-open");
+  return `<form class="compose" id="note-form">
+      <textarea id="n-text" maxlength="2000" placeholder="اكتب أي حاجة عايز ترجعلها، فكرة أو حاجة تقراها أو تعملها بعدين" aria-label="نوت جديدة"></textarea>
+      <div class="compose-row"><select id="n-area" aria-label="القسم">${areaOpts}</select><span style="flex:1"></span><button class="btn primary" type="submit">احفظ النوت</button></div></form>
+    <section class="section"><h2>النوتس<small>${open.length}</small></h2>${open.length?open.map(card).join(""):`<div class="empty">مفيش نوتس مفتوحة.</div>`}</section>
+    ${closed.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="notes-done-open" aria-expanded="${!shut}">${ARR}خلصت</button><small>${closed.length}</small></h2>${shut?"":closed.map(card).join("")}</section>`:""}`;
+}
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-nreopen]");if(!b)return;await writeNote(b.dataset.nreopen,{resolved:false,resolvedAt:null});toast("رجعت للنوتس")});
+function clientMonthMin(n){const m=today().slice(0,8)+"01";return sessions.filter(s=>cname(s.client)===n&&s.date>=m).reduce((a,s)=>a+(s.min||0),0)}
+function clientLast(n){let d="";tasks.forEach(t=>{if(cname(t.client)!==n)return;const x=t.status==="done"?t.doneDate:ymd(new Date(t.createdAt||0));if(x&&x>d)d=x});
+  sessions.forEach(s=>{if(cname(s.client)===n&&s.date>d)d=s.date});return d}
+function findClient(text){const t=" "+String(text).toLowerCase()+" ";return clientNames().sort((a,b)=>b.length-a.length).find(n=>n.length>1&&t.includes(n.toLowerCase()))||""}
+function clientsList(names){
+  const rows=names.map(n=>({n,...clientStats(n)}));
+  const busy=rows.filter(r=>r.open.length||(r.pkg&&r.pkg.done<r.pkg.target)).sort((a,b)=>b.open.length-a.open.length||a.n.localeCompare(b.n,"ar"));
+  const idle=rows.filter(r=>!busy.includes(r)).map(r=>({...r,last:clientLast(r.n)})).sort((a,b)=>(b.last||"").localeCompare(a.last||""));
+  const shut=!folded.has("cl-idle-open");
+  return busy.map(r=>clientCard2(r.n)).join("")+(busy.length?"":`<div class="empty" style="padding-top:16px">مفيش شغل مفتوح لأي عميل دلوقتي.</div>`)+
+    (idle.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="cl-idle-open" aria-expanded="${!shut}">${ARR}مفيش ليهم شغل مفتوح</button><small>${idle.length}</small></h2>
+      ${shut?"":idle.map(r=>clOpen===r.n?clientCard2(r.n):`<button type="button" class="cl-line" data-clopen="${esc(r.n)}"><b>${esc(r.n)}</b><span>${r.done.length} خلص${r.last?` · آخر شغل ${esc(dayName(r.last))}`:""}${r.pkg?` · باكدج ${r.pkg.done}/${r.pkg.target}`:""}</span></button>`).join("")}</section>`:"");
+}
+let clOpen=null;
+function clientCard2(name){
+  const {c,open,done,pkg}=clientStats(name);const mm=clientMonthMin(name);const shutC=folded.has("cl:"+name)&&clEdit!==name;
+  const pct=pkg?Math.min(100,Math.round(pkg.done/pkg.target*100)):0;
+  const sub=[`${open.length} مفتوح`,`${done.length} خلص`,mm?`⏱ ${fmtMin(mm)} الشهر ده`:""].filter(Boolean).join(" · ");
+  const pkgHtml=pkg?`<div class="prog"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span>${pkg.done} من ${pkg.target}</span></div>
+      <div class="next">${pkg.done>=pkg.target?`<b>الباكدج خلصت.</b> <button class="mini" type="button" data-clrenew="${esc(name)}">ابدأ باكدج جديدة</button>`:`<b>فاضل ${pkg.target-pkg.done}</b> من الباكدج`}${pkg.since?` · من ${esc(fmtDay(pkg.since))}`:""}</div>`:"";
+  const mode=clEdit===name?(clMode||(pkg?"package":"single")):"";
+  const form=clEdit===name?`<form class="cl-form" data-clsave2="${esc(name)}">
+      <label style="flex:1 1 160px">الاسم<input id="cl-name" maxlength="60" value="${esc(name)}" required></label>
+      <div class="chips" role="group" aria-label="نوع الشغل"><button type="button" class="chip" data-clmode="single" aria-pressed="${mode==="single"}">بالقطعة</button><button type="button" class="chip" data-clmode="package" aria-pressed="${mode==="package"}">باكدج</button></div>
+      ${mode==="package"?`<label>عدد الفيديوهات<input id="cl-target" type="number" min="1" max="999" value="${pkg?pkg.target:""}" required></label>
+      <label>من يوم<input id="cl-since" type="date" value="${esc(pkg&&pkg.since?pkg.since:today().slice(0,8)+"01")}"></label>`:""}
+      <button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" data-clcancel="1">إلغاء</button></form>`:"";
+  return `<article class="proj">
+    <div class="proj-head"><h3><button type="button" class="fold" data-fold="cl:${esc(name)}" aria-expanded="${!shutC}">${ARR}${esc(name)}</button></h3><span class="cl-tools">${clEdit===name?"":`<button class="mini" type="button" data-cladd="${esc(name)}">+ تاسك</button><button class="mini" type="button" data-cledit="${esc(name)}">تعديل</button>`}</span></div>
+    <div class="note">${sub}${pkg?"":" · بالقطعة"}</div>
+    ${shutC?"":pkgHtml+form}
+    ${open.length&&!shutC?`<div class="cl-tasks">${sortTasks(open).map(t=>row(t,{noArea:true,noClient:true})).join("")}</div>`:""}
+  </article>`;
+}
+let clMode="";
+document.addEventListener("click",async e=>{
+  const o=e.target.closest("[data-clopen]");if(o){clOpen=o.dataset.clopen;render();return}
+  const ed=e.target.closest("[data-cledit]");if(ed){clEdit=ed.dataset.cledit;clMode="";render();const el=$("#cl-name");el&&el.focus();return}
+  const md=e.target.closest("[data-clmode]");if(md){clMode=md.dataset.clmode;const keep=$("#cl-name").value;render();$("#cl-name").value=keep;return}
+  const rn=e.target.closest("[data-clrenew]");if(rn){if(await writeClient(rn.dataset.clrenew,{since:today()}))toast("باكدج جديدة من النهارده");return}
+});
+document.addEventListener("submit",async e=>{const f=e.target;if(!f.dataset||!f.dataset.clsave2)return;e.preventDefault();
+  const old=f.dataset.clsave2, nw=cname($("#cl-name").value);if(!nw)return;
+  const pkgOn=!!$("#cl-target");
+  const data=pkgOn?{mode:"package",target:parseInt($("#cl-target").value,10)||null,since:$("#cl-since").value||""}:{mode:"single",target:null,since:""};
+  if(pkgOn&&!(data.target>0))return;
+  if(nw!==old){
+    for(const t of tasks.filter(x=>cname(x.client)===old))await write(t.id,{client:nw});
+    for(const x of sessions.filter(x=>cname(x.client)===old))try{await sesCol.doc(x.id).update({client:nw})}catch(_){}
+    const oc=clients.find(x=>cname(x.name)===old), nc=clients.find(x=>cname(x.name)===nw);
+    if(oc&&!nc){try{await clientsCol.doc(oc.id).update({name:nw})}catch(_){}}else if(oc&&nc){try{await clientsCol.doc(oc.id).delete()}catch(_){}}
+  }
+  if(await writeClient(nw,data)){clEdit=null;clMode="";if(clOpen===old)clOpen=nw;toast(nw!==old?`اتغير لـ«${nw}» في كل التسكات`:"اتحفظ");render()}
+});
+document.addEventListener("click",async e=>{if(e.target.id!=="ed-promote"||!editing)return;
+  const s=editing,p=parentOf(s);if(!p)return;closeEditor();
+  if(await write(s.id,{parentId:"",splitFrom:p.id,notes:[s.notes,`كان تاسك فرعي تحت: ${p.title}`].filter(Boolean).join("\n")})){toast("بقى تاسك أساسي");await syncParent(p.id);render()}});
+const courseCount=c=>{let d=0,n=0;(c&&c.chapters||[]).forEach(ch=>(ch.lessons||[]).forEach(l=>{n++;if(l.done)d++}));return [d,n]};
+function courseBlock(t){const chs=t.course.chapters||[];const [d,n]=courseCount(t.course);
+  return `<div class="course">${chs.map((ch,ci)=>{const ld=ch.lessons.filter(l=>l.done).length;
+    return `<div class="chap"><div class="chap-h"><b>${esc(ch.t)}</b><span>${ld}/${ch.lessons.length}</span>
+      <button class="mini" type="button" data-lesadd="${t.id}|${ch.id}">+ درس</button><button class="mini danger" type="button" data-chdel="${t.id}|${ch.id}">امسح</button></div>
+      <div class="lessons">${ch.lessons.map((l,li)=>`<button type="button" class="les ${l.done?"on":""}" data-les="${t.id}|${ch.id}|${l.id}" aria-pressed="${!!l.done}" title="${esc(l.t)}">${li+1}</button>`).join("")}</div></div>`}).join("")}
+    ${n&&d===n&&t.status!=="done"?`<div class="next"><b>كل الدروس خلصت.</b> <button class="mini" type="button" data-toggle="${t.id}">علّم الكورس خلص</button></div>`:""}
+    <form class="inline" data-chadd="${t.id}"><input id="chname-${t.id}" placeholder="اسم الفصل، مثلاً: الفصل ${chs.length+1}" maxlength="80" aria-label="اسم الفصل"><input id="chn-${t.id}" type="number" min="1" max="200" placeholder="كام درس" aria-label="عدد الدروس" style="width:6.5em;flex:0 0 auto"><button class="btn" type="submit">+ فصل</button></form></div>`}
+async function setCourse(id,fn){const t=tasks.find(x=>x.id===id);if(!t||!t.course)return;const c=JSON.parse(JSON.stringify(t.course));fn(c);await write(id,{course:c});render()}
+document.addEventListener("click",async e=>{
+  const l=e.target.closest("[data-les]");if(l){const [tid,cid,lid]=l.dataset.les.split("|");
+    await setCourse(tid,c=>{const x=c.chapters.find(h=>h.id===cid).lessons.find(y=>y.id===lid);x.done=!x.done;x.doneDate=x.done?today():null});return}
+  const a=e.target.closest("[data-lesadd]");if(a){const [tid,cid]=a.dataset.lesadd.split("|");
+    await setCourse(tid,c=>{const h=c.chapters.find(x=>x.id===cid);h.lessons.push({id:"l"+sid(),t:"درس "+(h.lessons.length+1),done:false,doneDate:null})});return}
+  const dl=e.target.closest("[data-chdel]");if(dl){if(dl.dataset.sure!=="1"){dl.dataset.sure="1";dl.textContent="متأكد؟";setTimeout(()=>{dl.dataset.sure="";dl.textContent="امسح"},2500);return}
+    const [tid,cid]=dl.dataset.chdel.split("|");await setCourse(tid,c=>{c.chapters=c.chapters.filter(x=>x.id!==cid)});return}
+});
+document.addEventListener("submit",async e=>{const f=e.target;if(!f.dataset||!f.dataset.chadd)return;e.preventDefault();const id=f.dataset.chadd;
+  const t=tasks.find(x=>x.id===id);const name=$("#chname-"+id).value.trim()||("الفصل "+(((t.course||{}).chapters||[]).length+1));const n=parseInt($("#chn-"+id).value,10);
+  if(!(n>=1&&n<=200)){toast("اكتب عدد الدروس");$("#chn-"+id).focus();return}
+  await setCourse(id,c=>{c.chapters.push({id:"ch"+sid(),t:name,lessons:[...Array(n)].map((_,i)=>({id:"l"+sid()+i,t:"درس "+(i+1),done:false,doneDate:null}))})});
+  const el=$("#chname-"+id);if(el)el.focus()});
+/* ---- trash ---- */
+let trash=[], trashCol=null;
+async function toTrash(kind,item,subs){if(!trashCol||!item)return;const {id,...data}=item;
+  try{await trashCol.doc("x"+sid()).set({kind,id,data,subs:(subs||[]).map(({id,...d})=>({id,data:d})),title:kind==="note"?item.text:item.title,deletedAt:Date.now()})}catch(_){}}
+async function restoreTrash(xid){const x=trash.find(y=>y.id===xid);if(!x)return;
+  try{if(x.kind==="note")await notesCol.doc(x.oid).set(x.data);
+    else{await col.doc(x.oid).set(x.data);for(const s of x.subs||[])await col.doc(s.id).set(s.data)}
+    await trashCol.doc(xid).delete();toast("رجع ✓")}catch(_){toast("مارجعش، جرّب تاني")}}
+const WEEK=7*864e5;
+/* ---- settings ---- */
+let areaCfg=null, setDraft=null;
+const BASE_AREAS=AREAS.map(a=>a.slice()), BASE_KINDS=JSON.parse(JSON.stringify(KINDS));
+let KHIDE=new Set();
+function applyAreaCfg(){const c=areaCfg||{};
+  AREAS.forEach(a=>{const b=BASE_AREAS.find(x=>x[0]===a[0]);a[1]=(c.names&&c.names[a[0]])||b[1];AREA[a[0]]=a[1]});
+  Object.keys(KINDS).forEach(k=>{const list=(c.kinds&&c.kinds[k])||BASE_KINDS[k];KINDS[k].length=0;list.forEach(x=>KINDS[k].push([x[0],x[1]]))});
+  KHIDE=new Set(c.hidden||[])}
+function settingsView(){
+  if(!setDraft)setDraft={names:Object.fromEntries(AREAS.map(a=>[a[0],a[1]])),kinds:JSON.parse(JSON.stringify(KINDS)),hidden:[...KHIDE],routine:routineItems.map(i=>({...i}))};
+  const d=setDraft;
+  const areasHtml=AREAS.map(([k])=>`<div class="srow"><input type="text" data-sname="${k}" value="${esc(d.names[k])}" aria-label="اسم القسم" maxlength="30"></div>
+    ${k==="work"?`<div class="kinds"><span class="lab">«شغل» من غير أنواع، بيتقسم بالعميل.</span></div>`:`<div class="kinds">${(d.kinds[k]||[]).map(([kk,nn],i)=>{const off=d.hidden.includes(k+":"+kk);
+      return `<span class="k ${off?"off":""}"><input type="text" data-skind="${k}|${i}" value="${esc(nn)}" aria-label="اسم النوع" maxlength="24"><button type="button" class="x" data-shide="${k}:${kk}" title="${off?"رجّعه":"خبّيه"}" aria-label="${off?"رجّع النوع":"خبّي النوع"}">${off?"رجّع":"خبّي"}</button></span>`}).join("")}
+      <button type="button" class="mini" data-skadd="${k}">+ نوع</button></div>`}`).join("");
+  const rtHtml=d.routine.map((it,i)=>`<div class="srow"><input type="text" data-srt="${i}" value="${esc(it.t)}" aria-label="عنصر الروتين" maxlength="40">
+      <button type="button" class="x" data-srtup="${i}" aria-label="لفوق" ${i?"":"disabled"}>↑</button><button type="button" class="x" data-srtdel="${i}" aria-label="شيله">×</button></div>`).join("");
+  const now=Date.now();
+  const tr=trash.slice().sort((a,b)=>b.deletedAt-a.deletedAt);
+  focusView();const pomoBox=pomoSetHtml.replace(/<details class="fset" id="fset-box"[^>]*>/,'<details class="fset" id="fset-box" open>').replace("<summary>الإعدادات</summary>","<summary>التايمر</summary>");
+  return `<section class="section"><h2>الأقسام وأنواعها</h2><div class="sets">${areasHtml}
+      <div class="note">الأنواع اللي بتخبّيها مش بتظهر في التسكات الجديدة، والتسكات القديمة بتفضل زي ما هي.</div></div></section>
+    <section class="section"><h2>الروتين الثابت</h2><div class="sets">${rtHtml}<div class="srow"><button type="button" class="mini" data-srtadd="1">+ عنصر</button></div></div></section>
+    <div class="sets" style="padding-top:0"><div class="srow"><button class="btn primary" type="button" data-ssave="1">احفظ الأقسام والروتين</button><button class="btn" type="button" data-sreset="1">إلغاء</button></div></div>
+    <section class="section">${pomoBox}</section>
+    <section class="section"><h2>الكالندر</h2><div class="sets"><div class="srow"><span style="flex:1">${calCfg?"متربط ✓ الميتنجات بتتضاف لوحدها.":"مش متربط. الميتنجات بتفتح الكالندر متكتبة."}</span><button class="mini" type="button" data-calsetup="1">${calCfg?"عدّل":"اربط"}</button></div></div></section>
+    <section class="section"><h2>المحذوفات<small>${tr.length}</small></h2>
+      <div class="note" style="padding:0 16px 8px">أي حاجة بتمسحها بتفضل هنا أسبوع، وبعدها بتتمسح لوحدها.</div>
+      ${tr.length?tr.map(x=>{const left=Math.max(1,Math.ceil((x.deletedAt+WEEK-now)/864e5));return `<div class="trash-row"><span class="tt">${esc(clip(x.title||"",70))}<small>${x.kind==="note"?"نوت":"تاسك"}${(x.subs||[]).length?` ومعاه ${x.subs.length} فرعي`:""} · هيتمسح خالص بعد ${left===1?"يوم":left+" أيام"}</small></span><button class="mini" type="button" data-restore="${x.id}">رجّعه</button></div>`}).join(""):`<div class="empty">مفيش حاجة ممسوحة.</div>`}</section>
+    <section class="section"><h2>GitHub</h2><div class="sets"><div class="srow"><span style="flex:1">الداتا بتتحفظ في ريبو daftar-malek-data.</span><button class="mini" type="button" data-ghset="1">الاتصال بـ GitHub</button></div></div></section>`;
+}
+document.addEventListener("input",e=>{if(!setDraft)return;const t=e.target;
+  if(t.dataset.sname)setDraft.names[t.dataset.sname]=t.value;
+  if(t.dataset.skind){const [k,i]=t.dataset.skind.split("|");setDraft.kinds[k][+i][1]=t.value}
+  if(t.dataset.srt)setDraft.routine[+t.dataset.srt].t=t.value});
+document.addEventListener("click",async e=>{
+  if(e.target.closest("#open-settings")){view=view==="settings"?"today":"settings";setDraft=null;setTabs();render();scrollTo(0,0);return}
+  if(view!=="settings")return;const b=e.target.closest("button");if(!b)return;const d=setDraft;
+  if(b.dataset.skadd){const k=b.dataset.skadd;d.kinds[k].push(["k"+sid().slice(-5),"نوع جديد"]);render();const ins=document.querySelectorAll(`[data-skind^="${k}|"]`);const l=ins[ins.length-1];if(l){l.focus();l.select()}return}
+  if(b.dataset.shide){const v=b.dataset.shide;d.hidden=d.hidden.includes(v)?d.hidden.filter(x=>x!==v):[...d.hidden,v];render();return}
+  if(b.dataset.srtadd){d.routine.push({id:"r"+sid().slice(-6),t:""});render();const ins=document.querySelectorAll("[data-srt]");ins[ins.length-1].focus();return}
+  if(b.dataset.srtup){const i=+b.dataset.srtup;if(i>0){[d.routine[i-1],d.routine[i]]=[d.routine[i],d.routine[i-1]];render()}return}
+  if(b.dataset.srtdel){d.routine.splice(+b.dataset.srtdel,1);render();return}
+  if(b.dataset.sreset){setDraft=null;render();toast("اترجعت زي ما كانت");return}
+  if(b.dataset.ssave){
+    const names={};AREAS.forEach(([k])=>{names[k]=(d.names[k]||"").trim()||BASE_AREAS.find(x=>x[0]===k)[1]});
+    const kinds={};Object.keys(d.kinds).forEach(k=>{kinds[k]=d.kinds[k].map(([kk,nn])=>[kk,(nn||"").trim()]).filter(x=>x[1])});
+    const items=d.routine.map(i=>({id:i.id,t:(i.t||"").trim()})).filter(i=>i.t);
+    if(!items.length){toast("الروتين لازم يبقى فيه عنصر واحد على الأقل");return}
+    try{await db.collection("config").doc("areas").set({names,kinds,hidden:d.hidden});await db.collection("config").doc("routine").set({items});
+      areaCfg={names,kinds,hidden:d.hidden};applyAreaCfg();routineItems=items;setDraft=null;renderChips&&renderChips();render();toast("اتحفظ ✓")}catch(_){toast("ماتحفظش، جرّب تاني")}return}
+  if(b.dataset.restore){restoreTrash(b.dataset.restore);return}
+  if(b.dataset.ghset){const g=$("#gh-settings");if(g)g.click();return}
+});
+document.addEventListener("click",e=>{
+  if(e.target.closest("[data-paper]")){$("#paper-btn").click();return}
+  if(e.target.closest("[data-qamore]")){const t=$("#qa-title").value.trim(),a=$("#qa-area").value;openEditor(null);$("#f-title").value=t;$("#f-area").value=a;fillKinds("");if(a==="work")$("#f-client").value=findClient(t);clientInfo();$("#f-today").checked=true;$("#qa-title").value="";qaState={t:"",d:"",tm:""};$("#qa-meet").hidden=true;return}
+});
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -485,7 +928,7 @@ function renderInner(){
   const todayList=tasks.filter(inToday);
   const doneToday=tasks.filter(t=>t.status==="done"&&t.doneDate===today());
   $("#counts").innerHTML=`<span><b>${todayList.length}</b>فاضل النهارده</span><span><b>${doneToday.length}</b>خلص النهارده</span>`;
-  $("#chips").hidden=view!=="all";const tb=document.querySelector(".wrap>.bar");if(tb)tb.hidden=ghScreen||!(view==="today"||view==="all");
+  $("#chips").hidden=view!=="all";const tb=document.querySelector(".wrap>.bar");if(tb)tb.hidden=ghScreen||view!=="all";
   const v=$("#view");
   if(!loaded||ghScreen){return}
   if(view==="today"){
@@ -493,17 +936,17 @@ function renderInner(){
     const mine=sortTasks(todayList.filter(t=>PERSONAL.has(t.area)));
     const doneShown=doneToday.filter(isTop);
     const rd=(routineDays[today()]||{}).done||{};
-    const pendingReview=notes.filter(n=>n.review&&!n.resolved).length;
-    v.innerHTML=`<section class="section"><h2>الروتين الثابت<small>${routineItems.filter(i=>rd[i.id]).length}/${routineItems.length}</small></h2>
+    const pendingReview=notes.filter(n=>n.by==="claude"&&!n.resolved).length;
+    v.innerHTML=meetStrip()+(pendingReview?`<button type="button" class="hint hint-top" data-goto="notes">كلود كاتبلك ${pendingReview===1?"نوت":pendingReview+" نوتس"} في النوتس ←</button>`:"")+`<section class="section"><h2>الروتين الثابت<small>${routineItems.filter(i=>rd[i.id]).length}/${routineItems.length}</small></h2>
       <div class="routine">${routineItems.map(i=>`<button type="button" class="rt ${rd[i.id]?"on":""}" data-rt="${i.id}" aria-pressed="${!!rd[i.id]}"><span class="box">${rd[i.id]?"✓":""}</span><span>${esc(i.t)}</span></button>`).join("")}</div>
-      ${pendingReview?`<button type="button" class="hint" data-goto="notes">عندك ${pendingReview} حاجة محتاجة مراجعة في النوتس</button>`:""}</section>`+
-      quickAdd()+section("تسكات اليوم",plan,{timer:true},todayList.length?"مفيش غير الشخصي النهارده.":"مفيش تسكات لليوم. اكتب تاسك فوق، أو افتح «التسكات» ودوس «+ النهارده» على اللي هتعمله.")+
+      </section>`+
+      section(`<span class="h-t">تسكات اليوم<button type="button" class="h-link" data-paper="1">انسخ للورقة</button></span>`,plan,{timer:true},todayList.length?"مفيش غير الشخصي النهارده.":"مفيش تسكات لليوم. اكتب فوق واضغط Enter، أو افتح «التسكات» ودوس «+ النهارده».").replace("</h2>","</h2>"+quickAdd().replace('<section class="section">','').replace(/<\/section>$/,""))+
       (mine.length?section("شخصي",mine,{timer:true},""):"")+
       (doneShown.length?section("خلص النهارده",doneShown,{showPlan:false},""):"");
   }else if(view==="all"){
     const open=tasks.filter(isOpen);
     const areas=areaFilter?[areaFilter]:AREAS.map(a=>a[0]);
-    v.innerHTML=areas.map(a=>section(AREA[a],sortTasks(open.filter(t=>t.area===a&&isTop(t))),{noArea:true},"مفيش تسكات مفتوحة هنا.")).join("");
+    v.innerHTML=areas.map(a=>{const l=sortTasks(open.filter(t=>t.area===a&&isTop(t)));return areaFilter?section(AREA[a],l,{noArea:true},"مفيش تسكات مفتوحة هنا."):foldSection(a,AREA[a],l,{noArea:true},"مفيش تسكات مفتوحة هنا.")}).join("");
   }else if(view==="personal"){
     const open=tasks.filter(t=>isOpen(t)&&isTop(t));
     const since=ymd(new Date(Date.now()-6*864e5));
@@ -517,16 +960,18 @@ function renderInner(){
       `<form class="proj" id="new-proj"><div class="proj-head"><h3>مشروع جديد</h3></div>
         <div class="inline"><input id="np-name" placeholder="اسم المشروع" maxlength="60" required><select id="np-area" class="btn" style="padding:7px 8px">${areaOpts}</select></div>
         <div class="inline"><input id="np-goal" placeholder="الهدف في سطر (اختياري)" maxlength="160"><button class="btn primary" type="submit">أضف</button></div></form>`;
-  }else if(view==="notes"){
+  }else if(view==="notes"){v.innerHTML=notesView();
+  }else if(view==="notes-old"){
     const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
     const rev=notes.filter(n=>n.review&&!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
     const rest=notes.filter(n=>!(n.review&&!n.resolved)).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,80);
     const card=n=>`<article class="note-card ${n.review&&!n.resolved?"review":""}">
-      <div class="note-top"><span class="by ${n.by==="claude"?"claude":""}">${n.by==="claude"?"كلود":"أنا"}</span><span>${esc(fmtShort(n.d||""))}</span>${n.area?`<span>${esc(AREA[n.area]||"")}</span>`:""}${n.review&&!n.resolved?`<span style="color:var(--yellow)">محتاج مراجعة</span>`:""}${n.resolved?`<span>اتراجع</span>`:""}</div>
+      <div class="note-top"><span class="by ${n.by==="claude"?"claude":""}">${n.by==="claude"?"كلود":"أنا"}</span><span>${esc(fmtShort(n.d||""))}</span>${n.area?`<span>${esc(AREA[n.area]||"")}</span>`:""}${n.review&&!n.resolved?`<span style="color:var(--yellow)">محتاج مراجعة</span>`:""}${n.resolved?`<span>${n.taskId?"اتحولت لتاسك":"اتراجع"}</span>`:""}</div>
       <div class="note-text">${esc(n.text)}</div>
       <div class="note-actions">
         ${n.review&&!n.resolved?`<button class="mini" type="button" data-nresolve="${n.id}">راجعته</button><button class="mini" type="button" data-ntoday="${n.id}">مراجعة النهارده</button>`:""}
         ${!n.review&&!n.resolved?`<button class="mini" type="button" data-nflag="${n.id}">محتاج مراجعة</button>`:""}
+        ${!n.resolved?`<button class="mini" type="button" data-ntask="${n.id}">حوّلها لتاسك</button>`:""}
         <button class="mini danger" type="button" data-ndel="${n.id}">امسح</button></div></article>`;
     v.innerHTML=`<form class="compose" id="note-form">
         <textarea id="n-text" maxlength="2000" placeholder="مثلاً: ذاكرت الـ subnetting بس مش فاهمه كويس، هراجعه تاني" aria-label="نوت جديدة"></textarea>
@@ -537,8 +982,8 @@ function renderInner(){
       (rev.length?`<section class="section"><h2>محتاج مراجعة<small>${rev.length}</small></h2>${rev.map(card).join("")}</section>`:"")+
       `<section class="section"><h2>كل النوتس<small>${rest.length}</small></h2>${rest.length?rest.map(card).join(""):`<div class="empty">لسه مفيش نوتس.</div>`}</section>`;
   }else if(view==="clients"){
-    const names=clientNames().sort((a,b)=>clientStats(b).open.length-clientStats(a).open.length||a.localeCompare(b,"ar"));
-    v.innerHTML=(names.length?names.map(clientCard).join(""):`<div class="empty" style="padding-top:16px">لسه مفيش عملاء. أي تاسك في «شغل» عليه اسم عميل هيظهر هنا، أو ضيف عميل من تحت.</div>`)+
+    const names=clientNames();
+    v.innerHTML=(names.length?clientsList(names):`<div class="empty" style="padding-top:16px">لسه مفيش عملاء. أي تاسك في «شغل» عليه اسم عميل هيظهر هنا، أو ضيف عميل من تحت.</div>`)+
       `<form class="proj" id="new-client"><div class="proj-head"><h3>عميل جديد</h3></div>
         <div class="cl-form"><label style="flex:1 1 160px">الاسم<input id="nc-name" maxlength="60" required></label>
         <div class="chips" role="group" aria-label="نوع الشغل"><button type="button" class="chip" data-ncmode="single" aria-pressed="true">بالقطعة</button><button type="button" class="chip" data-ncmode="package" aria-pressed="false">باكدج</button></div>
@@ -546,6 +991,10 @@ function renderInner(){
         <button class="btn primary" type="submit">أضف</button></div></form>`;
   }else if(view==="focus"){
     v.innerHTML=focusView();
+  }else if(view==="settings"){
+    v.innerHTML=settingsView();
+  }else if(view==="calendar"){
+    v.innerHTML=calSetupView("");
   }else if(view==="week"){
     const since=ymd(new Date(Date.now()-6*864e5));
     const days=[...Array(7)].map((_,i)=>ymd(new Date(Date.now()-i*864e5)));
@@ -556,9 +1005,9 @@ function renderInner(){
     const max=Math.max(1,...counts.map(c=>c[2]));
     v.innerHTML=(trendMode==="focus"?focusChart(true):trendChart(true))+`<section class="section"><h2>اللي خلص آخر 7 أيام<small>${done.length} تاسك</small></h2>
       <div class="week">${counts.map(([k,n,c,by])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${n}</span><div class="track"><div class="fill" style="width:${c/max*100}%"></div></div><span>${c}</span></div>${c?`<div class="wby">${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([x,y])=>`<span>${esc(x)} ${y}</span>`).join("")}</div>`:""}`).join("")}</div>
-      <div class="empty">الأقسام اللي بالأحمر ماخدتش أي وقت الأسبوع ده.</div></section>
+      ${counts.some(c=>!c[2])?`<div class="empty">${counts.filter(c=>!c[2]).map(c=>c[1]).join(" و")}: مخلصش فيه ولا تاسك آخر 7 أيام.</div>`:""}</section>
       <section class="section"><h2>الروتين الثابت<small>آخر 7 أيام</small></h2>
-      <div class="week">${routineRows.map(([n,c])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${esc(n)}</span><div class="track"><div class="fill" style="width:${c/7*100}%;background:var(--done)"></div></div><span>${c}/7</span></div>`).join("")}</div></section>`+section("آخر اللي خلص",tasks.filter(t=>t.status==="done"&&isTop(t)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0)).slice(0,15),{showPlan:false},"لسه مفيش حاجة خلصت.");
+      <div class="week">${routineRows.map(([n,c])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${esc(n)}</span><div class="track"><div class="fill" style="width:${c/7*100}%;background:var(--done)"></div></div><span>${c}/7</span></div>`).join("")}</div></section>`+doneDayView();
   }else{
     const done=tasks.filter(t=>t.status==="done"&&isTop(t)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0)).slice(0,60);
     v.innerHTML=section("آخر اللي خلص",done,{showPlan:false},"لسه مفيش حاجة خلصت.");
@@ -632,15 +1081,23 @@ function quickAdd(){
   let a="work";try{a=localStorage.getItem("qaArea")||"work"}catch(_){}
   if(!AREA[a])a="work";
   return `<section class="section"><form class="quick" id="quick-add" style="padding-top:14px">
-    <input id="qa-title" maxlength="160" placeholder="تاسك جديد للنهارده… اكتب واضغط Enter" aria-label="تاسك جديد للنهارده">
+    <input id="qa-title" maxlength="160" placeholder="تاسك جديد، أو «ميتنج مع … بكره الساعة 5»" aria-label="تاسك جديد للنهارده" value="${esc(qaState.t)}">
     <select id="qa-area" aria-label="القسم">${AREAS.map(([k,n])=>`<option value="${k}" ${k===a?"selected":""}>${n}</option>`).join("")}</select>
-    <button class="btn primary" type="submit">أضف</button></form></section>`;
+    <button class="btn primary" type="submit">أضف</button><button class="btn" type="button" data-qamore="1" title="افتح التاسك بكل التفاصيل">تفاصيل</button></form><div class="qa-meet" id="qa-meet" ${parseMeet(qaState.t)?"":"hidden"}>${meetPreview()}</div></section>`;
 }
 document.addEventListener("change",e=>{if(e.target.id==="qa-area")try{localStorage.setItem("qaArea",e.target.value)}catch(_){}});
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="quick-add")return;e.preventDefault();
   const inp=$("#qa-title");const title=inp.value.trim();if(!title)return;inp.value="";
-  await write("t"+sid(),{title,area:$("#qa-area").value,kind:"",pri:"blue",client:"",stage:"",due:"",notes:"",status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null},true);
+  let mt=parseMeet(title);
+  if(mt&&mt.partial){const tv=qaState.tm||($("#qm-time")&&$("#qm-time").value),dv=qaState.d||($("#qm-date")&&$("#qm-date").value);
+    if(!tv){inp.value=title;toast("اختار ساعة الميتنج الأول، أو اكتبها: «بكره الساعة 5»");const q=$("#qm-time");if(q)q.focus();return}
+    mt={title:mt.title,date:dv||mt.date,time:tv}}
+  qaState={t:"",d:"",tm:""};$("#qa-meet").hidden=true;$("#qa-meet").innerHTML="";
+  if(mt){if(!calCfg)window.open(calUrl(mt),"_blank","noopener");askNotify();
+    const id="m"+sid();await meetCol.doc(id).set({title:mt.title,date:mt.date,time:mt.time,calId:"",createdAt:Date.now()});
+    if(calCfg)calSave(id);else toast(`الميتنج اتسجل: ${dayName(mt.date)} ${fmtTime(mt.time)}`);return}
+  await write("t"+sid(),{title,area:$("#qa-area").value,kind:"",pri:"blue",client:$("#qa-area").value==="work"?findClient(title):"",stage:"",due:"",notes:"",status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null},true);
   render();toast("اتضاف لخطة النهارده");
 });
 /* ===== pomodoro =====
@@ -660,7 +1117,10 @@ try{pomo=JSON.parse(localStorage.getItem("pomo")||"null");cycle=+(localStorage.g
 const savePomo=()=>{try{pomo?localStorage.setItem("pomo",JSON.stringify(pomo)):localStorage.removeItem("pomo");localStorage.setItem("pomoCycle",String(cycle))}catch(_){}};
 const leftMs=()=>pomo.start+pomo.len+(pomo.pausedMs||0)-(pomo.pausedAt||Date.now());
 const doneMin=()=>Math.max(0,Math.floor(((pomo.pausedAt||Date.now())-pomo.start-(pomo.pausedMs||0))/60000));
-const clock=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`};
+const clock=ms=>{const s=Math.max(0,Math.ceil(ms/1000));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=String(s%60).padStart(2,"0");return h?`${h}:${String(m).padStart(2,"0")}:${x}`:`${m}:${x}`};
+const overClock=()=>"+"+clock(Math.floor(-leftMs()/1000)*1000);
+const IC={play:`<svg class="ic" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5v9l8-4.5z" fill="currentColor"/></svg>`,
+  pause:`<svg class="ic" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1.5" width="3" height="9" rx="1" fill="currentColor"/><rect x="7" y="1.5" width="3" height="9" rx="1" fill="currentColor"/></svg>`};
 function beep(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
   [0,.35,.7].forEach(s=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=880;g.gain.value=.2*(pset.vol??80)/100;o.connect(g);g.connect(audioCtx.destination);o.start(audioCtx.currentTime+s);o.stop(audioCtx.currentTime+s+.18)})}catch(_){}}
 async function addSession(taskId,min,date){
@@ -673,7 +1133,8 @@ async function addSession(taskId,min,date){
 function unlockAudio(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume&&audioCtx.resume()}catch(_){}}
 async function startPomo(id){
   const t=tasks.find(x=>x.id===id);if(!t)return;unlockAudio();
-  if(pomo&&pomo.kind==="focus"&&!pomo.doneAt)await stopPomo(true);
+  if(pomo&&pomo.kind==="focus"&&!pomo.doneAt){if(pomo.id===id){pomo.pausedAt?resumePomo():pausePomo();return}
+    const m=doneMin(),old=pomo.title;await stopPomo(true);if(m>=1)toast(`اتسجل ${fmtMin(m)} على «${clip(old,30)}»`)}
   pomo={id,title:t.title,kind:"focus",start:Date.now(),len:pset.focus*60000};savePomo();paintPomo();render();
 }
 async function stopPomo(silent){
@@ -693,6 +1154,7 @@ async function switchTask(id){
 }
 async function skipPomo(){
   if(!pomo){return}
+  if(pomo.kind==="focus"&&!pomo.doneAt&&doneMin()<1){pomo=null;savePomo();paintPomo();render();toast("أقل من دقيقة، متسجلش");return}
   if(pomo.kind==="focus"&&!pomo.doneAt){const m=doneMin();if(m>=1)await addSession(pomo.id,m);pomo.doneAt=Date.now();pomo.len=Math.max(1,m)*60000;cycle++;savePomo();
     toast(m>=1?`اتسجل ${fmtMin(m)}`:"اتخطت من غير تسجيل");if(pset.auto){startBreak();return}paintPomo();render();return}
   if(pomo.doneAt){startBreak();return}
@@ -718,12 +1180,14 @@ function paintPomo(){
     if(pomo.doneAt)inn.innerHTML=`<div class="pomo-what">خلصت جلسة على «${esc(pomo.title)}»<small>اتسجلت على التاسك</small></div>
       <button class="btn primary" type="button" data-pomo-break="1">استراحة</button><button class="btn" type="button" data-pomo-again="1">جلسة كمان</button><button class="btn" type="button" data-pomo-close="1">قفل</button>`;
     else{const brk=pomo.kind==="break";
-      inn.innerHTML=`<div class="pomo-t" id="pomo-t"></div><div class="pomo-what">${brk?(pomo.long?"استراحة طويلة":"استراحة"):esc(pomo.title)}<small>${pomo.pausedAt?"واقف مؤقتاً":(brk?"قوم اتحرك شوية":"تركيز")}</small></div>
-        ${brk?`<button class="btn" type="button" data-pomo-skip="1">خلّص الاستراحة</button>`:`<button class="btn" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?"▶ كمّل":"⏸ وقفة"}</button><button class="btn" type="button" data-pomo-skip="1">✓ خلّصت</button>`}`}
+      inn.innerHTML=`<div class="pomo-t" id="pomo-t"></div><div class="pomo-what">${brk?(pomo.long?"استراحة طويلة":"استراحة"):esc(pomo.title)}<small>${pomo.pausedAt?"واقف مؤقتاً":(brk?"قوم اتحرك شوية":pomo.over?`التايمر خلص عند ${fmtMin(pomo.endMin)}`:"تركيز")}</small></div>
+        ${brk?`<button class="btn" type="button" data-pomo-skip="1">خلّص الاستراحة</button>`:pomo.over&&!pomo.keep?`<button class="btn primary" type="button" data-pomo-stopat="1">✓ اقف عند ${fmtMin(pomo.endMin)}</button><button class="btn" type="button" data-pomo-keep="1">${IC.play}كمّل</button>`:`<button class="btn" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?IC.play+"كمّل":IC.pause+"وقفة"}</button><button class="btn" type="button" data-pomo-skip="1">✓ خلّصت</button>`}`}
   }
   if(pomo.doneAt)return;
-  const tick=()=>{if(!pomo||pomo.doneAt)return;const left=leftMs();if(left<=0&&!pomo.pausedAt){finishPomo();return}
-    const txt=clock(left);const a=$("#pomo-t");if(a)a.textContent=txt;const b=$("#f-big");if(b)b.textContent=txt;};
+  const tick=()=>{if(!pomo||pomo.doneAt)return;const left=leftMs();let txt;
+    if(pomo.kind==="focus"){if(left<=0&&!pomo.over&&!pomo.pausedAt){pomo.over=true;pomo.endMin=Math.round(pomo.len/60000);savePomo();beep();paintPomo();render();return}
+      txt=pomo.over?overClock():clock(left)}
+    else{if(left<=0&&!pomo.pausedAt){finishPomo();return}txt=clock(left)}const a=$("#pomo-t");if(a)a.textContent=txt;const b=$("#f-big");if(b)b.textContent=txt;};
   tick();if(!pomo.pausedAt)pomoTick=setInterval(tick,1000);
 }
 function taskOptions(sel){
@@ -740,10 +1204,10 @@ function focusView(){
     if(!fsTask||!tasks.some(t=>t.id===fsTask&&t.status!=="done"&&inToday(t)))fsTask=first?first.id:"";
     const len=fmode==="focus"?pset.focus:fmode==="long"?pset.long:pset.brk;
     card=`<div class="chips" role="group" aria-label="الوضع">${[["focus","تركيز"],["short","استراحة قصيرة"],["long","استراحة طويلة"]].map(([k,n])=>`<button type="button" class="chip" data-fmode="${k}" aria-pressed="${fmode===k}">${n}</button>`).join("")}</div>
-      <div class="fbig">${clock(len*60000)}</div><div class="fstatus">${fmode==="focus"?"حان وقت التركيز!":"وقت الاستراحة"}</div>
-      ${fmode!=="focus"?`<div class="frow-btns"><button class="btn primary" type="button" data-fbreak="1">▶ ابدأ الاستراحة</button></div>`
+      <div class="fbig">${clock(len*60000)}</div><div class="fstatus">${fmode==="focus"?"اختار التاسك ودوس ابدأ":"وقت الاستراحة"}</div>
+      ${fmode!=="focus"?`<div class="frow-btns"><button class="btn primary" type="button" data-fbreak="1">${IC.play}ابدأ الاستراحة</button></div>`
       :fsTask?`<div class="fpick"><select id="fs-task" aria-label="التاسك">${taskOptions(fsTask)}</select></div>
-      <div class="frow-btns"><button class="btn primary" type="button" data-fstart="1">▶ ابدأ ${pset.focus} دقيقة</button></div>`
+      <div class="frow-btns"><button class="btn primary" type="button" data-fstart="1">${IC.play}ابدأ ${pset.focus} دقيقة</button></div>`
       :`<div class="fsub">مفيش تسكات لليوم. ضيفها من «النهارده» الأول.</div>`}`;
   }else if(pomo.doneAt){
     const long=cycle%pset.every===0;
@@ -752,21 +1216,28 @@ function focusView(){
       <div class="flinks"><button type="button" data-pomo-close="1">قفل</button></div>`;
   }else if(pomo.kind==="break"){
     card=`<div class="fbig" id="f-big">${clock(leftMs())}</div><div class="fsub">${pomo.long?"استراحة طويلة":"استراحة"}، قوم اتحرك شوية</div>
-      <div class="frow-btns"><button class="btn primary" type="button" data-pomo-skip="1">⏭ خلّص الاستراحة</button></div>
+      <div class="frow-btns"><button class="btn primary" type="button" data-pomo-skip="1">خلّص الاستراحة</button></div>
       <div class="flinks"><button type="button" data-pomo-plus="1">+5 دقايق</button></div>`;
   }else{
-    card=`<div class="fbig ${pomo.pausedAt?"paused":""}" id="f-big">${clock(leftMs())}</div>
+    card=pomo.over&&!pomo.keep?`<div class="fbig over ${pomo.pausedAt?"paused":""}" id="f-big">${overClock()}</div>
       <div class="fstatus">${esc(pomo.title)}</div>
-      <div class="fsub">${pomo.pausedAt?"واقف مؤقتاً · ":""}اشتغلت ${fmtMin(doneMin())} لحد دلوقتي</div>
+      <div class="fsub">التايمر خلص عند ${fmtMin(pomo.endMin)}، وبيعد الزيادة. تقف عند وقت التايمر ولا تكمّل؟</div>
       <div class="frow-btns">
-        <button class="btn primary" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?"▶ كمّل":"⏸ وقفة"}</button>
-        <button class="btn" type="button" data-pomo-skip="1">✓ خلّصت</button></div>
-      <div class="flinks"><button type="button" data-pomo-plus="1">+5 دقايق</button><button type="button" data-pomo-cancel="1">ألغي من غير تسجيل</button></div>`;
+        <button class="btn primary" type="button" data-pomo-stopat="1">✓ اقف عند ${fmtMin(pomo.endMin)}</button>
+        <button class="btn" type="button" data-pomo-keep="1">${IC.play}كمّل</button></div>
+      <div class="flinks"><button type="button" data-pomo-cancel="1">ألغي من غير تسجيل</button></div>`
+     :`<div class="fbig ${pomo.over?"over":""} ${pomo.pausedAt?"paused":""}" id="f-big">${pomo.over?overClock():clock(leftMs())}</div>
+      <div class="fstatus">${esc(pomo.title)}</div>
+      <div class="fsub">${pomo.pausedAt?"واقف مؤقتاً · ":""}${pomo.over?`التايمر خلص عند ${fmtMin(pomo.endMin)} · `:""}اشتغلت ${fmtMin(doneMin())} لحد دلوقتي</div>
+      <div class="frow-btns">
+        <button class="btn primary" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?IC.play+"كمّل":IC.pause+"وقفة"}</button>
+        <button class="btn" type="button" data-pomo-skip="1">✓ خلّصت${pomo.over?` (${fmtMin(Math.max(1,doneMin()))})`:""}</button></div>
+      <div class="flinks">${pomo.over?"":`<button type="button" data-pomo-plus="1">+5 دقايق</button>`}<button type="button" data-pomo-cancel="1">ألغي من غير تسجيل</button></div>`;
   }
   const inCycle=cycle%pset.every;
   const dots=`<div class="fcycle" title="بعد ${pset.every} جلسات بتيجي استراحة طويلة">${[...Array(pset.every)].map((_,i)=>`<i class="${i<(pomo&&pomo.doneAt&&inCycle===0&&cycle?pset.every:inCycle)?"on":""}"></i>`).join("")}<span>جلسات قبل الاستراحة الطويلة</span></div>`;
-  const settings=`<details class="fset" id="fset-box"${fsetOpen?" open":""}><summary>الإعدادات</summary><div class="grid">
-    <label>التركيز (دقيقة)<input id="ps-focus" type="number" min="5" max="180" value="${pset.focus}"></label>
+  const settings=pomoSetHtml=`<details class="fset" id="fset-box"${fsetOpen?" open":""}><summary>الإعدادات</summary><div class="grid">
+    <label>التركيز (دقيقة)<input id="ps-focus" type="number" min="1" max="600" value="${pset.focus}"></label>
     <label>الاستراحة<input id="ps-brk" type="number" min="1" max="60" value="${pset.brk}"></label>
     <label>الاستراحة الطويلة<input id="ps-long" type="number" min="1" max="90" value="${pset.long}"></label>
     <label>كل كام جلسة<input id="ps-every" type="number" min="2" max="12" value="${pset.every}"></label>
@@ -783,9 +1254,9 @@ function focusView(){
     ${maTask?`<form class="fman" id="f-manual"><span class="note">سجّل وقت بإيدك:</span><select id="ma-task" aria-label="التاسك">${taskOptions(maTask)}</select>
       <input id="ma-min" type="number" min="1" max="600" placeholder="دقايق" aria-label="الدقايق"><button class="btn" type="submit">سجّل</button></form>`:""}</section>`;
   const mode=pomo?(pomo.kind==="break"?"break":"focus"):(fmode==="focus"?"focus":"break");
-  return `<section class="section"><h2>البومودورو</h2><div class="fcard m-${mode}">${card}${dots}<div class="fkeys"><kbd>Space</kbd> ابدأ أو وقفة · <kbd>S</kbd> خلّصت</div></div>${settings}</section>`+todayBox+focusChart(false)+focusBySection();
+  return `<section class="section"><h2>البومودورو</h2><div class="fcard m-${mode}">${card}${dots}<div class="fkeys"><kbd>Space</kbd> ابدأ أو وقفة · <kbd>S</kbd> خلّصت</div></div><div class="flinks" style="padding:0 16px 12px"><button type="button" data-goto-set="1">إعدادات التايمر</button></div></section>`+todayBox+focusChart(false)+focusBySection();
 }
-let fsetOpen=false;
+let fsetOpen=false, pomoSetHtml="";
 function focusChart(toggle){
   const days=[...Array(14)].map((_,i)=>daysAgo(13-i));
   const per=days.map(d=>sumMin(sessions.filter(s=>s.date===d)));
@@ -814,6 +1285,9 @@ document.addEventListener("click",async e=>{
   if(e.target.closest("[data-fbreak]")){startIdleBreak();return}
   if(e.target.closest("[data-ptest]")){unlockAudio();beep();return}
   if(e.target.closest("[data-pomo-cancel]")){cancelPomo();return}
+  if(e.target.closest("[data-pomo-keep]")){if(pomo){pomo.keep=true;savePomo();paintPomo();render()}return}
+  if(e.target.closest("[data-pomo-stopat]")){if(pomo&&pomo.over){const m=pomo.endMin;await addSession(pomo.id,m);pomo.doneAt=Date.now();pomo.len=m*60000;cycle++;savePomo();toast(`اتسجل ${fmtMin(m)}`);
+    if(pset.auto){startBreak();return}paintPomo();render()}return}
   if(e.target.closest("[data-pomo-pause]")){pausePomo();return}
   if(e.target.closest("[data-pomo-resume]")){resumePomo();return}
   if(e.target.closest("[data-pomo-plus]")){plusFive();return}
@@ -834,7 +1308,9 @@ document.addEventListener("change",async e=>{
     try{await sesCol.doc(e.target.dataset.sesmin).update({min:m});toast("اتعدلت")}catch(_){toast("ماتعدلتش")}return}
   if(id&&id.startsWith("ps-")){
     const n=(k,d,lo,hi)=>{const v=parseInt($("#ps-"+k).value,10);return v>=lo&&v<=hi?v:d};
-    const next={focus:n("focus",pset.focus,5,180),brk:n("brk",pset.brk,1,60),long:n("long",pset.long,1,90),every:n("every",pset.every,2,12),auto:$("#ps-auto").checked,autoFocus:$("#ps-autoFocus").checked,vol:n("vol",pset.vol??80,0,100)};
+    const bad=["focus","brk","long","every"].find(k=>{const v=parseInt($("#ps-"+k).value,10);return !(v>=+$("#ps-"+k).min&&v<=+$("#ps-"+k).max)});
+    if(bad&&e.type==="change"){toast("الرقم ده مش مقبول، بين "+$("#ps-"+bad).min+" و"+$("#ps-"+bad).max)}
+    const next={focus:n("focus",pset.focus,1,600),brk:n("brk",pset.brk,1,60),long:n("long",pset.long,1,90),every:n("every",pset.every,2,12),auto:$("#ps-auto").checked,autoFocus:$("#ps-autoFocus").checked,vol:n("vol",pset.vol??80,0,100)};
     pset=next;fsetOpen=true;
     if(setCol){try{await setCol.doc("pomo").set(next)}catch(_){toast("الإعدادات ماتحفظتش")}}
     render();return}
@@ -849,6 +1325,7 @@ document.addEventListener("keydown",e=>{
   if(e.code==="KeyS"){e.preventDefault();skipPomo()}
 });
 document.addEventListener("toggle",e=>{if(e.target.id==="fset-box")fsetOpen=e.target.open},true);
+document.addEventListener("click",e=>{if(e.target.closest("[data-goto-set]")){view="settings";setDraft=null;setTabs();render();setTimeout(()=>{const f=document.getElementById("fset-box");if(f)f.scrollIntoView({block:"start"})},0)}});
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="f-manual")return;e.preventDefault();
   const m=parseInt($("#ma-min").value,10);if(!maTask||!(m>=1)){toast("اختار التاسك واكتب الدقايق");return}
@@ -921,19 +1398,21 @@ async function writeNote(id,data,isNew){
 document.addEventListener("click",async e=>{
   const r=e.target.closest("[data-rt]");if(r){toggleRoutine(r.dataset.rt);return}
   const g=e.target.closest("[data-goto]");if(g){view=g.dataset.goto;setTabs();render();return}
-  const nr=e.target.closest("[data-nresolve]");if(nr){await writeNote(nr.dataset.nresolve,{resolved:true,resolvedAt:Date.now()});toast("تمام");return}
+  const nr=e.target.closest("[data-nresolve]");if(nr){await writeNote(nr.dataset.nresolve,{resolved:true,resolvedAt:Date.now()});toast("اتنقلت لـ«خلصت»");return}
   const nf=e.target.closest("[data-nflag]");if(nf){await writeNote(nf.dataset.nflag,{review:true});return}
   const nt=e.target.closest("[data-ntoday]");if(nt){const n=notes.find(x=>x.id===nt.dataset.ntoday);if(!n)return;
+    const had=tasks.find(t=>t.noteId===n.id&&t.status!=="done");if(had){await write(had.id,{planDate:today()});toast("اتحطت في خطة النهارده");return}
     const short=n.text.length>70?n.text.slice(0,70)+"…":n.text;
     await write("t"+sid(),{title:"مراجعة: "+short,area:n.area||"personal",pri:"blue",client:"",stage:"",due:"",notes:n.text,status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null,noteId:n.id},true);
     toast("اتحطت في خطة النهارده");return}
   const nd=e.target.closest("[data-ndel]");if(nd){if(nd.dataset.sure!=="1"){nd.dataset.sure="1";nd.textContent="متأكد؟";setTimeout(()=>{nd.dataset.sure="";nd.textContent="امسح"},2500);return}
-    try{await notesCol.doc(nd.dataset.ndel).delete()}catch(_){toast("ماتمسحش")}}
+    await toTrash("note",notes.find(x=>x.id===nd.dataset.ndel),[]);
+    try{await notesCol.doc(nd.dataset.ndel).delete();toast("اتمسحت، تقدر ترجّعها من الإعدادات لمدة أسبوع")}catch(_){toast("ماتمسحش")}}
 });
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="note-form")return;e.preventDefault();
   const text=$("#n-text").value.trim();if(!text)return;
-  const data={text,area:$("#n-area").value,review:$("#n-review").checked,resolved:false,by:"malek",d:today(),createdAt:Date.now()};
+  const data={text,area:$("#n-area").value,review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()};
   $("#n-text").value="";$("#n-text").blur();
   await writeNote("n"+sid(),data,true);toast("النوت اتحفظت");
 });
@@ -1016,6 +1495,8 @@ document.addEventListener("click",e=>{
   const pl=e.target.closest("[data-plan]");
   if(pl){const t=tasks.find(x=>x.id===pl.dataset.plan);if(!t)return;
     const on=t.planDate&&t.planDate<=today()||t.planDate>today();
+    if(on&&t.noteId&&t.noteKind!=="task"&&t.status!=="done"&&notes.some(n=>n.id===t.noteId)){
+      (async()=>{try{await col.doc(t.id).delete();tasks=tasks.filter(x=>x.id!==t.id);await writeNote(t.noteId,{resolved:false,resolvedAt:null});render();toast("رجعت للنوتس")}catch(_){toast("ماتأجلتش، جرّب تاني")}})();return}
     write(t.id,{planDate:on?"":today()});toast(on?"اتشال من النهارده":"اتحط في خطة النهارده");return}
   const ed=e.target.closest("[data-edit]");
   if(ed){openEditor(tasks.find(x=>x.id===ed.dataset.edit));return}
@@ -1026,28 +1507,35 @@ document.addEventListener("click",e=>{
 });
 
 function paintPri(){$("#f-pri").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===edPri))}
-function fillKinds(keep){const a=$("#f-area").value;const ks=KINDS[a]||[];
+function fillKinds(keep){const a=$("#f-area").value;const ks=(KINDS[a]||[]).filter(k=>!KHIDE.has(a+":"+k[0])||k[0]===keep);
   $("#f-kind").innerHTML=`<option value="">—</option>`+ks.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
   $("#f-kind").value=ks.some(k=>k[0]===keep)?keep:"";$("#kind-field").hidden=!ks.length;syncStage()}
 function syncStage(){const a=$("#f-area").value,k=$("#f-kind").value;
   $("#stage-wrap").style.visibility=a==="work"?"visible":"hidden";
   $("#client-lab").textContent=a==="work"?"العميل":"المشروع أو تفاصيل (اختياري)";clientInfo()}
-function clientInfo(){const el=$("#client-info");const n=cname($("#f-client").value);
+function courseBox(){const w=$("#course-wrap");if(w)w.hidden=$("#f-area").value!=="study"||!!parentOf(editing)}
+function clientInfo(){courseBox();const el=$("#client-info");const n=cname($("#f-client").value);
+  {const s0=n&&$("#f-area").value==="work"?clientStats(n):null;$("#nopkg-wrap").hidden=!(s0&&s0.pkg)}
   if($("#f-area").value!=="work"||!n){el.textContent="";return}
   const s=clientStats(n);if(!s.c&&!s.open.length&&!s.done.length){el.textContent="عميل جديد، هيتضاف لصفحة العملاء.";return}
   el.textContent=[`${s.open.length} مفتوح`,`${s.done.length} خلص`,s.pkg?`الباكدج ${s.pkg.done} من ${s.pkg.target}`:""].filter(Boolean).join(" · ")}
+let fromNote=null;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-ntask]");if(!b)return;const n=notes.find(x=>x.id===b.dataset.ntask);if(!n)return;
+  openEditor(null);fromNote=n.id;$("#ed-title").textContent="تاسك من نوت";
+  $("#f-title").value=n.text.replace(/\s+/g," ").slice(0,160);if(n.area&&AREA[n.area])$("#f-area").value=n.area;fillKinds("");
+  $("#f-notes").value=n.text.length>160?n.text:"";$("#notes-wrap").open=n.text.length>160;$("#f-today").checked=false;});
 function openEditor(t){
-  editing=t||null;
+  editing=t||null;fromNote=null;
   const par=parentOf(t);
   $("#ed-title").textContent=par?"تعديل تاسك فرعي":(t?"تعديل التاسك":"تاسك جديد");
-  $("#ed-parent").hidden=!par;$("#ed-parent").textContent=par?`↳ تحت: ${par.title}`:"";
+  $("#ed-parent").hidden=!par;$("#ed-parent").textContent=par?`↳ تحت: ${par.title}`:"";$("#ed-par-row").hidden=!par;
   $("#area-row").hidden=!!par;$("#client-field").hidden=!!par;
   const subs=t&&!par?subsOf(t.id):[];
   $("#ed-subs").hidden=!t||!!par;
   $("#ed-subs").textContent=subs.length?`التسكات الفرعية (${subs.filter(s=>s.status==="done").length}/${subs.length})`:"+ تسكات فرعية";
   $("#f-title").value=t?.title||"";
   $("#f-area").value=t?.area||(view==="personal"?"personal":(areaFilter||"work"));
-  $("#f-client").value=t?.client||"";
+  $("#f-client").value=t?.client||"";$("#f-course").checked=!!t?.course;$("#f-nopkg").checked=!!t?.noPkg;
   $("#f-stage").value=t?.stage||"";
   $("#f-due").value=t?.due||"";
   $("#f-notes").value=t?.notes||"";$("#notes-wrap").open=!!(t&&t.notes);
@@ -1065,7 +1553,7 @@ function closeEditor(){$("#overlay").hidden=true;editing=null}
 $("#f-area").innerHTML=AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
 $("#f-pri").innerHTML=PRI.map(([k,n])=>`<button type="button" class="p-${k}" data-p="${k}" aria-pressed="false"><i class="dot"></i>${n}</button>`).join("");
 $("#f-pri").addEventListener("click",e=>{const b=e.target.closest("[data-p]");if(b){edPri=b.dataset.p;paintPri()}});
-$("#f-area").addEventListener("change",()=>fillKinds(""));$("#f-kind").addEventListener("change",syncStage);$("#f-client").addEventListener("input",clientInfo);
+$("#f-area").addEventListener("change",()=>{fillKinds("");courseBox()});$("#f-kind").addEventListener("change",syncStage);$("#f-client").addEventListener("input",clientInfo);
 $("#add-btn").addEventListener("click",()=>openEditor(null));
 $("#ed-cancel").addEventListener("click",closeEditor);
 $("#ed-pomo").addEventListener("click",()=>{const id=editing&&editing.id;closeEditor();if(id)startPomo(id)});
@@ -1077,8 +1565,8 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeEditor();close
 $("#ed-delete").addEventListener("click",async()=>{
   const b=$("#ed-delete");const subs=subsOf(editing.id);
   if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent=subs.length?`متأكد؟ هيتمسح معاه ${subs.length} فرعي`:"متأكد؟ اضغط تاني";setTimeout(()=>{b.dataset.sure="";b.textContent="امسح"},3000);return}
-  const id=editing.id, pid=editing.parentId;closeEditor();
-  try{for(const s of subs)await col.doc(s.id).delete();await col.doc(id).delete();tasks=tasks.filter(x=>x.id!==id&&x.parentId!==id);toast("اتمسح");if(pid)await syncParent(pid);else render()}catch(e){toast("ماتمسحش، جرّب تاني")}
+  const id=editing.id, pid=editing.parentId, gone=tasks.find(x=>x.id===id);closeEditor();await toTrash("task",gone,subs);
+  try{for(const s of subs)await col.doc(s.id).delete();await col.doc(id).delete();tasks=tasks.filter(x=>x.id!==id&&x.parentId!==id);toast("اتمسح، تقدر ترجّعه من الإعدادات لمدة أسبوع");if(pid)await syncParent(pid);else render()}catch(e){toast("ماتمسحش، جرّب تاني")}
 });
 $("#editor").addEventListener("submit",async e=>{
   e.preventDefault();
@@ -1086,7 +1574,7 @@ $("#editor").addEventListener("submit",async e=>{
   const par=parentOf(editing);
   const area=par?par.area:$("#f-area").value;
   const wantToday=$("#f-today").checked;
-  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",due:$("#f-due").value,notes:$("#f-notes").value.trim()};
+  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,...(!$("#course-wrap").hidden&&$("#f-course").checked?{course:(editing&&editing.course)||{chapters:[]}}:(editing&&editing.course&&!courseCount(editing.course)[1]?{course:null}:{})),due:$("#f-due").value,notes:$("#f-notes").value.trim()};
   let doneOn=$("#f-done").value, needResolve=false;
   if(doneOn&&editing&&!par&&editing.status!=="done"&&subsOf(editing.id).some(s=>s.status!=="done")){doneOn="";needResolve=true}
   if(doneOn){const was=editing&&editing.status==="done"&&editing.doneDate===doneOn;
@@ -1103,7 +1591,8 @@ $("#editor").addEventListener("submit",async e=>{
   }else{
     Object.assign(data,doneOn?{planDate:"",createdAt:Date.now()}:{status:"open",planDate:wantToday?today():"",createdAt:Date.now(),doneAt:null,doneDate:null});
     const id="t"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-    closeEditor();await write(id,data,true);toast("اتضاف");
+    const nid=fromNote;if(nid){data.noteId=nid;data.noteKind="task"}
+    closeEditor();await write(id,data,true);if(nid)await writeNote(nid,{review:false,resolved:true,resolvedAt:Date.now(),taskId:id});toast("اتضاف");
   }
 });
 
@@ -1133,7 +1622,7 @@ async function writeClient(name,data){
 }
 document.addEventListener("click",async e=>{
   const pk=e.target.closest("[data-clpkg]");if(pk){clEdit=pk.dataset.clpkg;render();const el=$("#cl-target");el&&el.focus();return}
-  if(e.target.closest("[data-clcancel]")){clEdit=null;render();return}
+  if(e.target.closest("[data-clcancel]")){clEdit=null;clMode="";render();return}
   const dl=e.target.closest("[data-cldel]");if(dl){if(await writeClient(dl.dataset.cldel,{mode:"single",target:null,since:""})){clEdit=null;toast("بقى بالقطعة")}return}
   const nm=e.target.closest("[data-ncmode]");if(nm){$("#new-client").dataset.mode=nm.dataset.ncmode;$("#nc-target-wrap").hidden=nm.dataset.ncmode!=="package";
     document.querySelectorAll("[data-ncmode]").forEach(b=>b.setAttribute("aria-pressed",b===nm));if(nm.dataset.ncmode==="package")$("#nc-target").focus();return}
@@ -1164,7 +1653,8 @@ const b64enc=s=>{const b=new TextEncoder().encode(s);let bin="";for(let i=0;i<b.
 const b64dec=s=>new TextDecoder().decode(Uint8Array.from(atob(String(s).replace(/\s/g,"")),c=>c.charCodeAt(0)));
 const clone=o=>JSON.parse(JSON.stringify(o));
 var ghScreen=false;
-function setSync(state,text){const el=$("#sync");if(!el)return;el.hidden=false;el.className="sync"+(state?" "+state:"");$("#sync-t").textContent=text}
+function setSync(state,text){const el=$("#sync");if(!el)return;clearTimeout(setSync._t);el.hidden=false;el.className="sync"+(state?" "+state:"");$("#sync-t").textContent=text;
+  if(!state)setSync._t=setTimeout(()=>{el.hidden=true},1800)}
 class GitHubDB{
   constructor(cfg){this.cfg=cfg;this.files={};this.pending=ghLoad(GH_PENDING_KEY)||{};this.cache=ghLoad(GH_CACHE_KEY)||{};this.authBad=false;
     this.api=`https://api.github.com/repos/${cfg.repo}`;
@@ -1283,7 +1773,7 @@ document.addEventListener("submit",async e=>{
   ghSave(GH_CFG_KEY,cfg);location.reload();
 });
 document.addEventListener("click",e=>{
-  if(e.target.id==="gh-settings"){ghConnectView("");return}
+  if(e.target.id==="gh-settings"||(e.target.closest&&e.target.closest("#sync.err"))){ghConnectView("");return}
   if(e.target.id==="gh-back"){location.reload();return}
   if(e.target.id==="gh-forget"){if(e.target.dataset.sure!=="1"){e.target.dataset.sure="1";e.target.textContent="متأكد؟ اضغط تاني";return}
     ghSave(GH_CFG_KEY,null);ghSave(GH_CACHE_KEY,null);ghSave(GH_PENDING_KEY,null);location.reload()}
@@ -1298,13 +1788,20 @@ document.addEventListener("click",e=>{
   col=db.collection("tasks");
   col.onSnapshot(snap=>{
     tasks=snap.docs.map(d=>{const x=normArea({id:d.id,...d.data()});if(x.pri==="yellow")x.pri="blue";return x});const first=!loaded;loaded=true;render();if(first&&pomo)paintPomo();
-  },err=>{if(loaded)return;loaded=true;$("#view").innerHTML=`<div class="empty">مقدرتش أجيب التسكات. اتأكد إن النت شغال، أو افتح «الاتصال بـ GitHub» تحت.</div>`});
+  },err=>{if(loaded)return;loaded=true;$("#view").innerHTML=`<div class="empty">مقدرتش أجيب التسكات. اتأكد إن النت شغال، أو دوس على الترس فوق ← «الاتصال بـ GitHub».</div>`});
   const keepTyping=()=>{const a=document.activeElement;return a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA")&&(view==="projects"||view==="notes")};
   routCol=db.collection("routine");
   routCol.where("d",">=",ymd(new Date(Date.now()-13*864e5))).onSnapshot(snap=>{
     routineDays={};snap.docs.forEach(d=>{routineDays[d.id]=d.data()});render();
   },()=>{});
+  trashCol=db.collection("trash");const purged=new Set();
+  trashCol.onSnapshot(snap=>{trash=snap.docs.map(d=>{const x=d.data();return {...x,oid:x.id,id:d.id}});
+    trash.filter(x=>Date.now()-(x.deletedAt||0)>WEEK&&!purged.has(x.id)).forEach(x=>{purged.add(x.id);trashCol.doc(x.id).delete().catch(()=>{})});trash=trash.filter(x=>!purged.has(x.id));
+    if(view==="settings")render()},()=>{});
+  db.doc("config/areas").onSnapshot(d=>{areaCfg=d.exists?d.data():null;applyAreaCfg();if(view!=="settings"||!setDraft)render()},()=>{});
   db.doc("config/routine").onSnapshot(d=>{const items=d.exists&&d.data().items;if(Array.isArray(items)&&items.length){routineItems=items;render()}},()=>{});
+  meetCol=db.collection("meetings");
+  meetCol.onSnapshot(snap=>{meetings=snap.docs.map(d=>({id:d.id,...d.data()}));meetAlerts();if(view==="today"&&!meetEdit)render()},()=>{});
   notesCol=db.collection("notes");
   notesCol.onSnapshot(snap=>{notes=snap.docs.map(d=>{const x={id:d.id,...d.data()};const m=LEGACY[x.area];if(m)x.area=m[0];return x});if(keepTyping())pendingRender=true;else render()},()=>{});
   projCol=db.collection("projects");
@@ -1316,7 +1813,7 @@ document.addEventListener("click",e=>{
   sesCol=db.collection("focus");
   sesCol.onSnapshot(snap=>{sessions=snap.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
   setCol=db.collection("settings");
-  setCol.onSnapshot(snap=>{const d=snap.docs.find(x=>x.id==="pomo");if(d){pset={...pset,...d.data()};render();if(pomo)paintPomo()}},()=>{});
+  setCol.onSnapshot(snap=>{const cc=snap.docs.find(x=>x.id==="calendar");calCfg=cc&&cc.data().url?cc.data():null;const d=snap.docs.find(x=>x.id==="pomo");if(d){pset={...pset,...d.data()};render();if(pomo)paintPomo()}},()=>{});
   clientsCol=db.collection("clients");
   clientsCol.onSnapshot(snap=>{clients=snap.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
 })();
