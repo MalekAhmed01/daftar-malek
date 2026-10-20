@@ -261,6 +261,9 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+.tag.rep{color:var(--accent)}
+.rep-chips{flex-wrap:wrap;overflow:visible}
+.rep-chips .chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
 .wrap>header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
 .wrap>header>div:first-child{flex:1 1 auto;min-width:0}
 .wrap>header #sync{order:1}.wrap>header .gear{order:2}
@@ -443,6 +446,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
     <label class="note" id="course-wrap" hidden style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="f-course" style="width:auto"> ده كورس (فصول ودروس)</label>
     <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span><label class="note" id="nopkg-wrap" hidden style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-nopkg" style="width:auto"> مش محسوب من الباكدج (ميتنج، مراجعة…)</label></div>
     <div class="field"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
+    <div class="field" id="rep-field"><span class="lab">بيتكرر</span><div class="chips rep-chips" id="f-rep" role="group" aria-label="بيتكرر"></div></div>
     <div class="row2">
       <div class="field"><label for="f-due">الديدلاين</label><input id="f-due" type="date"></div>
       <label class="note" style="display:flex;gap:8px;align-items:center;align-self:end;min-height:42px"><input type="checkbox" id="f-today" style="width:auto"> حطه في خطة النهارده</label>
@@ -523,7 +527,10 @@ let expanded=new Set();try{expanded=new Set(JSON.parse(LS.getItem("expanded")||"
 const saveExpanded=()=>{try{LS.setItem("expanded",JSON.stringify([...expanded]))}catch(_){}};
 const sortTasks=a=>a.slice().sort((x,y)=>(PRI_RANK[x.pri]??9)-(PRI_RANK[y.pri]??9)||(x.due||"9999").localeCompare(y.due||"9999")||(x.createdAt||0)-(y.createdAt||0));
 const isOpen=t=>t.status!=="done";
-const inToday=t=>isOpen(t)&&t.planDate&&t.planDate<=today();
+const DOW=["الحد","الاتنين","التلات","الأربع","الخميس","الجمعة","السبت"];
+const repDue=t=>!!(t.repeat&&(t.repeat.days||[]).includes(new Date().getDay()));
+const inToday=t=>isOpen(t)&&(t.repeat?(t.lastDone!==today()&&t.skip!==today()&&(repDue(t)||(t.planDate&&t.planDate<=today()))):(t.planDate&&t.planDate<=today()));
+const repText=r=>{const d=(r&&r.days)||[];if(d.length===7)return "كل يوم";return "كل "+[6,0,1,2,3,4,5].filter(x=>d.includes(x)).map(x=>DOW[x]).join(" و")};
 
 function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=false}={}){
   const done=t.status==="done";
@@ -542,10 +549,12 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   if(kindName(t)&&!parent)meta.push(`<span class="tag">${esc(kindName(t))}</span>`);
   if(t.due)meta.push(`<span class="tag ${overdue?"late":""}">ديدلاين ${esc(fmtDay(t.due))}</span>`);
   if(done&&t.doneDate&&t.doneDate!==today()&&!noDone)meta.push(`<span class="tag">خلص ${esc(fmtDay(t.doneDate))}</span>`);
-  if(late)meta.push(`<span class="tag late">متأجل من ${esc(fmtDay(t.planDate))}</span>`);
+  if(late&&!t.repeat)meta.push(`<span class="tag late">متأجل من ${esc(fmtDay(t.planDate))}</span>`);
+  if(t.repeat&&!done)meta.push(`<span class="tag rep">↻ ${esc(repText(t.repeat))}</span>`);
   const fm=focusOf(t);if(fm)meta.push(`<span class="tag" title="وقت التركيز">⏱ ${fmtMin(fm)}</span>`);
   const planned=t.planDate&&t.planDate>=today();
-  const planBtn=(!done&&showPlan)?`<button class="mini ${planned||late?"on":""}" data-plan="${t.id}" type="button">${planned||late?(view==="today"?"أجّل":"✓ النهارده"):"+ النهارده"}</button>`:"";
+  const onT=t.repeat?inToday(t):(planned||late);
+  const planBtn=(!done&&showPlan)?`<button class="mini ${onT?"on":""}" data-plan="${t.id}" type="button">${onT?(view==="today"?"أجّل":"✓ النهارده"):"+ النهارده"}</button>`:"";
   return `<div class="task p-${t.pri||"black"} ${done?"is-done":""}">
     <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}">${done?"✓":""}</button>
     <div class="body" data-edit="${t.id}"><div class="title">${esc(t.title)}</div>${t.closeNote?`<div class="closed-note">اتقفل بنوت: ${esc(t.closeNote)}</div>`:""}<div class="meta">${meta.join("")}</div></div>
@@ -1446,6 +1455,12 @@ async function syncParent(pid){
   render();
 }
 async function toggleTask(t){
+  if(t.repeat&&t.status!=="done"){const {id,repeat,lastDone,skip,...rest}=t;const cid="t"+sid();
+    await write(cid,{...rest,planDate:"",status:"done",doneDate:today(),doneAt:Date.now(),repeatOf:t.id},true);
+    await write(t.id,{lastDone:today(),planDate:""});toast(`خلص النهارده، وراجع ${repText(t.repeat)}`);render();return}
+  if(t.repeatOf&&t.status==="done"){const tpl=tasks.find(x=>x.id===t.repeatOf);
+    try{await col.doc(t.id).delete();tasks=tasks.filter(x=>x.id!==t.id)}catch(_){toast("مارجعش");return}
+    if(tpl&&tpl.lastDone===t.doneDate)await write(tpl.id,{lastDone:""});render();return}
   const done=t.status!=="done";
   if(done&&!t.parentId&&subsOf(t.id).some(s=>s.status!=="done")){openResolve(t.id);return}
   await applyDone(t,done,done?{}:{closeNote:""});
@@ -1496,6 +1511,7 @@ document.addEventListener("click",e=>{
   if(ex){const id=ex.dataset.expand;expanded.has(id)?expanded.delete(id):expanded.add(id);saveExpanded();render();return}
   const pl=e.target.closest("[data-plan]");
   if(pl){const t=tasks.find(x=>x.id===pl.dataset.plan);if(!t)return;
+    if(t.repeat){if(inToday(t)){write(t.id,{skip:today(),planDate:""});toast("اتشال النهارده بس، وراجع في يومه")}else{write(t.id,{skip:"",planDate:today()});toast("اتحط في خطة النهارده")}return}
     const on=t.planDate&&t.planDate<=today()||t.planDate>today();
     if(on&&t.noteId&&t.noteKind!=="task"&&t.status!=="done"&&notes.some(n=>n.id===t.noteId)){
       (async()=>{try{await col.doc(t.id).delete();tasks=tasks.filter(x=>x.id!==t.id);await writeNote(t.noteId,{resolved:false,resolvedAt:null});render();toast("رجعت للنوتس")}catch(_){toast("ماتأجلتش، جرّب تاني")}})();return}
@@ -1526,6 +1542,13 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-ntask]");i
   openEditor(null);fromNote=n.id;$("#ed-title").textContent="تاسك من نوت";
   $("#f-title").value=n.text.replace(/\s+/g," ").slice(0,160);if(n.area&&AREA[n.area])$("#f-area").value=n.area;fillKinds("");
   $("#f-notes").value=n.text.length>160?n.text:"";$("#notes-wrap").open=n.text.length>160;$("#f-today").checked=false;});
+let edRep=[];
+function paintRep(){const all=edRep.length===7;
+  $("#f-rep").innerHTML=`<button type="button" class="chip" data-rp="none" aria-pressed="${!edRep.length}">لأ</button><button type="button" class="chip" data-rp="all" aria-pressed="${all}">كل يوم</button>`+
+    [6,0,1,2,3,4,5].map(d=>`<button type="button" class="chip" data-rp="${d}" aria-pressed="${!all&&edRep.includes(d)}">${DOW[d]}</button>`).join("")}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-rp]");if(!b)return;const v=b.dataset.rp;
+  if(v==="none")edRep=[];else if(v==="all")edRep=edRep.length===7?[]:[0,1,2,3,4,5,6];else{const d=+v;if(edRep.length===7)edRep=[d];else edRep=edRep.includes(d)?edRep.filter(x=>x!==d):[...edRep,d]}
+  paintRep()});
 function openEditor(t){
   editing=t||null;fromNote=null;
   const par=parentOf(t);
@@ -1543,7 +1566,8 @@ function openEditor(t){
   $("#f-notes").value=t?.notes||"";$("#notes-wrap").open=!!(t&&t.notes);
   $("#f-done").value=t?.status==="done"?(t.doneDate||""):"";
   $("#f-today").checked=t?!!(t.planDate&&t.planDate<=today()):view==="today";
-  edPri=t?.pri||"blue";paintPri();fillKinds(t?.kind||"");
+  edPri=t?.pri||"blue";paintPri();edRep=t&&t.repeat?[...(t.repeat.days||[])]:[];paintRep();
+  $("#rep-field").hidden=!!(t&&(t.parentId||subsOf(t.id).length||t.status==="done"||t.repeatOf));fillKinds(t?.kind||"");
   $("#ed-pomo").hidden=!t||t.status==="done";
   $("#ed-delete").hidden=!t;$("#ed-delete").dataset.sure="";$("#ed-delete").textContent="امسح";
   const names=clientNames();
@@ -1576,7 +1600,7 @@ $("#editor").addEventListener("submit",async e=>{
   const par=parentOf(editing);
   const area=par?par.area:$("#f-area").value;
   const wantToday=$("#f-today").checked;
-  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,...(!$("#course-wrap").hidden&&$("#f-course").checked?{course:(editing&&editing.course)||{chapters:[]}}:(editing&&editing.course&&!courseCount(editing.course)[1]?{course:null}:{})),due:$("#f-due").value,notes:$("#f-notes").value.trim()};
+  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,...($("#rep-field").hidden?{}:edRep.length?{repeat:{days:edRep.slice().sort()}}:(editing&&editing.repeat?{repeat:null}:{})),...(!$("#course-wrap").hidden&&$("#f-course").checked?{course:(editing&&editing.course)||{chapters:[]}}:(editing&&editing.course&&!courseCount(editing.course)[1]?{course:null}:{})),due:$("#f-due").value,notes:$("#f-notes").value.trim()};
   let doneOn=$("#f-done").value, needResolve=false;
   if(doneOn&&editing&&!par&&editing.status!=="done"&&subsOf(editing.id).some(s=>s.status!=="done")){doneOn="";needResolve=true}
   if(doneOn){const was=editing&&editing.status==="done"&&editing.doneDate===doneOn;
