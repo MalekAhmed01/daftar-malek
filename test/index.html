@@ -1139,7 +1139,7 @@ document.addEventListener("submit",async e=>{
   if(!key){box.outerHTML=aiSetupHtml("الصق المفتاح الأول.");return}
   const c={prov:base.prov||"gemini",key,model:sel?sel.value:base.model,models:base.models||[]};
   try{if(!c.models.length||c.key!==base.key){c.models=await aiModels(c);c.model=aiPickModel(c.models)}}
-  catch(err){(document.getElementById("ai-form")||box).outerHTML=aiSetupHtml(err.message==="key"?"المفتاح ده مش شغال. اتأكد إنك نسخته كامل.":"مقدرتش أوصل للخدمة. جرّب تاني.");return}
+  catch(err){(document.getElementById("ai-form")||box).outerHTML=aiSetupHtml((err.message==="key"?"جوجل رفضت المفتاح. لو لسه عامله استنى دقيقة وجرّب تاني. ":"مقدرتش أوصل للخدمة. ")+"التفاصيل: "+(err.detail||err.message));return}
   if(!c.models.length){box.outerHTML=aiSetupHtml("ملقتش موديلات مجانية على الحساب ده.");return}
   const old=aiCfg;aiCfg=c;let okModel="";
   for(const m of [c.model,...c.models.filter(x=>x!==c.model&&/flash/i.test(x)).sort((a,b)=>aiRank(a)-aiRank(b)).slice(0,3)]){
