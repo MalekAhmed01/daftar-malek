@@ -694,7 +694,7 @@ function calUrl(t){const d=t.date.replace(/-/g,""),[h,m]=t.time.split(":").map(N
 let meetings=[], meetCol=null, meetEdit=null;
 const meetAt=m=>{const [y,mo,d]=m.date.split("-").map(Number),[h,mi]=m.time.split(":").map(Number);return new Date(y,mo-1,d,h,mi).getTime()};
 const upcoming=()=>meetings.filter(m=>m.date&&m.time&&meetAt(m)+3600e3>Date.now()).sort((a,b)=>meetAt(a)-meetAt(b));
-function inWords(ms){const m=Math.round(ms/60000);if(m<=0)return "دلوقتي";if(m<60)return `بعد ${m} دقيقة`;const h=Math.round(m/60);if(h<24)return `بعد ${h===1?"ساعة":h===2?"ساعتين":h+" ساعات"}`;const d=Math.round(h/24);return `بعد ${d===1?"يوم":d===2?"يومين":d+" أيام"}`}
+function inWords(ms){const m=Math.round(ms/60000);if(m<=0)return "دلوقتي";if(m<60)return `بعد ${m} دقيقة`;const h=Math.round(m/60);if(h<24)return `بعد ${h===1?"ساعة":h===2?"ساعتين":h<=10?h+" ساعات":h+" ساعة"}`;const d=Math.round(h/24);return `بعد ${d===1?"يوم":d===2?"يومين":d<=10?d+" أيام":d+" يوم"}`}
 function meetStrip(){const up=upcoming().filter(m=>m.date<=ymd(new Date(Date.now()+6*864e5)));if(!up.length)return "";
   return `<section class="section meets"><h2>الميتنجات<small>${up.length}</small></h2>${up.map(m=>{const at=meetAt(m),now=Date.now(),live=at<=now;
     if(meetEdit===m.id)return `<form class="inline meet-ed" data-meetsave="${m.id}"><input id="me-title" value="${esc(m.title)}" maxlength="120" aria-label="اسم الميتنج"><input id="me-date" type="date" value="${m.date}" aria-label="اليوم"><input id="me-time" type="time" value="${m.time}" aria-label="الساعة"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" data-meetcancel="1">إلغاء</button></form>`;
