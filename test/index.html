@@ -263,6 +263,12 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .tag.meet{color:var(--accent);background:var(--accent-soft)}
 a.tag.cal{color:var(--accent);text-decoration:none;border:1px solid var(--accent-soft)}
 a.tag.cal:hover{background:var(--accent-soft)}
+.dnav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 16px 10px}
+.dnav button{all:unset;cursor:pointer;width:30px;height:30px;display:grid;place-items:center;border-radius:8px;border:1px solid var(--line);color:var(--ink);font-size:16px}
+.dnav button:hover{background:var(--paper)}.dnav button:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.dnav button[disabled]{opacity:.35;cursor:default}
+.dnav .dlab{all:unset;cursor:pointer;font-weight:600;flex:1;text-align:center;padding:4px;border-radius:8px}
+.mini.night{font-size:12px}
 select{-webkit-appearance:none;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238a93a2' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")!important;
   background-repeat:no-repeat!important;background-position:left 12px center!important;background-size:12px 8px!important;padding-left:34px!important;padding-right:12px!important}
@@ -444,7 +450,7 @@ const sortTasks=a=>a.slice().sort((x,y)=>(PRI_RANK[x.pri]??9)-(PRI_RANK[y.pri]??
 const isOpen=t=>t.status!=="done";
 const inToday=t=>isOpen(t)&&t.planDate&&t.planDate<=today();
 
-function row(t,{showPlan=true,noArea=false,noClient=false,timer=false}={}){
+function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=false}={}){
   const done=t.status==="done";
   const late=!done&&t.planDate&&t.planDate<today();
   const overdue=!done&&t.due&&t.due<today();
@@ -459,7 +465,7 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false}={}){
   if(kindName(t)&&!parent)meta.push(`<span class="tag">${esc(kindName(t))}</span>`);
   if(t.due&&t.time)meta.push(`<span class="tag meet">ميتنج ${esc(fmtDay(t.due))}، ${fmtTime(t.time)}</span>`,done?"":`<a class="tag cal" href="${esc(calUrl(t))}" target="_blank" rel="noopener">+ الكالندر</a>`);
   else if(t.due)meta.push(`<span class="tag ${overdue?"late":""}">ديدلاين ${esc(fmtDay(t.due))}</span>`);
-  if(done&&t.doneDate&&t.doneDate!==today())meta.push(`<span class="tag">خلص ${esc(fmtDay(t.doneDate))}</span>`);
+  if(done&&t.doneDate&&t.doneDate!==today()&&!noDone)meta.push(`<span class="tag">خلص ${esc(fmtDay(t.doneDate))}</span>`);
   if(late)meta.push(`<span class="tag late">متأجل من ${esc(fmtDay(t.planDate))}</span>`);
   const fm=focusOf(t);if(fm)meta.push(`<span class="tag" title="وقت التركيز">⏱ ${fmtMin(fm)}</span>`);
   const planned=t.planDate&&t.planDate>=today();
@@ -467,7 +473,7 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false}={}){
   return `<div class="task p-${t.pri||"black"} ${done?"is-done":""}">
     <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}">${done?"✓":""}</button>
     <div class="body" data-edit="${t.id}"><div class="title">${esc(t.title)}</div>${t.closeNote?`<div class="closed-note">اتقفل بنوت: ${esc(t.closeNote)}</div>`:""}<div class="meta">${meta.join("")}</div></div>
-    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}">▶ ${pset.up!==false?"ابدأ":pset.focus}</button>${planBtn}</div>`:(planBtn||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}</div>`;
+    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}">▶ ${pset.up!==false?"ابدأ":pset.focus}</button>${planBtn}</div>`:(planBtn||nightFix(t)||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}</div>`;
 }
 function subRow(s){
   const done=s.status==="done";
@@ -494,12 +500,30 @@ function foldSection(key,title,list,opts,emptyMsg){
 document.addEventListener("click",e=>{const b=e.target.closest("[data-fold]");if(!b)return;const k=b.dataset.fold;
   folded.has(k)?folded.delete(k):folded.add(k);try{LS.setItem("folded",JSON.stringify([...folded]))}catch(_){}
   render();const nb=document.querySelector(`[data-fold="${k}"]`);if(nb)nb.focus()});
-function doneByDay(){
-  const days=[...Array(7)].map((_,i)=>ymd(new Date(Date.now()-i*864e5)));
-  const out=days.map((d,i)=>{const l=tasks.filter(t=>t.status==="done"&&isTop(t)&&t.doneDate===d).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
-    return l.length?foldSection("d:"+(i===0?"today":d),i===0?"خلص النهارده":i===1?"خلص امبارح":"خلص "+fmtDay(d),l,{showPlan:false},""):""}).join("");
-  return out||`<section class="section"><h2>اللي خلص كل يوم</h2><div class="empty">لسه مفيش حاجة خلصت آخر 7 أيام.</div></section>`;
+let doneDay="";
+const prevDay=d=>ymd(new Date(new Date(d+"T12:00").getTime()-864e5));
+const nextDay=d=>ymd(new Date(new Date(d+"T12:00").getTime()+864e5));
+const dayName=d=>d===today()?"النهارده":d===prevDay(today())?"امبارح":fmtDay(d);
+function doneDayView(){
+  const d=doneDay&&doneDay<today()?doneDay:today();
+  const l=tasks.filter(t=>t.status==="done"&&isTop(t)&&t.doneDate===d).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
+  return `<section class="section"><h2>اللي خلص<small>${l.length}</small></h2><div class="dnav">
+    <button type="button" data-dday="-1" aria-label="اليوم اللي قبله">›</button>
+    <button type="button" class="dlab" data-dday="0" title="ارجع للنهارده">${esc(dayName(d))}</button>
+    <button type="button" data-dday="1" aria-label="اليوم اللي بعده" ${d>=today()?"disabled":""}>‹</button></div>
+    ${l.length?l.map(t=>row(t,{showPlan:false,noDone:true})).join(""):`<div class="empty">مفيش حاجة خلصت ${d===today()?"النهارده لسه":"اليوم ده"}.</div>`}</section>`;
 }
+document.addEventListener("click",e=>{const b=e.target.closest("[data-dday]");if(!b||b.disabled)return;const k=+b.dataset.dday;
+  const d=doneDay&&doneDay<today()?doneDay:today();doneDay=k===0?"":k<0?prevDay(d):nextDay(d);if(doneDay>=today())doneDay="";
+  render();const nb=document.querySelector(`[data-dday="${k}"]`);if(nb&&!nb.disabled)nb.focus()});
+function nightFix(t){
+  if(t.status!=="done"||!t.doneAt||!t.doneDate)return "";const at=new Date(t.doneAt);if(at.getHours()>=6)return "";const real=ymd(at);
+  if(t.doneDate===real)return `<button class="mini night" type="button" data-nday="${t.id}" data-to="${prevDay(real)}" title="خلص الساعة ${at.getHours()||12} بالليل">احسبه على ${esc(dayName(prevDay(real)))}</button>`;
+  if(t.doneDate===prevDay(real))return `<button class="mini night on" type="button" data-nday="${t.id}" data-to="${real}" title="محسوب على اليوم اللي قبله">رجّعه لـ${esc(dayName(real))}</button>`;
+  return "";
+}
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-nday]");if(!b)return;
+  if(await write(b.dataset.nday,{doneDate:b.dataset.to}))toast("اتحسب على "+dayName(b.dataset.to))});
 const fmtTime=s=>{const [h,m]=String(s).split(":").map(Number);return `${h%12||12}:${String(m).padStart(2,"0")} ${h<12?"ص":"م"}`};
 function calUrl(t){const d=t.due.replace(/-/g,""),[h,m]=t.time.split(":").map(Number),e=new Date(2000,0,1,h,m+60);
   const st=`${d}T${String(h).padStart(2,"0")}${String(m).padStart(2,"0")}00`;
@@ -595,7 +619,7 @@ function renderInner(){
       <div class="week">${counts.map(([k,n,c,by])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${n}</span><div class="track"><div class="fill" style="width:${c/max*100}%"></div></div><span>${c}</span></div>${c?`<div class="wby">${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([x,y])=>`<span>${esc(x)} ${y}</span>`).join("")}</div>`:""}`).join("")}</div>
       <div class="empty">الأقسام اللي بالأحمر ماخدتش أي وقت الأسبوع ده.</div></section>
       <section class="section"><h2>الروتين الثابت<small>آخر 7 أيام</small></h2>
-      <div class="week">${routineRows.map(([n,c])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${esc(n)}</span><div class="track"><div class="fill" style="width:${c/7*100}%;background:var(--done)"></div></div><span>${c}/7</span></div>`).join("")}</div></section>`+doneByDay();
+      <div class="week">${routineRows.map(([n,c])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${esc(n)}</span><div class="track"><div class="fill" style="width:${c/7*100}%;background:var(--done)"></div></div><span>${c}/7</span></div>`).join("")}</div></section>`+doneDayView();
   }else{
     const done=tasks.filter(t=>t.status==="done"&&isTop(t)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0)).slice(0,60);
     v.innerHTML=section("آخر اللي خلص",done,{showPlan:false},"لسه مفيش حاجة خلصت.");
