@@ -467,7 +467,7 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false}={}){
   return `<div class="task p-${t.pri||"black"} ${done?"is-done":""}">
     <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}">${done?"✓":""}</button>
     <div class="body" data-edit="${t.id}"><div class="title">${esc(t.title)}</div>${t.closeNote?`<div class="closed-note">اتقفل بنوت: ${esc(t.closeNote)}</div>`:""}<div class="meta">${meta.join("")}</div></div>
-    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ بومودورو على ${esc(t.title)}">▶ ${pset.focus}</button>${planBtn}</div>`:(planBtn||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}</div>`;
+    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}">▶ ${pset.up!==false?"ابدأ":pset.focus}</button>${planBtn}</div>`:(planBtn||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}</div>`;
 }
 function subRow(s){
   const done=s.status==="done";
@@ -685,7 +685,7 @@ document.addEventListener("submit",async e=>{
    the running timer lives in this browser (localStorage), settings live in the db. */
 let sessions=[], sesCol=null, setCol=null, trendMode="tasks";
 try{trendMode=LS.getItem("trendMode")||"tasks"}catch(_){}
-let pset={focus:25,brk:5,long:15,every:4,auto:false,autoFocus:false,vol:80};
+let pset={focus:25,brk:5,long:15,every:4,auto:false,autoFocus:false,vol:80,up:true};
 let fmode="focus";
 const fmtMin=m=>m<60?`${m} د`:`${Math.floor(m/60)} س${m%60?` ${m%60} د`:""}`;
 const shortMin=m=>m<60?String(m):`${Math.floor(m/60)}:${String(m%60).padStart(2,"0")}`;
@@ -697,7 +697,8 @@ try{pomo=JSON.parse(LS.getItem("pomo")||"null");cycle=+(LS.getItem("pomoCycle")|
 const savePomo=()=>{try{pomo?LS.setItem("pomo",JSON.stringify(pomo)):LS.removeItem("pomo");LS.setItem("pomoCycle",String(cycle))}catch(_){}};
 const leftMs=()=>pomo.start+pomo.len+(pomo.pausedMs||0)-(pomo.pausedAt||Date.now());
 const doneMin=()=>Math.max(0,Math.floor(((pomo.pausedAt||Date.now())-pomo.start-(pomo.pausedMs||0))/60000));
-const clock=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`};
+const clock=ms=>{const s=Math.max(0,Math.ceil(ms/1000));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=String(s%60).padStart(2,"0");return h?`${h}:${String(m).padStart(2,"0")}:${x}`:`${m}:${x}`};
+const upMs=()=>(pomo.pausedAt||Date.now())-pomo.start-(pomo.pausedMs||0);
 function beep(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
   [0,.35,.7].forEach(s=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=880;g.gain.value=.2*(pset.vol??80)/100;o.connect(g);g.connect(audioCtx.destination);o.start(audioCtx.currentTime+s);o.stop(audioCtx.currentTime+s+.18)})}catch(_){}}
 async function addSession(taskId,min,date){
@@ -711,7 +712,7 @@ function unlockAudio(){try{audioCtx=audioCtx||new (window.AudioContext||window.w
 async function startPomo(id){
   const t=tasks.find(x=>x.id===id);if(!t)return;unlockAudio();
   if(pomo&&pomo.kind==="focus"&&!pomo.doneAt)await stopPomo(true);
-  pomo={id,title:t.title,kind:"focus",start:Date.now(),len:pset.focus*60000};savePomo();paintPomo();render();
+  pomo={id,title:t.title,kind:"focus",start:Date.now(),len:pset.focus*60000,up:pset.up!==false};savePomo();paintPomo();render();
 }
 async function stopPomo(silent){
   if(!pomo)return;
@@ -759,8 +760,9 @@ function paintPomo(){
         ${brk?`<button class="btn" type="button" data-pomo-skip="1">خلّص الاستراحة</button>`:`<button class="btn" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?"▶ كمّل":"⏸ وقفة"}</button><button class="btn" type="button" data-pomo-skip="1">✓ خلّصت</button>`}`}
   }
   if(pomo.doneAt)return;
-  const tick=()=>{if(!pomo||pomo.doneAt)return;const left=leftMs();if(left<=0&&!pomo.pausedAt){finishPomo();return}
-    const txt=clock(left);const a=$("#pomo-t");if(a)a.textContent=txt;const b=$("#f-big");if(b)b.textContent=txt;};
+  const tick=()=>{if(!pomo||pomo.doneAt)return;let txt;
+    if(pomo.up){const el=upMs();txt=clock(el);if(!pomo.rang&&!pomo.pausedAt&&el>=pset.focus*60000){pomo.rang=1;savePomo();beep();if(view==="focus")render()}}
+    else{const left=leftMs();if(left<=0&&!pomo.pausedAt){finishPomo();return}txt=clock(left)}const a=$("#pomo-t");if(a)a.textContent=txt;const b=$("#f-big");if(b)b.textContent=txt;};
   tick();if(!pomo.pausedAt)pomoTick=setInterval(tick,1000);
 }
 function taskOptions(sel){
@@ -777,10 +779,10 @@ function focusView(){
     if(!fsTask||!tasks.some(t=>t.id===fsTask&&t.status!=="done"&&inToday(t)))fsTask=first?first.id:"";
     const len=fmode==="focus"?pset.focus:fmode==="long"?pset.long:pset.brk;
     card=`<div class="chips" role="group" aria-label="الوضع">${[["focus","تركيز"],["short","استراحة قصيرة"],["long","استراحة طويلة"]].map(([k,n])=>`<button type="button" class="chip" data-fmode="${k}" aria-pressed="${fmode===k}">${n}</button>`).join("")}</div>
-      <div class="fbig">${clock(len*60000)}</div><div class="fstatus">${fmode==="focus"?"حان وقت التركيز!":"وقت الاستراحة"}</div>
+      <div class="fbig">${clock(fmode==="focus"&&pset.up!==false?0:len*60000)}</div><div class="fstatus">${fmode==="focus"?"حان وقت التركيز!":"وقت الاستراحة"}</div>
       ${fmode!=="focus"?`<div class="frow-btns"><button class="btn primary" type="button" data-fbreak="1">▶ ابدأ الاستراحة</button></div>`
       :fsTask?`<div class="fpick"><select id="fs-task" aria-label="التاسك">${taskOptions(fsTask)}</select></div>
-      <div class="frow-btns"><button class="btn primary" type="button" data-fstart="1">▶ ابدأ ${pset.focus} دقيقة</button></div>`
+      <div class="frow-btns"><button class="btn primary" type="button" data-fstart="1">▶ ابدأ${pset.up!==false?"":` ${pset.focus} دقيقة`}</button></div>`
       :`<div class="fsub">مفيش تسكات لليوم. ضيفها من «النهارده» الأول.</div>`}`;
   }else if(pomo.doneAt){
     const long=cycle%pset.every===0;
@@ -792,7 +794,14 @@ function focusView(){
       <div class="frow-btns"><button class="btn primary" type="button" data-pomo-skip="1">⏭ خلّص الاستراحة</button></div>
       <div class="flinks"><button type="button" data-pomo-plus="1">+5 دقايق</button></div>`;
   }else{
-    card=`<div class="fbig ${pomo.pausedAt?"paused":""}" id="f-big">${clock(leftMs())}</div>
+    card=pomo.up?`<div class="fbig ${pomo.pausedAt?"paused":""}" id="f-big">${clock(upMs())}</div>
+      <div class="fstatus">${esc(pomo.title)}</div>
+      <div class="fsub">${pomo.pausedAt?`واقف عند ${fmtMin(doneMin())}. تكمّل، ولا تسجّل الوقت ده وتقف؟`:pomo.rang?`عدّى ${fmtMin(pset.focus)}، خد استراحة لو محتاج`:"بيعد لحد ما توقف"}</div>
+      <div class="frow-btns">
+        <button class="btn primary" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?"▶ كمّل":"⏸ وقفة"}</button>
+        <button class="btn" type="button" data-pomo-skip="1">✓ ${pomo.pausedAt?"سجّل الوقت ده":"خلّصت"}</button></div>
+      <div class="flinks"><button type="button" data-pomo-cancel="1">ألغي من غير تسجيل</button></div>`
+     :`<div class="fbig ${pomo.pausedAt?"paused":""}" id="f-big">${clock(leftMs())}</div>
       <div class="fstatus">${esc(pomo.title)}</div>
       <div class="fsub">${pomo.pausedAt?"واقف مؤقتاً · ":""}اشتغلت ${fmtMin(doneMin())} لحد دلوقتي</div>
       <div class="frow-btns">
@@ -803,7 +812,8 @@ function focusView(){
   const inCycle=cycle%pset.every;
   const dots=`<div class="fcycle" title="بعد ${pset.every} جلسات بتيجي استراحة طويلة">${[...Array(pset.every)].map((_,i)=>`<i class="${i<(pomo&&pomo.doneAt&&inCycle===0&&cycle?pset.every:inCycle)?"on":""}"></i>`).join("")}<span>جلسات قبل الاستراحة الطويلة</span></div>`;
   const settings=`<details class="fset" id="fset-box"${fsetOpen?" open":""}><summary>الإعدادات</summary><div class="grid">
-    <label>التركيز (دقيقة)<input id="ps-focus" type="number" min="5" max="180" value="${pset.focus}"></label>
+    <label style="flex-direction:row;align-items:center;gap:6px;grid-column:1/-1"><input id="ps-up" type="checkbox" ${pset.up!==false?"checked":""} style="width:auto"> التايمر بيعد لفوق لحد ما أوقفه</label>
+    <label>${pset.up!==false?"نبّهني بعد (دقيقة)":"التركيز (دقيقة)"}<input id="ps-focus" type="number" min="5" max="180" value="${pset.focus}"></label>
     <label>الاستراحة<input id="ps-brk" type="number" min="1" max="60" value="${pset.brk}"></label>
     <label>الاستراحة الطويلة<input id="ps-long" type="number" min="1" max="90" value="${pset.long}"></label>
     <label>كل كام جلسة<input id="ps-every" type="number" min="2" max="12" value="${pset.every}"></label>
@@ -871,7 +881,7 @@ document.addEventListener("change",async e=>{
     try{await sesCol.doc(e.target.dataset.sesmin).update({min:m});toast("اتعدلت")}catch(_){toast("ماتعدلتش")}return}
   if(id&&id.startsWith("ps-")){
     const n=(k,d,lo,hi)=>{const v=parseInt($("#ps-"+k).value,10);return v>=lo&&v<=hi?v:d};
-    const next={focus:n("focus",pset.focus,5,180),brk:n("brk",pset.brk,1,60),long:n("long",pset.long,1,90),every:n("every",pset.every,2,12),auto:$("#ps-auto").checked,autoFocus:$("#ps-autoFocus").checked,vol:n("vol",pset.vol??80,0,100)};
+    const next={focus:n("focus",pset.focus,5,180),brk:n("brk",pset.brk,1,60),long:n("long",pset.long,1,90),every:n("every",pset.every,2,12),auto:$("#ps-auto").checked,autoFocus:$("#ps-autoFocus").checked,vol:n("vol",pset.vol??80,0,100),up:$("#ps-up").checked};
     pset=next;fsetOpen=true;
     if(setCol){try{await setCol.doc("pomo").set(next)}catch(_){toast("الإعدادات ماتحفظتش")}}
     render();return}
