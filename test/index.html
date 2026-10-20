@@ -260,6 +260,11 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+.course{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;margin-inline-start:32px;padding:6px 0 4px 0;padding-inline-start:12px;border-inline-start:2px solid var(--line)}
+.chap-h{display:flex;align-items:center;gap:8px;font-size:14px}.chap-h span{color:var(--muted);font-size:12.5px;flex:1}
+.lessons{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.les{all:unset;cursor:pointer;min-width:30px;height:30px;padding:0 4px;box-sizing:border-box;display:grid;place-items:center;border-radius:8px;border:1px solid var(--line);font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.les.on{background:var(--done);border-color:var(--done);color:#fff}.les:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 .ed-par{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .cl-tools{display:flex;gap:6px}
 .cl-line{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:11px 16px;border-top:1px solid var(--line);font-size:14px}
@@ -380,6 +385,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
       <div class="field"><label for="f-area">القسم</label><select id="f-area"></select></div>
       <div class="field" id="kind-field"><label for="f-kind">النوع</label><select id="f-kind"></select></div>
     </div>
+    <label class="note" id="course-wrap" hidden style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="f-course" style="width:auto"> ده كورس (فصول ودروس)</label>
     <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span><label class="note" id="nopkg-wrap" hidden style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-nopkg" style="width:auto"> مش محسوب من الباكدج (ميتنج، مراجعة…)</label></div>
     <div class="field"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
     <div class="row2">
@@ -474,6 +480,8 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   const subs=parent?[]:subsOf(t.id);
   const meta=[];
   if(parent)meta.push(`<span class="tag parent-of">↳ ${esc(clip(parent.title))}</span>`);
+  if(t.course){const [d,n]=courseCount(t.course);
+    meta.push(`<button type="button" class="subprog" data-expand="c:${t.id}" aria-expanded="${expanded.has("c:"+t.id)}"><span class="track"><span class="fill" style="width:${n?d/n*100:0}%"></span></span>${n?`${d}/${n} درس`:"ضيف الفصول"}</button>`)}
   if(subs.length){const d=subs.filter(s=>s.status==="done").length;
     meta.push(`<button type="button" class="subprog" data-expand="${t.id}" aria-expanded="${expanded.has(t.id)}"><span class="track"><span class="fill" style="width:${d/subs.length*100}%"></span></span>${d}/${subs.length}</button>`)}
   if(!noArea)meta.push(`<span class="tag">${esc(AREA[t.area]||"")}</span>`);
@@ -489,7 +497,7 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   return `<div class="task p-${t.pri||"black"} ${done?"is-done":""}">
     <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}">${done?"✓":""}</button>
     <div class="body" data-edit="${t.id}"><div class="title">${esc(t.title)}</div>${t.closeNote?`<div class="closed-note">اتقفل بنوت: ${esc(t.closeNote)}</div>`:""}<div class="meta">${meta.join("")}</div></div>
-    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}">${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?(pomo.pausedAt?"واقف":"● شغال"):IC.play+(pset.up!==false?"ابدأ":pset.focus)}</button>${planBtn}</div>`:(planBtn||nightFix(t)||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}</div>`;
+    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}">${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?(pomo.pausedAt?"واقف":"● شغال"):IC.play+(pset.up!==false?"ابدأ":pset.focus)}</button>${planBtn}</div>`:(planBtn||nightFix(t)||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}${t.course&&expanded.has("c:"+t.id)?courseBlock(t):""}</div>`;
 }
 function subRow(s){
   const done=s.status==="done";
@@ -729,6 +737,28 @@ document.addEventListener("submit",async e=>{const f=e.target;if(!f.dataset||!f.
 document.addEventListener("click",async e=>{if(e.target.id!=="ed-promote"||!editing)return;
   const s=editing,p=parentOf(s);if(!p)return;closeEditor();
   if(await write(s.id,{parentId:"",splitFrom:p.id,notes:[s.notes,`كان تاسك فرعي تحت: ${p.title}`].filter(Boolean).join("\n")})){toast("بقى تاسك أساسي");await syncParent(p.id);render()}});
+const courseCount=c=>{let d=0,n=0;(c&&c.chapters||[]).forEach(ch=>(ch.lessons||[]).forEach(l=>{n++;if(l.done)d++}));return [d,n]};
+function courseBlock(t){const chs=t.course.chapters||[];const [d,n]=courseCount(t.course);
+  return `<div class="course">${chs.map((ch,ci)=>{const ld=ch.lessons.filter(l=>l.done).length;
+    return `<div class="chap"><div class="chap-h"><b>${esc(ch.t)}</b><span>${ld}/${ch.lessons.length}</span>
+      <button class="mini" type="button" data-lesadd="${t.id}|${ch.id}">+ درس</button><button class="mini danger" type="button" data-chdel="${t.id}|${ch.id}">امسح</button></div>
+      <div class="lessons">${ch.lessons.map((l,li)=>`<button type="button" class="les ${l.done?"on":""}" data-les="${t.id}|${ch.id}|${l.id}" aria-pressed="${!!l.done}" title="${esc(l.t)}">${li+1}</button>`).join("")}</div></div>`}).join("")}
+    ${n&&d===n&&t.status!=="done"?`<div class="next"><b>كل الدروس خلصت.</b> <button class="mini" type="button" data-toggle="${t.id}">علّم الكورس خلص</button></div>`:""}
+    <form class="inline" data-chadd="${t.id}"><input id="chname-${t.id}" placeholder="اسم الفصل، مثلاً: الفصل ${chs.length+1}" maxlength="80" aria-label="اسم الفصل"><input id="chn-${t.id}" type="number" min="1" max="200" placeholder="كام درس" aria-label="عدد الدروس" style="width:6.5em;flex:0 0 auto"><button class="btn" type="submit">+ فصل</button></form></div>`}
+async function setCourse(id,fn){const t=tasks.find(x=>x.id===id);if(!t||!t.course)return;const c=JSON.parse(JSON.stringify(t.course));fn(c);await write(id,{course:c});render()}
+document.addEventListener("click",async e=>{
+  const l=e.target.closest("[data-les]");if(l){const [tid,cid,lid]=l.dataset.les.split("|");
+    await setCourse(tid,c=>{const x=c.chapters.find(h=>h.id===cid).lessons.find(y=>y.id===lid);x.done=!x.done;x.doneDate=x.done?today():null});return}
+  const a=e.target.closest("[data-lesadd]");if(a){const [tid,cid]=a.dataset.lesadd.split("|");
+    await setCourse(tid,c=>{const h=c.chapters.find(x=>x.id===cid);h.lessons.push({id:"l"+sid(),t:"درس "+(h.lessons.length+1),done:false,doneDate:null})});return}
+  const dl=e.target.closest("[data-chdel]");if(dl){if(dl.dataset.sure!=="1"){dl.dataset.sure="1";dl.textContent="متأكد؟";setTimeout(()=>{dl.dataset.sure="";dl.textContent="امسح"},2500);return}
+    const [tid,cid]=dl.dataset.chdel.split("|");await setCourse(tid,c=>{c.chapters=c.chapters.filter(x=>x.id!==cid)});return}
+});
+document.addEventListener("submit",async e=>{const f=e.target;if(!f.dataset||!f.dataset.chadd)return;e.preventDefault();const id=f.dataset.chadd;
+  const t=tasks.find(x=>x.id===id);const name=$("#chname-"+id).value.trim()||("الفصل "+(((t.course||{}).chapters||[]).length+1));const n=parseInt($("#chn-"+id).value,10);
+  if(!(n>=1&&n<=200)){toast("اكتب عدد الدروس");$("#chn-"+id).focus();return}
+  await setCourse(id,c=>{c.chapters.push({id:"ch"+sid(),t:name,lessons:[...Array(n)].map((_,i)=>({id:"l"+sid()+i,t:"درس "+(i+1),done:false,doneDate:null}))})});
+  const el=$("#chname-"+id);if(el)el.focus()});
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -1317,7 +1347,8 @@ function fillKinds(keep){const a=$("#f-area").value;const ks=KINDS[a]||[];
 function syncStage(){const a=$("#f-area").value,k=$("#f-kind").value;
   $("#stage-wrap").style.visibility=a==="work"?"visible":"hidden";
   $("#client-lab").textContent=a==="work"?"العميل":"المشروع أو تفاصيل (اختياري)";clientInfo()}
-function clientInfo(){const el=$("#client-info");const n=cname($("#f-client").value);
+function courseBox(){const w=$("#course-wrap");if(w)w.hidden=$("#f-area").value!=="study"||!!parentOf(editing)}
+function clientInfo(){courseBox();const el=$("#client-info");const n=cname($("#f-client").value);
   {const s0=n&&$("#f-area").value==="work"?clientStats(n):null;$("#nopkg-wrap").hidden=!(s0&&s0.pkg)}
   if($("#f-area").value!=="work"||!n){el.textContent="";return}
   const s=clientStats(n);if(!s.c&&!s.open.length&&!s.done.length){el.textContent="عميل جديد، هيتضاف لصفحة العملاء.";return}
@@ -1338,7 +1369,7 @@ function openEditor(t){
   $("#ed-subs").textContent=subs.length?`التسكات الفرعية (${subs.filter(s=>s.status==="done").length}/${subs.length})`:"+ تسكات فرعية";
   $("#f-title").value=t?.title||"";
   $("#f-area").value=t?.area||(view==="personal"?"personal":(areaFilter||"work"));
-  $("#f-client").value=t?.client||"";$("#f-nopkg").checked=!!t?.noPkg;
+  $("#f-client").value=t?.client||"";$("#f-course").checked=!!t?.course;$("#f-nopkg").checked=!!t?.noPkg;
   $("#f-stage").value=t?.stage||"";
   $("#f-due").value=t?.due||"";$("#f-time").value=t?.time||"";$("#time-note").hidden=!(t?.time);
   $("#f-notes").value=t?.notes||"";$("#notes-wrap").open=!!(t&&t.notes);
@@ -1356,7 +1387,7 @@ function closeEditor(){$("#overlay").hidden=true;editing=null}
 $("#f-area").innerHTML=AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
 $("#f-pri").innerHTML=PRI.map(([k,n])=>`<button type="button" class="p-${k}" data-p="${k}" aria-pressed="false"><i class="dot"></i>${n}</button>`).join("");
 $("#f-pri").addEventListener("click",e=>{const b=e.target.closest("[data-p]");if(b){edPri=b.dataset.p;paintPri()}});
-$("#f-area").addEventListener("change",()=>fillKinds(""));$("#f-kind").addEventListener("change",syncStage);$("#f-client").addEventListener("input",clientInfo);
+$("#f-area").addEventListener("change",()=>{fillKinds("");courseBox()});$("#f-kind").addEventListener("change",syncStage);$("#f-client").addEventListener("input",clientInfo);
 $("#add-btn").addEventListener("click",()=>openEditor(null));
 $("#ed-cancel").addEventListener("click",closeEditor);
 $("#ed-pomo").addEventListener("click",()=>{const id=editing&&editing.id;closeEditor();if(id)startPomo(id)});
@@ -1377,7 +1408,7 @@ $("#editor").addEventListener("submit",async e=>{
   const par=parentOf(editing);
   const area=par?par.area:$("#f-area").value;
   const wantToday=$("#f-today").checked;
-  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,due:$("#f-due").value,time:$("#f-due").value?$("#f-time").value:"",notes:$("#f-notes").value.trim()};
+  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,...(!$("#course-wrap").hidden&&$("#f-course").checked?{course:(editing&&editing.course)||{chapters:[]}}:(editing&&editing.course&&!courseCount(editing.course)[1]?{course:null}:{})),due:$("#f-due").value,time:$("#f-due").value?$("#f-time").value:"",notes:$("#f-notes").value.trim()};
   const meetGo=!!(data.due&&data.time&&(!editing||editing.due!==data.due||(editing.time||"")!==data.time||(calCfg&&editing.calId&&editing.title!==data.title)));
   if(meetGo&&!calCfg)window.open(calUrl({...editing,...data}),"_blank","noopener");
   let doneOn=$("#f-done").value, needResolve=false;
