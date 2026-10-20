@@ -262,10 +262,12 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
-.ai-fab{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:14;border:0;border-radius:999px;padding:11px 16px;background:var(--accent);color:var(--sheet);font:inherit;font-weight:600;font-size:14.5px;box-shadow:0 6px 20px rgba(0,0,0,.18);cursor:pointer}
+.toast-undo{all:unset;cursor:pointer;margin-inline-start:10px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.toast{display:flex;align-items:center;gap:4px}
+body{padding-bottom:24px}
+.ai-fab{order:2;height:36px;border:0;border-radius:999px;padding:0 14px;background:var(--accent);color:var(--sheet);font:inherit;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:2px}
 .ai-fab:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-body.has-pomo .ai-fab{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
-body.ai-on .ai-fab{display:none}
+body.ai-on .ai-fab{opacity:.5}
 .ai-ov{position:fixed;inset:0;z-index:40;background:rgba(10,14,22,.35);display:flex;justify-content:flex-start}
 .ai-ov[hidden]{display:none}
 .ai-panel{width:min(440px,100%);height:100%;background:var(--sheet);border-inline-end:1px solid var(--line);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.2)}
@@ -290,7 +292,7 @@ body.ai-on .ai-fab{display:none}
 .ai-setup label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
 .ai-setup input,.ai-setup select{font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:8px 10px;direction:ltr;text-align:left}
 .ai-setup .err{color:var(--red);font-size:14px}.ai-setup a{color:var(--accent)}
-@media (max-width:480px){.ai-fab{padding:10px 13px;font-size:13.5px}}
+@media (max-width:480px){.ai-fab{width:36px;padding:0;justify-content:center;font-size:16px}.ai-fab .lbl{display:none}}
 .tag.rep{color:var(--accent)}
 .rep-chips{flex-wrap:wrap;overflow:visible}
 .rep-chips .chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
@@ -345,6 +347,8 @@ body.ai-on .ai-fab{display:none}
 .sets .x{all:unset;cursor:pointer;width:26px;height:26px;display:grid;place-items:center;border-radius:6px;color:var(--muted)}
 .sets .x:hover{background:var(--paper);color:var(--ink)}
 .sets .lab{font-size:13px;color:var(--muted)}
+.area-ed{display:flex;flex-direction:column;gap:6px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.del-ask{background:var(--paper);border-radius:8px;padding:8px;font-size:13.5px}.del-ask select{font:inherit;font-size:13.5px}
 .trash-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--line);font-size:14px}
 .trash-row .tt{flex:1;min-width:0}.trash-row small{display:block;color:var(--muted);font-size:12px}
 .course{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;margin-inline-start:32px;padding:6px 0 4px 0;padding-inline-start:12px;border-inline-start:2px solid var(--line)}
@@ -435,6 +439,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
     </div>
     <div class="counts" id="counts"></div>
     <span class="sync" id="sync" hidden><i></i><span id="sync-t"></span></span>
+    <button type="button" class="ai-fab" id="ai-fab" aria-label="المساعد" title="المساعد"><span aria-hidden="true">✦</span><span class="lbl"> المساعد</span></button>
     <button type="button" class="gear" id="open-settings" aria-label="الإعدادات" title="الإعدادات"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
   </header>
   <div class="test-flag demo-flag">نسخة تجربة: التسكات اللي هنا أمثلة، وأي حاجة تعملها بتتحفظ في متصفحك انت بس. محدش غيرك بيشوفها. <button type="button" class="h-link" data-demoreset="1">ابدأ من الأول</button></div>
@@ -460,7 +465,6 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 
   <div class="chips" id="chips" hidden></div>
   <div class="meet-alert" id="meet-alert" hidden role="alert"></div>
-  <button type="button" class="ai-fab" id="ai-fab" aria-label="المساعد"><span aria-hidden="true">✦</span> المساعد</button>
   <div class="ai-ov" id="ai-ov" hidden><aside class="ai-panel" role="dialog" aria-label="المساعد"><div class="ai-head"><b>✦ المساعد</b><span class="note">بيقترح، وانت اللي بتوافق</span><button type="button" class="x" data-aiclose="1" aria-label="اقفل">×</button></div><div class="ai-panel-in" id="ai-panel-in"></div></aside></div>
   <main id="view" class="sheet"><div class="empty">بيحمّل التسكات…</div></main>
   <div class="foot" id="foot" hidden><button type="button" id="gh-settings">الاتصال بـ GitHub</button></div>
@@ -549,7 +553,8 @@ document.addEventListener("focusout",()=>{if(pendingRender){setTimeout(()=>{cons
 let tasks=[], loaded=false, db=null, col=null, view="today", areaFilter="", editing=null, edPri="blue";
 
 function setTabs(){document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===view));const g=document.getElementById("open-settings");if(g)g.setAttribute("aria-pressed",view==="settings")}
-function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2200)}
+function toast(m,undo){const t=$("#toast");t.textContent=m;if(undo){const b=document.createElement("button");b.type="button";b.className="toast-undo";b.textContent="رجوع";b.onclick=()=>{t.hidden=true;undo()};t.append(" ",b)}
+  t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,undo?5000:2200)}
 
 const subsOf=id=>tasks.filter(t=>t.parentId===id).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
 const parentOf=t=>t&&t.parentId?tasks.find(p=>p.id===t.parentId)||null:null;
@@ -901,28 +906,47 @@ async function restoreTrash(xid){const x=trash.find(y=>y.id===xid);if(!x)return;
 const WEEK=7*864e5;
 /* ---- settings ---- */
 let areaCfg=null, setDraft=null;
+async function saveSets(){const d=setDraft;if(!d)return;
+    const list=d.list.map(([k,n])=>[k,(n||"").trim()||(BASE_AREAS.find(x=>x[0]===k)||[,"قسم"])[1]]);const names=Object.fromEntries(list);
+    const kinds={};Object.keys(d.kinds).forEach(k=>{kinds[k]=d.kinds[k].map(([kk,nn])=>[kk,(nn||"").trim()]).filter(x=>x[1])});
+    const items=d.routine.map(i=>({id:i.id,t:(i.t||"").trim()})).filter(i=>i.t);
+    if(!items.length){toast("الروتين لازم يبقى فيه عنصر واحد على الأقل");return}
+    try{await db.collection("config").doc("areas").set({list,names,kinds,hidden:d.hidden});await db.collection("config").doc("routine").set({items});
+      const mv=d.moves;d.moves={};for(const t of tasks.filter(t=>mv[t.area]))await write(t.id,{area:mv[t.area],kind:""});
+      areaCfg={list,names,kinds,hidden:d.hidden};applyAreaCfg();routineItems=items;renderChips&&renderChips();toast("اتحفظ ✓")}catch(_){toast("ماتحفظش، جرّب تاني")}}
+let setsT=null;const queueSave=()=>{clearTimeout(setsT);setsT=setTimeout(saveSets,350)};
+document.addEventListener("change",e=>{const t=e.target;if(view==="settings"&&setDraft&&(t.dataset.sname!==undefined||t.dataset.skind||t.dataset.srt!==undefined))queueSave()});
+
 const BASE_AREAS=AREAS.map(a=>a.slice()), BASE_KINDS=JSON.parse(JSON.stringify(KINDS));
 let KHIDE=new Set();
 function applyAreaCfg(){const c=areaCfg||{};
-  AREAS.forEach(a=>{const b=BASE_AREAS.find(x=>x[0]===a[0]);a[1]=(c.names&&c.names[a[0]])||b[1];AREA[a[0]]=a[1]});
-  Object.keys(KINDS).forEach(k=>{const list=(c.kinds&&c.kinds[k])||BASE_KINDS[k];KINDS[k].length=0;list.forEach(x=>KINDS[k].push([x[0],x[1]]))});
-  KHIDE=new Set(c.hidden||[])}
+  const list=Array.isArray(c.list)&&c.list.length?c.list:BASE_AREAS.map(a=>[a[0],(c.names&&c.names[a[0]])||a[1]]);
+  AREAS.length=0;Object.keys(AREA).forEach(k=>delete AREA[k]);
+  list.forEach(([k,n])=>{AREAS.push([k,n]);AREA[k]=n;if(!KINDS[k])KINDS[k]=[]});
+  Object.keys(KINDS).forEach(k=>{const l=(c.kinds&&c.kinds[k])||BASE_KINDS[k]||[];KINDS[k].length=0;l.forEach(x=>KINDS[k].push([x[0],x[1]]))});
+  KHIDE=new Set(c.hidden||[]);
+  const fa=document.getElementById("f-area");if(fa){const v=fa.value;fa.innerHTML=AREAS.map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join("");if(AREA[v])fa.value=v}}
 function settingsView(){
-  if(!setDraft)setDraft={names:Object.fromEntries(AREAS.map(a=>[a[0],a[1]])),kinds:JSON.parse(JSON.stringify(KINDS)),hidden:[...KHIDE],routine:routineItems.map(i=>({...i}))};
+  if(!setDraft)setDraft={list:AREAS.map(a=>[a[0],a[1]]),kinds:JSON.parse(JSON.stringify(KINDS)),hidden:[...KHIDE],routine:routineItems.map(i=>({...i})),moves:{},ask:-1};
   const d=setDraft;
-  const areasHtml=AREAS.map(([k])=>`<div class="srow"><input type="text" data-sname="${k}" value="${esc(d.names[k])}" aria-label="اسم القسم" maxlength="30"></div>
-    ${k==="work"?`<div class="kinds"><span class="lab">«شغل» من غير أنواع، بيتقسم بالعميل.</span></div>`:`<div class="kinds">${(d.kinds[k]||[]).map(([kk,nn],i)=>{const off=d.hidden.includes(k+":"+kk);
-      return `<span class="k ${off?"off":""}"><input type="text" data-skind="${k}|${i}" value="${esc(nn)}" aria-label="اسم النوع" maxlength="24"><button type="button" class="x" data-shide="${k}:${kk}" title="${off?"رجّعه":"خبّيه"}" aria-label="${off?"رجّع النوع":"خبّي النوع"}">${off?"رجّع":"خبّي"}</button></span>`}).join("")}
-      <button type="button" class="mini" data-skadd="${k}">+ نوع</button></div>`}`).join("");
+  const FIXED={work:"«شغل» بيتقسم بالعميل، ومن غير أنواع.",personal:"«شخصي» بيظهر لوحده تحت تسكات اليوم."};
+  const areasHtml=d.list.map(([k,name],i)=>{const n=tasks.filter(t=>t.area===k).length;
+    const ask=d.ask===i?`<div class="srow del-ask"><span>فيه ${n} تاسك في القسم ده. انقلهم لـ</span><select id="sa-move">${d.list.filter((_,j)=>j!==i).map(([kk,nn])=>`<option value="${kk}">${esc(nn)}</option>`).join("")}</select><button class="mini danger" type="button" data-sadelok="${i}">انقل وامسح</button><button class="mini" type="button" data-sadelno="1">إلغاء</button></div>`:"";
+    return `<div class="area-ed"><div class="srow"><input type="text" data-sname="${i}" value="${esc(name)}" aria-label="اسم القسم" maxlength="30">
+      <button type="button" class="x" data-saup="${i}" aria-label="لفوق" ${i?"":"disabled"}>↑</button>
+      ${FIXED[k]?"":`<button type="button" class="mini danger" data-sadel="${i}">امسح القسم</button>`}</div>${ask}
+    ${k==="work"?`<div class="kinds"><span class="lab">${FIXED.work}</span></div>`:`<div class="kinds">${FIXED[k]?`<span class="lab" style="flex-basis:100%">${FIXED[k]}</span>`:""}${(d.kinds[k]||[]).map(([kk,nn],j)=>{const off=d.hidden.includes(k+":"+kk);
+      return `<span class="k ${off?"off":""}"><input type="text" data-skind="${k}|${j}" value="${esc(nn)}" aria-label="اسم النوع" maxlength="24"><button type="button" class="x" data-shide="${k}:${kk}" title="${off?"رجّعه":"خبّيه"}" aria-label="${off?"رجّع النوع":"خبّي النوع"}">${off?"رجّع":"خبّي"}</button></span>`}).join("")}
+      <button type="button" class="mini" data-skadd="${k}">+ نوع</button></div>`}</div>`}).join("")+`<div class="srow"><button type="button" class="mini" data-saadd="1">+ قسم جديد</button></div>`;
   const rtHtml=d.routine.map((it,i)=>`<div class="srow"><input type="text" data-srt="${i}" value="${esc(it.t)}" aria-label="عنصر الروتين" maxlength="40">
       <button type="button" class="x" data-srtup="${i}" aria-label="لفوق" ${i?"":"disabled"}>↑</button><button type="button" class="x" data-srtdel="${i}" aria-label="شيله">×</button></div>`).join("");
   const now=Date.now();
   const tr=trash.slice().sort((a,b)=>b.deletedAt-a.deletedAt);
   focusView();const pomoBox=pomoSetHtml.replace(/<details class="fset" id="fset-box"[^>]*>/,'<details class="fset" id="fset-box" open>').replace("<summary>الإعدادات</summary>","<summary>التايمر</summary>");
   return `<section class="section"><h2>الأقسام وأنواعها</h2><div class="sets">${areasHtml}
-      <div class="note">الأنواع اللي بتخبّيها مش بتظهر في التسكات الجديدة، والتسكات القديمة بتفضل زي ما هي.</div></div></section>
+      <div class="note">أي تعديل بيتحفظ لوحده. الأنواع اللي بتخبّيها مش بتظهر في التسكات الجديدة، والتسكات القديمة بتفضل زي ما هي.</div></div></section>
     <section class="section"><h2>الروتين الثابت</h2><div class="sets">${rtHtml}<div class="srow"><button type="button" class="mini" data-srtadd="1">+ عنصر</button></div></div></section>
-    <div class="sets" style="padding-top:0"><div class="srow"><button class="btn primary" type="button" data-ssave="1">احفظ الأقسام والروتين</button><button class="btn" type="button" data-sreset="1">إلغاء</button></div></div>
+
     <section class="section">${pomoBox}</section>
     <section class="section"><h2>المساعد</h2><div class="sets"><div class="srow"><span style="flex:1">${aiCfg&&aiCfg.key?`متربط ✓ (${esc(AI_PROV[aiCfg.prov]?.name||"")} · ${esc(aiCfg.model||"")})`:"مش متربط. محتاج مفتاح مجاني مرة واحدة."}</span><button class="mini" type="button" data-aisetopen="1">${aiCfg&&aiCfg.key?"عدّل":"اربط"}</button></div></div></section>
     <section class="section"><h2>الكالندر</h2><div class="sets"><div class="srow"><span style="flex:1">${calCfg?"متربط ✓ الميتنجات بتتضاف لوحدها.":"مش متربط. الميتنجات بتفتح الكالندر متكتبة."}</span><button class="mini" type="button" data-calsetup="1">${calCfg?"عدّل":"اربط"}</button></div></div></section>
@@ -932,29 +956,30 @@ function settingsView(){
     <section class="section" hidden><h2>GitHub</h2><div class="sets"><div class="srow"><span style="flex:1">الداتا بتتحفظ في ريبو daftar-malek-data.</span><button class="mini" type="button" data-ghset="1">الاتصال بـ GitHub</button></div></div></section>`;
 }
 document.addEventListener("input",e=>{if(!setDraft)return;const t=e.target;
-  if(t.dataset.sname)setDraft.names[t.dataset.sname]=t.value;
+  if(t.dataset.sname!==undefined)setDraft.list[+t.dataset.sname][1]=t.value;
   if(t.dataset.skind){const [k,i]=t.dataset.skind.split("|");setDraft.kinds[k][+i][1]=t.value}
   if(t.dataset.srt)setDraft.routine[+t.dataset.srt].t=t.value});
 document.addEventListener("click",async e=>{
   if(e.target.closest("#open-settings")){view=view==="settings"?"today":"settings";setDraft=null;setTabs();render();scrollTo(0,0);return}
   if(view!=="settings")return;const b=e.target.closest("button");if(!b)return;const d=setDraft;
-  if(b.dataset.skadd){const k=b.dataset.skadd;d.kinds[k].push(["k"+sid().slice(-5),"نوع جديد"]);render();const ins=document.querySelectorAll(`[data-skind^="${k}|"]`);const l=ins[ins.length-1];if(l){l.focus();l.select()}return}
-  if(b.dataset.shide){const v=b.dataset.shide;d.hidden=d.hidden.includes(v)?d.hidden.filter(x=>x!==v):[...d.hidden,v];render();return}
+  if(b.dataset.saadd){const k="a"+sid().slice(-6);d.list.push([k,"قسم جديد"]);d.kinds[k]=[];render();queueSave();const ins=document.querySelectorAll("[data-sname]");const l=ins[ins.length-1];if(l){l.focus();l.select()}return}
+  if(b.dataset.saup){const i=+b.dataset.saup;if(i>0){[d.list[i-1],d.list[i]]=[d.list[i],d.list[i-1]];d.ask=-1;render()}return}
+  if(b.dataset.sadel){const i=+b.dataset.sadel,k=d.list[i][0];if(tasks.some(t=>t.area===k)){d.ask=i;render();return}d.list.splice(i,1);d.ask=-1;render();queueSave();return}
+  if(b.dataset.sadelno){d.ask=-1;render();return}
+  if(b.dataset.sadelok){const i=+b.dataset.sadelok,k=d.list[i][0],to=$("#sa-move").value;d.moves[k]=to;Object.keys(d.moves).forEach(x=>{if(d.moves[x]===k)d.moves[x]=to});d.list.splice(i,1);d.ask=-1;render();queueSave();toast("القسم اتمسح وتسكاته اتنقلت");return}
+  if(b.dataset.skadd){const k=b.dataset.skadd;(d.kinds[k]=d.kinds[k]||[]).push(["k"+sid().slice(-5),"نوع جديد"]);render();queueSave();const ins=document.querySelectorAll(`[data-skind^="${k}|"]`);const l=ins[ins.length-1];if(l){l.focus();l.select()}return}
+  if(b.dataset.shide){const v=b.dataset.shide;d.hidden=d.hidden.includes(v)?d.hidden.filter(x=>x!==v):[...d.hidden,v];render();queueSave();return}
   if(b.dataset.srtadd){d.routine.push({id:"r"+sid().slice(-6),t:""});render();const ins=document.querySelectorAll("[data-srt]");ins[ins.length-1].focus();return}
   if(b.dataset.srtup){const i=+b.dataset.srtup;if(i>0){[d.routine[i-1],d.routine[i]]=[d.routine[i],d.routine[i-1]];render()}return}
-  if(b.dataset.srtdel){d.routine.splice(+b.dataset.srtdel,1);render();return}
+  if(b.dataset.srtdel){d.routine.splice(+b.dataset.srtdel,1);render();queueSave();return}
   if(b.dataset.sreset){setDraft=null;render();toast("اترجعت زي ما كانت");return}
-  if(b.dataset.ssave){
-    const names={};AREAS.forEach(([k])=>{names[k]=(d.names[k]||"").trim()||BASE_AREAS.find(x=>x[0]===k)[1]});
-    const kinds={};Object.keys(d.kinds).forEach(k=>{kinds[k]=d.kinds[k].map(([kk,nn])=>[kk,(nn||"").trim()]).filter(x=>x[1])});
-    const items=d.routine.map(i=>({id:i.id,t:(i.t||"").trim()})).filter(i=>i.t);
-    if(!items.length){toast("الروتين لازم يبقى فيه عنصر واحد على الأقل");return}
-    try{await db.collection("config").doc("areas").set({names,kinds,hidden:d.hidden});await db.collection("config").doc("routine").set({items});
-      areaCfg={names,kinds,hidden:d.hidden};applyAreaCfg();routineItems=items;setDraft=null;renderChips&&renderChips();render();toast("اتحفظ ✓")}catch(_){toast("ماتحفظش، جرّب تاني")}return}
   if(b.dataset.restore){restoreTrash(b.dataset.restore);return}
   if(b.dataset.aisetopen){openAi();aiShowSet=!!(aiCfg&&aiCfg.key);paintAi();return}
   if(b.dataset.ghset){const g=$("#gh-settings");if(g)g.click();return}
 });
+document.addEventListener("keydown",e=>{if(e.key!=="n"&&e.key!=="N"&&e.key!=="ى")return;if(e.ctrlKey||e.metaKey||e.altKey)return;const a=document.activeElement;
+  if(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA"||a.tagName==="SELECT"||a.isContentEditable))return;if(!$("#overlay").hidden||aiOpen)return;
+  e.preventDefault();if(view!=="today"){view="today";setTabs();render()}const q=$("#qa-title");if(q){q.focus();q.scrollIntoView({block:"center"})}});
 document.addEventListener("click",e=>{
   if(e.target.closest("[data-paper]")){$("#paper-btn").click();return}
   if(e.target.closest("[data-qamore]")){const t=$("#qa-title").value.trim(),a=$("#qa-area").value;openEditor(null);$("#f-title").value=t;$("#f-area").value=a;fillKinds("");if(a==="work")$("#f-client").value=findClient(t);clientInfo();$("#f-today").checked=true;$("#qa-title").value="";qaState={t:"",d:"",tm:""};$("#qa-meet").hidden=true;return}
@@ -984,10 +1009,12 @@ function aiPickModel(list){list=list.filter(m=>!/preview|exp|latest|omni/i.test(
   for(const p of pref){const m=list.find(x=>p.test(x));if(m)return m}return list[0]||""}
 
 function aiContext(){
-  const open=tasks.filter(t=>t.status!=="done");
+  const rank=t=>(inToday(t)?0:1)*10+({red:0,blue:1,black:2}[t.pri]??3)+(t.due?-.5:0);
+  const allOpen=tasks.filter(t=>t.status!=="done").sort((a,b)=>rank(a)-rank(b)||(a.due||"9").localeCompare(b.due||"9"));
+  const open=allOpen.slice(0,120), more=allOpen.length-open.length;
   const line=t=>{const p=parentOf(t);return [t.id,t.title,AREA[t.area]||t.area,t.pri,t.client||"",t.due?"ديدلاين "+t.due:"",inToday(t)?"في النهارده":(t.planDate?"متحط "+t.planDate:""),p?"فرعي تحت "+p.id:"",t.repeat?"بيتكرر "+repText(t.repeat):"",subsOf(t.id).length?`${subsOf(t.id).filter(s=>s.status==="done").length}/${subsOf(t.id).length} فرعي`:""].filter(Boolean).join(" | ")};
   const d7=ymd(new Date(Date.now()-6*864e5));
-  const done=tasks.filter(t=>t.status==="done"&&t.doneDate>=d7&&isTop(t)).map(t=>`${t.doneDate} | ${t.title} | ${AREA[t.area]||""}`);
+  const done=tasks.filter(t=>t.status==="done"&&t.doneDate>=d7&&isTop(t)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0)).slice(0,40).map(t=>`${t.doneDate} | ${t.title} | ${AREA[t.area]||""}`);
   const rd=(routineDays[today()]||{}).done||{};
   const meets=upcoming().slice(0,8).map(m=>`${m.date} ${m.time} | ${m.title}`);
   return `النهارده ${today()} (${DOW[new Date().getDay()]})، الساعة ${new Date().toTimeString().slice(0,5)} بتوقيت القاهرة.
@@ -995,7 +1022,7 @@ function aiContext(){
 الروتين النهارده: ${routineItems.map(i=>i.t+(rd[i.id]?" ✓":" ✗")).join("، ")}.
 الميتنجات الجاية: ${meets.join(" ؛ ")||"مفيش"}.
 التسكات المفتوحة (id | الاسم | القسم | اللون | العميل | ...):
-${open.map(line).join("\n")||"مفيش"}
+${open.map(t=>line(t).slice(0,180)).join("\n")||"مفيش"}${more>0?`\n(و ${more} تاسك تاني مفتوح أقل أهمية مش ظاهرين هنا)`:""}
 اللي خلص آخر 7 أيام:
 ${done.join("\n")||"مفيش"}`;
 }
@@ -1328,14 +1355,15 @@ function quickAdd(){
   let a="work";try{a=LS.getItem("qaArea")||"work"}catch(_){}
   if(!AREA[a])a="work";
   return `<section class="section"><form class="quick" id="quick-add" style="padding-top:14px">
-    <input id="qa-title" maxlength="160" placeholder="تاسك جديد، أو «ميتنج مع … بكره الساعة 5»" aria-label="تاسك جديد للنهارده" value="${esc(qaState.t)}">
+    <input id="qa-title" maxlength="160" placeholder="تاسك جديد (ابدأ بـ ! لو مهم)، أو «ميتنج مع … بكره 5»" aria-label="تاسك جديد للنهارده" value="${esc(qaState.t)}">
     <select id="qa-area" aria-label="القسم">${AREAS.map(([k,n])=>`<option value="${k}" ${k===a?"selected":""}>${n}</option>`).join("")}</select>
     <button class="btn primary" type="submit">أضف</button><button class="btn" type="button" data-qamore="1" title="افتح التاسك بكل التفاصيل">تفاصيل</button></form><div class="qa-meet" id="qa-meet" ${parseMeet(qaState.t)?"":"hidden"}>${meetPreview()}</div></section>`;
 }
 document.addEventListener("change",e=>{if(e.target.id==="qa-area")try{LS.setItem("qaArea",e.target.value)}catch(_){}});
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="quick-add")return;e.preventDefault();
-  const inp=$("#qa-title");const title=inp.value.trim();if(!title)return;inp.value="";
+  const inp=$("#qa-title");let title=inp.value.trim();if(!title)return;inp.value="";
+  let qaPri="blue";if(/^!+\s*/.test(title)&&!parseMeet(title)){qaPri="red";title=title.replace(/^!+\s*/,"");if(!title)return}
   let mt=parseMeet(title);
   if(mt&&mt.partial){const tv=qaState.tm||($("#qm-time")&&$("#qm-time").value),dv=qaState.d||($("#qm-date")&&$("#qm-date").value);
     if(!tv){inp.value=title;toast("اختار ساعة الميتنج الأول، أو اكتبها: «بكره الساعة 5»");const q=$("#qm-time");if(q)q.focus();return}
@@ -1344,7 +1372,7 @@ document.addEventListener("submit",async e=>{
   if(mt){if(!calCfg)window.open(calUrl(mt),"_blank","noopener");askNotify();
     const id="m"+sid();await meetCol.doc(id).set({title:mt.title,date:mt.date,time:mt.time,calId:"",createdAt:Date.now()});
     if(calCfg)calSave(id);else toast(`الميتنج اتسجل: ${dayName(mt.date)} ${fmtTime(mt.time)}`);return}
-  await write("t"+sid(),{title,area:$("#qa-area").value,kind:"",pri:"blue",client:$("#qa-area").value==="work"?findClient(title):"",stage:"",due:"",notes:"",status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null},true);
+  await write("t"+sid(),{title,area:$("#qa-area").value,kind:"",pri:qaPri,client:$("#qa-area").value==="work"?findClient(title):"",stage:"",due:"",notes:"",status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null},true);
   render();toast("اتضاف لخطة النهارده");
 });
 /* ===== pomodoro =====
@@ -1742,7 +1770,10 @@ $("#resolve-ov").addEventListener("submit",async e=>{
 
 document.addEventListener("click",e=>{
   const tg=e.target.closest("[data-toggle]");
-  if(tg){const t=tasks.find(x=>x.id===tg.dataset.toggle);if(!t)return;toggleTask(t);return}
+  if(tg){const t=tasks.find(x=>x.id===tg.dataset.toggle);if(!t)return;const wasOpen=t.status!=="done",rep=!!t.repeat,id=t.id;
+    (async()=>{await toggleTask(t);if(!wasOpen)return;
+      if(rep){const c=tasks.filter(x=>x.repeatOf===id&&x.doneDate===today()).pop();if(c)toast("خلص ✓",()=>{const cc=tasks.find(x=>x.id===c.id);if(cc)toggleTask(cc)})}
+      else{const x=tasks.find(y=>y.id===id);if(x&&x.status==="done")toast(`خلص «${clip(x.title,30)}» ✓`,()=>{const y=tasks.find(z=>z.id===id);if(y&&y.status==="done")toggleTask(y)})}})();return}
   const ex=e.target.closest("[data-expand]");
   if(ex){const id=ex.dataset.expand;expanded.has(id)?expanded.delete(id):expanded.add(id);saveExpanded();render();return}
   const pl=e.target.closest("[data-plan]");
@@ -1828,7 +1859,7 @@ $("#ed-delete").addEventListener("click",async()=>{
   const b=$("#ed-delete");const subs=subsOf(editing.id);
   if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent=subs.length?`متأكد؟ هيتمسح معاه ${subs.length} فرعي`:"متأكد؟ اضغط تاني";setTimeout(()=>{b.dataset.sure="";b.textContent="امسح"},3000);return}
   const id=editing.id, pid=editing.parentId, gone=tasks.find(x=>x.id===id);closeEditor();await toTrash("task",gone,subs);
-  try{for(const s of subs)await col.doc(s.id).delete();await col.doc(id).delete();tasks=tasks.filter(x=>x.id!==id&&x.parentId!==id);toast("اتمسح، تقدر ترجّعه من الإعدادات لمدة أسبوع");if(pid)await syncParent(pid);else render()}catch(e){toast("ماتمسحش، جرّب تاني")}
+  try{for(const s of subs)await col.doc(s.id).delete();await col.doc(id).delete();tasks=tasks.filter(x=>x.id!==id&&x.parentId!==id);toast("اتمسح",()=>{const tr=trash.filter(x=>x.kind==="task"&&x.oid===id).sort((a,b)=>b.deletedAt-a.deletedAt)[0];if(tr)restoreTrash(tr.id)});if(pid)await syncParent(pid);else render()}catch(e){toast("ماتمسحش، جرّب تاني")}
 });
 $("#editor").addEventListener("submit",async e=>{
   e.preventDefault();
@@ -1861,6 +1892,7 @@ $("#editor").addEventListener("submit",async e=>{
 function paperText(){
   const list=tasks.filter(inToday);
   const lines=[`خطة ${fmtDay(today())}`,"","الروتين:",...routineItems.map(i=>i.t),""];
+  const mt=upcoming().filter(m=>m.date===today());if(mt.length)lines.push("ميتنجات:",...mt.map(m=>`${fmtTime(m.time)} ${m.title}`),"");
   const groups=[["red","مهم جداً"],["blue","أقل أهمية"],["black","لو فضل وقت"]];
   for(const [p,n] of groups){const g=sortTasks(list.filter(t=>t.pri===p));if(!g.length)continue;
     lines.push(n+":");g.forEach(t=>{const p=parentOf(t);lines.push(`${t.title}${p?" ← "+p.title:(t.client?" — "+t.client:"")}`)});lines.push("")}
