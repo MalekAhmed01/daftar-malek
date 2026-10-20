@@ -324,7 +324,9 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .cl-line{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:11px 16px;border-top:1px solid var(--line);font-size:14px}
 .cl-line span{color:var(--muted);font-size:13px}.cl-line:hover{background:var(--paper)}.cl-line:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
 .qa-meet{margin:-4px 16px 12px;padding:8px 12px;border-radius:9px;background:var(--accent-soft);color:var(--ink);font-size:13.5px;display:flex;flex-wrap:wrap;gap:4px 10px}
-.qa-meet .qm-to{color:var(--muted);font-size:12.5px}.qa-meet a,.note a{color:var(--accent)}
+.qa-meet .qm-to{color:var(--muted);font-size:12.5px;flex-basis:100%}
+.qa-meet{align-items:center}.qa-meet .qm-need{color:var(--accent);font-weight:500}
+.qa-meet input{font:inherit;font-size:13.5px;color:var(--ink);background:var(--sheet);border:1px solid var(--line);border-radius:7px;padding:3px 6px}.qa-meet a,.note a{color:var(--accent)}
 .dnav{display:flex;align-items:flex-start;justify-content:center;gap:4px;padding:0 16px 10px}
 .dnav>button{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:999px;color:var(--muted);font-size:20px;line-height:1}
 .dnav button:hover{background:var(--paper)}.dnav button:focus-visible{box-shadow:0 0 0 2px var(--accent)}
@@ -623,7 +625,7 @@ function parseMeet(raw,now){
     if(m[3])mi={"نص":30,"ربع":15,"تلت":20,"ثلث":20}[m[3]];
     if(m[4]){mi=60-{"ربع":15,"تلت":20,"ثلث":20}[m[5]];h=h-1}
     ampm=(m[6]||"").toLowerCase();}
-  if(h==null||h>23||mi>59)return null;
+  const noTime=h==null||h>23||mi>59;if(noTime){h=0;mi=0;ampm="ص"}
   const morning=/^(صباحاً|صباحا|الصبح|الصبحية|ص|صباح|am)$/.test(ampm);
   if(h>=1&&h<=11&&!morning)h+=12;           // 1–11 with no "ص" = afternoon/evening
   if(h===12&&morning)h=0;
@@ -634,10 +636,13 @@ function parseMeet(raw,now){
   else if(cut(/(النهارده|النهاردة|انهارده|اليوم ده|النهار ده)/))day=addD(0);
   if(!day){for(let i=0;i<7&&!day;i++)for(const w of AR_DAYS[i]){const r=new RegExp("(?:يوم\\s*)?(?:^|\\s)"+w+"(?=\\s|$)");if(r.test(s)){cut(r);let n=(i-base.getDay()+7)%7;day=addD(n);break}}}
   cut(/(?:^|\s)يوم(?=\s|$)/);
-  if(!day){day=addD(0);if(h*60+mi<=now.getHours()*60+now.getMinutes())day=addD(1)}
+  const dayGiven=!!day;
+  if(!day){day=addD(0);if(!noTime&&h*60+mi<=now.getHours()*60+now.getMinutes())day=addD(1)}
   const title=s.replace(/\s+(في|على|الساعة|الساعه)$/,"").trim()||"ميتنج";
   const p2=n=>String(n).padStart(2,"0");
-  return {title,date:`${day.getFullYear()}-${p2(day.getMonth()+1)}-${p2(day.getDate())}`,time:`${p2(h)}:${p2(mi)}`};
+  const date=`${day.getFullYear()}-${p2(day.getMonth()+1)}-${p2(day.getDate())}`;
+  if(noTime)return {title,date,time:"",partial:true};
+  return {title,date,time:`${p2(h)}:${p2(mi)}`};
 }
 
 const fmtTime=s=>{const [h,m]=String(s).split(":").map(Number);return `${h%12||12}:${String(m).padStart(2,"0")} ${h<12?"ص":"م"}`};
@@ -734,9 +739,19 @@ document.addEventListener("submit",async e=>{if(e.target.id!=="cal-form")return;
   try{await setCol.doc("calendar").set({url,key:calDraftKey,at:Date.now()})}catch(_){}
   toast("الكالندر اتربط ✓");view="today";setTabs();render();
 });
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.target.id==="qm-time"||e.target.id==="qm-date")){e.preventDefault();$("#quick-add").requestSubmit()}});
+document.addEventListener("click",e=>{if(e.target.closest("[data-qmsave]"))$("#quick-add").requestSubmit()});
 // quick box: understand meetings as you type
-document.addEventListener("input",e=>{if(e.target.id!=="qa-title")return;const m=parseMeet(e.target.value);const el=$("#qa-meet");if(!el)return;
-  el.hidden=!m;if(m)el.innerHTML=`<b>ميتنج:</b> ${meetLine(m)}<span class="qm-to">${calCfg?"هيتضاف على الكالندر لوحده":`هيفتح الكالندر متكتب · <a href="#" data-calsetup="1">اربطه عشان يتضاف لوحده</a>`}</span>`});
+let qaState={t:"",d:"",tm:""};
+function meetPreview(){const m=parseMeet(qaState.t);if(!m)return "";
+  const to=`<span class="qm-to">${calCfg?"هيتضاف على الكالندر لوحده":`هيفتح الكالندر متكتب · <a href="#" data-calsetup="1">اربطه عشان يتضاف لوحده</a>`}</span>`;
+  if(m.partial)return `<b>ميتنج:</b> <span>${esc(m.title)}</span> <span class="qm-need">اختار الساعة:</span><input type="date" id="qm-date" value="${qaState.d||m.date}" min="${today()}" aria-label="يوم الميتنج"><input type="time" id="qm-time" value="${qaState.tm}" aria-label="ساعة الميتنج"><button class="mini" type="button" data-qmsave="1">سجّل الميتنج</button>${to}`;
+  return `<b>ميتنج:</b> ${meetLine(m)}${to}`}
+document.addEventListener("input",e=>{const id=e.target.id;
+  if(id==="qm-date"){qaState.d=e.target.value;return}if(id==="qm-time"){qaState.tm=e.target.value;return}
+  if(id!=="qa-title")return;const was=parseMeet(qaState.t);qaState.t=e.target.value;const m=parseMeet(qaState.t);if(!m){qaState.d="";qaState.tm=""}
+  const el=$("#qa-meet");if(!el)return;el.hidden=!m;
+  if(!m||!(was&&was.partial&&m.partial&&$("#qm-time")))el.innerHTML=meetPreview();});
 function notesView(){
   const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
   const by=(a,b)=>(b.createdAt||0)-(a.createdAt||0);
@@ -899,7 +914,7 @@ document.addEventListener("click",async e=>{
 });
 document.addEventListener("click",e=>{
   if(e.target.closest("[data-paper]")){$("#paper-btn").click();return}
-  if(e.target.closest("[data-qamore]")){const t=$("#qa-title").value.trim(),a=$("#qa-area").value;openEditor(null);$("#f-title").value=t;$("#f-area").value=a;fillKinds("");if(a==="work")$("#f-client").value=findClient(t);clientInfo();$("#f-today").checked=true;$("#qa-title").value="";$("#qa-meet").hidden=true;return}
+  if(e.target.closest("[data-qamore]")){const t=$("#qa-title").value.trim(),a=$("#qa-area").value;openEditor(null);$("#f-title").value=t;$("#f-area").value=a;fillKinds("");if(a==="work")$("#f-client").value=findClient(t);clientInfo();$("#f-today").checked=true;$("#qa-title").value="";qaState={t:"",d:"",tm:""};$("#qa-meet").hidden=true;return}
 });
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
@@ -1068,15 +1083,19 @@ function quickAdd(){
   let a="work";try{a=LS.getItem("qaArea")||"work"}catch(_){}
   if(!AREA[a])a="work";
   return `<section class="section"><form class="quick" id="quick-add" style="padding-top:14px">
-    <input id="qa-title" maxlength="160" placeholder="تاسك جديد، أو «ميتنج مع … بكره الساعة 5»" aria-label="تاسك جديد للنهارده">
+    <input id="qa-title" maxlength="160" placeholder="تاسك جديد، أو «ميتنج مع … بكره الساعة 5»" aria-label="تاسك جديد للنهارده" value="${esc(qaState.t)}">
     <select id="qa-area" aria-label="القسم">${AREAS.map(([k,n])=>`<option value="${k}" ${k===a?"selected":""}>${n}</option>`).join("")}</select>
-    <button class="btn primary" type="submit">أضف</button><button class="btn" type="button" data-qamore="1" title="افتح التاسك بكل التفاصيل">تفاصيل</button></form><div class="qa-meet" id="qa-meet" hidden></div></section>`;
+    <button class="btn primary" type="submit">أضف</button><button class="btn" type="button" data-qamore="1" title="افتح التاسك بكل التفاصيل">تفاصيل</button></form><div class="qa-meet" id="qa-meet" ${parseMeet(qaState.t)?"":"hidden"}>${meetPreview()}</div></section>`;
 }
 document.addEventListener("change",e=>{if(e.target.id==="qa-area")try{LS.setItem("qaArea",e.target.value)}catch(_){}});
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="quick-add")return;e.preventDefault();
   const inp=$("#qa-title");const title=inp.value.trim();if(!title)return;inp.value="";
-  const mt=parseMeet(title);$("#qa-meet").hidden=true;
+  let mt=parseMeet(title);
+  if(mt&&mt.partial){const tv=qaState.tm||($("#qm-time")&&$("#qm-time").value),dv=qaState.d||($("#qm-date")&&$("#qm-date").value);
+    if(!tv){inp.value=title;toast("اختار ساعة الميتنج الأول، أو اكتبها: «بكره الساعة 5»");const q=$("#qm-time");if(q)q.focus();return}
+    mt={title:mt.title,date:dv||mt.date,time:tv}}
+  qaState={t:"",d:"",tm:""};$("#qa-meet").hidden=true;$("#qa-meet").innerHTML="";
   if(mt){if(!calCfg)window.open(calUrl(mt),"_blank","noopener");askNotify();
     const id="m"+sid();await meetCol.doc(id).set({title:mt.title,date:mt.date,time:mt.time,calId:"",createdAt:Date.now()});
     if(calCfg)calSave(id);else toast(`الميتنج اتسجل: ${dayName(mt.date)} ${fmtTime(mt.time)}`);return}
