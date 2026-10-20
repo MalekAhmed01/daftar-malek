@@ -961,7 +961,7 @@ document.addEventListener("click",e=>{
 /* ===== المساعد: free AI that plans and organises tasks, like Claude does in the tracking chat.
    Provider: OpenRouter (free models) or Google Gemini (free tier), with Malek's own free key kept in this browser only (ai-cfg).
    The model answers with a short reply + a list of proposed changes; nothing is written until Malek ticks and presses «طبّق». */
-const AI_KEY="ai-cfg", AI_VER="20/10 18:50";
+const AI_KEY="ai-cfg", AI_VER="20/10 18:55";
 const AI_PROV={
   gemini:{name:"Google Gemini (ننصح بيه)",keyUrl:"https://aistudio.google.com/apikey",hint:"مجاني ومستقر، ومش محتاج فيزا. ليه حد يومي (مئات الطلبات بموديلات Flash-Lite). جوجل ممكن تستخدم الكلام في تحسين خدماتها، فمتكتبش فيه حاجة سرية."},
   openrouter:{name:"OpenRouter",keyUrl:"https://openrouter.ai/settings/keys",hint:"بديل مجاني (موديلات آخرها :free)، حوالي 50 طلب في اليوم، والموديلات المجانية بتتغير كتير."}};
@@ -977,7 +977,8 @@ async function aiModels(c){
     return (j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent")&&/flash|gemma/i.test(m.name)&&!/image|tts|audio|live|embed/i.test(m.name)).map(m=>m.name.replace(/^models\//,""))}
   const r=await fetch("https://openrouter.ai/api/v1/models");if(!r.ok)throw new Error("net");const j=await r.json();
   return (j.data||[]).filter(m=>/:free$/.test(m.id)).map(m=>m.id)}
-function aiPickModel(list){const pref=[/^gemini-[\d.]+-flash-lite$/i,/gemini.*flash-lite(?!.*preview)/i,/^gemini-[\d.]+-flash$/i,/gemini.*flash/i,/deepseek.*(v3|chat)/i,/qwen.*(235|72|32)/i,/gpt-oss-120b/i,/llama-?3\.3-70b|llama-4/i,/gemma/i,/flash/i];
+const aiVer=m=>{const x=String(m).match(/gemini-(\d+(?:\.\d+)?)/);return x?parseFloat(x[1]):0};
+function aiPickModel(list){list=list.filter(m=>!/preview|exp|latest|omni/i.test(m)&&!(/^gemini-/i.test(m)&&aiVer(m)<3)).sort((a,b)=>aiVer(b)-aiVer(a)).concat(list);const pref=[/^gemini-[\d.]+-flash-lite$/i,/gemini.*flash-lite(?!.*preview)/i,/^gemini-[\d.]+-flash$/i,/gemini.*flash/i,/deepseek.*(v3|chat)/i,/qwen.*(235|72|32)/i,/gpt-oss-120b/i,/llama-?3\.3-70b|llama-4/i,/gemma/i,/flash/i];
   for(const p of pref){const m=list.find(x=>p.test(x));if(m)return m}return list[0]||""}
 
 function aiContext(){
