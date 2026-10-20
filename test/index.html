@@ -267,7 +267,11 @@ a.tag.cal:hover{background:var(--accent-soft)}
 .dnav button{all:unset;cursor:pointer;width:30px;height:30px;display:grid;place-items:center;border-radius:8px;border:1px solid var(--line);color:var(--ink);font-size:16px}
 .dnav button:hover{background:var(--paper)}.dnav button:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 .dnav button[disabled]{opacity:.35;cursor:default}
-.dnav .dlab{all:unset;cursor:pointer;font-weight:600;flex:1;text-align:center;padding:4px;border-radius:8px}
+.dnav .dlab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+.dnav .dlab button{all:unset;cursor:pointer;font-weight:600;padding:4px 10px;border-radius:8px;width:auto;height:auto;border:0}
+.dnav .dlab button:hover{background:var(--paper)}
+.dnav .dlab .dtoday{font-weight:400;font-size:12px;color:var(--accent);padding:0 6px}
+.dnav #dpick{position:absolute;inset:0;opacity:0;pointer-events:none;width:100%}
 .mini.night{font-size:12px}
 select{-webkit-appearance:none;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238a93a2' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")!important;
@@ -515,10 +519,12 @@ function doneDayView(){
   const l=tasks.filter(t=>t.status==="done"&&isTop(t)&&t.doneDate===d).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
   return `<section class="section"><h2>اللي خلص<small>${l.length}</small></h2><div class="dnav">
     <button type="button" data-dday="-1" aria-label="اليوم اللي قبله">›</button>
-    <button type="button" class="dlab" data-dday="0" title="ارجع للنهارده">${esc(dayName(d))}</button>
+    <span class="dlab"><button type="button" data-dpick="1" title="اختار يوم">${esc(dayName(d))} <span aria-hidden="true">▾</span></button><input type="date" id="dpick" max="${today()}" value="${d}" aria-label="اختار يوم" tabindex="-1">${d<today()?`<button type="button" class="dtoday" data-dday="0">ارجع للنهارده</button>`:""}</span>
     <button type="button" data-dday="1" aria-label="اليوم اللي بعده" ${d>=today()?"disabled":""}>‹</button></div>
     ${l.length?l.map(t=>row(t,{showPlan:false,noDone:true})).join(""):`<div class="empty">مفيش حاجة خلصت ${d===today()?"النهارده لسه":"اليوم ده"}.</div>`}</section>`;
 }
+document.addEventListener("click",e=>{if(!e.target.closest("[data-dpick]"))return;const i=$("#dpick");try{i.showPicker()}catch(_){i.style.pointerEvents="auto";i.focus();i.click()}});
+document.addEventListener("change",e=>{if(e.target.id!=="dpick"||!e.target.value)return;doneDay=e.target.value>=today()?"":e.target.value;render()});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-dday]");if(!b||b.disabled)return;const k=+b.dataset.dday;
   const d=doneDay&&doneDay<today()?doneDay:today();doneDay=k===0?"":k<0?prevDay(d):nextDay(d);if(doneDay>=today())doneDay="";
   render();const nb=document.querySelector(`[data-dday="${k}"]`);if(nb&&!nb.disabled)nb.focus()});
