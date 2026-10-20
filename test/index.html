@@ -261,6 +261,35 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+.ai-fab{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:14;border:0;border-radius:999px;padding:11px 16px;background:var(--accent);color:var(--sheet);font:inherit;font-weight:600;font-size:14.5px;box-shadow:0 6px 20px rgba(0,0,0,.18);cursor:pointer}
+.ai-fab:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+body.has-pomo .ai-fab{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+body.ai-on .ai-fab{display:none}
+.ai-ov{position:fixed;inset:0;z-index:40;background:rgba(10,14,22,.35);display:flex;justify-content:flex-start}
+.ai-ov[hidden]{display:none}
+.ai-panel{width:min(440px,100%);height:100%;background:var(--sheet);border-inline-end:1px solid var(--line);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.2)}
+.ai-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}.ai-head b{font-size:17px}.ai-head .note{flex:1}
+.ai-head .x{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;font-size:20px;color:var(--muted)}.ai-head .x:hover{background:var(--paper)}
+.ai-panel-in{flex:1;min-height:0;display:flex;flex-direction:column}
+.ai-msgs{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.ai-m{max-width:92%;padding:9px 12px;border-radius:12px;font-size:14.5px;line-height:1.6;white-space:pre-wrap}
+.ai-m.me{align-self:flex-start;background:var(--accent);color:var(--sheet);border-end-start-radius:4px}
+.ai-m.bot{align-self:flex-end;background:var(--paper);border:1px solid var(--line);border-end-end-radius:4px;white-space:normal}
+.ai-wait{color:var(--muted)}
+.ai-acts{display:flex;flex-direction:column;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.ai-act{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;cursor:pointer}.ai-act input{margin-top:4px}.ai-act.done{color:var(--muted)}
+.ai-acts .btn{align-self:flex-start;margin-top:4px}
+.ai-chips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px;border-top:1px solid var(--line)}
+.ai-in{display:flex;gap:8px;padding:8px 16px 6px;align-items:flex-end}
+.ai-in textarea{flex:1;font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 10px;resize:none;min-height:42px;max-height:140px}
+.ai-foot{display:flex;justify-content:space-between;padding:4px 16px 12px}
+.ai-foot button{border:0;background:none;color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.ai-body{padding:14px 16px;overflow-y:auto}
+.ai-setup{display:flex;flex-direction:column;gap:10px}
+.ai-setup label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.ai-setup input,.ai-setup select{font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:8px 10px;direction:ltr;text-align:left}
+.ai-setup .err{color:var(--red);font-size:14px}.ai-setup a{color:var(--accent)}
+@media (max-width:480px){.ai-fab{padding:10px 13px;font-size:13.5px}}
 .tag.rep{color:var(--accent)}
 .rep-chips{flex-wrap:wrap;overflow:visible}
 .rep-chips .chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
@@ -430,6 +459,8 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 
   <div class="chips" id="chips" hidden></div>
   <div class="meet-alert" id="meet-alert" hidden role="alert"></div>
+  <button type="button" class="ai-fab" id="ai-fab" aria-label="المساعد"><span aria-hidden="true">✦</span> المساعد</button>
+  <div class="ai-ov" id="ai-ov" hidden><aside class="ai-panel" role="dialog" aria-label="المساعد"><div class="ai-head"><b>✦ المساعد</b><span class="note">بيقترح، وانت اللي بتوافق</span><button type="button" class="x" data-aiclose="1" aria-label="اقفل">×</button></div><div class="ai-panel-in" id="ai-panel-in"></div></aside></div>
   <main id="view" class="sheet"><div class="empty">بيحمّل التسكات…</div></main>
   <div class="foot" id="foot" hidden><button type="button" id="gh-settings">الاتصال بـ GitHub</button></div>
 </div>
@@ -457,7 +488,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
     </div>
     <details class="field" id="notes-wrap"><summary class="lab" style="cursor:pointer">ملاحظات</summary><textarea id="f-notes" maxlength="1000"></textarea></details>
     <div class="actions">
-      <div class="grow"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" id="ed-cancel">إلغاء</button><button class="btn" type="button" id="ed-subs" hidden>+ تسكات فرعية</button><button class="btn" type="button" id="ed-pomo" hidden>▶ بومودورو</button></div>
+      <div class="grow"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" id="ed-cancel">إلغاء</button><button class="btn" type="button" id="ed-subs" hidden>+ تسكات فرعية</button><button class="btn" type="button" id="ed-ai" hidden>✦ قسّمه</button><button class="btn" type="button" id="ed-pomo" hidden>▶ بومودورو</button></div>
       <button class="btn danger" type="button" id="ed-delete" hidden>امسح</button>
     </div>
   </form>
@@ -892,6 +923,7 @@ function settingsView(){
     <section class="section"><h2>الروتين الثابت</h2><div class="sets">${rtHtml}<div class="srow"><button type="button" class="mini" data-srtadd="1">+ عنصر</button></div></div></section>
     <div class="sets" style="padding-top:0"><div class="srow"><button class="btn primary" type="button" data-ssave="1">احفظ الأقسام والروتين</button><button class="btn" type="button" data-sreset="1">إلغاء</button></div></div>
     <section class="section">${pomoBox}</section>
+    <section class="section"><h2>المساعد</h2><div class="sets"><div class="srow"><span style="flex:1">${aiCfg&&aiCfg.key?`متربط ✓ (${esc(AI_PROV[aiCfg.prov]?.name||"")} · ${esc(aiCfg.model||"")})`:"مش متربط. محتاج مفتاح مجاني مرة واحدة."}</span><button class="mini" type="button" data-aisetopen="1">${aiCfg&&aiCfg.key?"عدّل":"اربط"}</button></div></div></section>
     <section class="section"><h2>الكالندر</h2><div class="sets"><div class="srow"><span style="flex:1">${calCfg?"متربط ✓ الميتنجات بتتضاف لوحدها.":"مش متربط. الميتنجات بتفتح الكالندر متكتبة."}</span><button class="mini" type="button" data-calsetup="1">${calCfg?"عدّل":"اربط"}</button></div></div></section>
     <section class="section"><h2>المحذوفات<small>${tr.length}</small></h2>
       <div class="note" style="padding:0 16px 8px">أي حاجة بتمسحها بتفضل هنا أسبوع، وبعدها بتتمسح لوحدها.</div>
@@ -919,12 +951,193 @@ document.addEventListener("click",async e=>{
     try{await db.collection("config").doc("areas").set({names,kinds,hidden:d.hidden});await db.collection("config").doc("routine").set({items});
       areaCfg={names,kinds,hidden:d.hidden};applyAreaCfg();routineItems=items;setDraft=null;renderChips&&renderChips();render();toast("اتحفظ ✓")}catch(_){toast("ماتحفظش، جرّب تاني")}return}
   if(b.dataset.restore){restoreTrash(b.dataset.restore);return}
+  if(b.dataset.aisetopen){openAi();aiShowSet=!!(aiCfg&&aiCfg.key);paintAi();return}
   if(b.dataset.ghset){const g=$("#gh-settings");if(g)g.click();return}
 });
 document.addEventListener("click",e=>{
   if(e.target.closest("[data-paper]")){$("#paper-btn").click();return}
   if(e.target.closest("[data-qamore]")){const t=$("#qa-title").value.trim(),a=$("#qa-area").value;openEditor(null);$("#f-title").value=t;$("#f-area").value=a;fillKinds("");if(a==="work")$("#f-client").value=findClient(t);clientInfo();$("#f-today").checked=true;$("#qa-title").value="";qaState={t:"",d:"",tm:""};$("#qa-meet").hidden=true;return}
 });
+/* ===== المساعد: free AI that plans and organises tasks, like Claude does in the tracking chat.
+   Provider: OpenRouter (free models) or Google Gemini (free tier), with Malek's own free key kept in this browser only (ai-cfg).
+   The model answers with a short reply + a list of proposed changes; nothing is written until Malek ticks and presses «طبّق». */
+const AI_KEY="ai-cfg";
+const AI_PROV={
+  gemini:{name:"Google Gemini (ننصح بيه)",keyUrl:"https://aistudio.google.com/apikey",hint:"مجاني ومستقر، ومش محتاج فيزا. ليه حد يومي (مئات الطلبات بموديلات Flash-Lite). جوجل ممكن تستخدم الكلام في تحسين خدماتها، فمتكتبش فيه حاجة سرية."},
+  openrouter:{name:"OpenRouter",keyUrl:"https://openrouter.ai/settings/keys",hint:"بديل مجاني (موديلات آخرها :free)، حوالي 50 طلب في اليوم، والموديلات المجانية بتتغير كتير."}};
+let aiCfg=null;try{aiCfg=JSON.parse(LS.getItem(AI_KEY)||"null")}catch(_){}
+const aiSave=c=>{aiCfg=c;try{c?LS.setItem(AI_KEY,JSON.stringify(c)):LS.removeItem(AI_KEY)}catch(_){}};
+let aiMsgs=[], aiBusy=false, aiOpen=false, aiFocus="";
+try{aiMsgs=JSON.parse(LS.getItem("ai-chat")||"[]").slice(-20)}catch(_){}
+const aiKeep=()=>{try{LS.setItem("ai-chat",JSON.stringify(aiMsgs.slice(-20).map(m=>({...m,actions:(m.actions||[]).map(a=>({...a}))}))))}catch(_){}};
+
+async function aiModels(c){
+  if(c.prov==="gemini"){const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(c.key)}&pageSize=200`);
+    if(r.status===400||r.status===403)throw new Error("key");if(!r.ok)throw new Error("net");const j=await r.json();
+    return (j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent")&&/flash|gemma/i.test(m.name)&&!/image|tts|audio|live|embed/i.test(m.name)).map(m=>m.name.replace(/^models\//,""))}
+  const r=await fetch("https://openrouter.ai/api/v1/models");if(!r.ok)throw new Error("net");const j=await r.json();
+  return (j.data||[]).filter(m=>/:free$/.test(m.id)).map(m=>m.id)}
+function aiPickModel(list){const pref=[/^gemini-[\d.]+-flash-lite$/i,/gemini.*flash-lite(?!.*preview)/i,/^gemini-[\d.]+-flash$/i,/gemini.*flash/i,/deepseek.*(v3|chat)/i,/qwen.*(235|72|32)/i,/gpt-oss-120b/i,/llama-?3\.3-70b|llama-4/i,/gemma/i,/flash/i];
+  for(const p of pref){const m=list.find(x=>p.test(x));if(m)return m}return list[0]||""}
+
+function aiContext(){
+  const open=tasks.filter(t=>t.status!=="done");
+  const line=t=>{const p=parentOf(t);return [t.id,t.title,AREA[t.area]||t.area,t.pri,t.client||"",t.due?"ديدلاين "+t.due:"",inToday(t)?"في النهارده":(t.planDate?"متحط "+t.planDate:""),p?"فرعي تحت "+p.id:"",t.repeat?"بيتكرر "+repText(t.repeat):"",subsOf(t.id).length?`${subsOf(t.id).filter(s=>s.status==="done").length}/${subsOf(t.id).length} فرعي`:""].filter(Boolean).join(" | ")};
+  const d7=ymd(new Date(Date.now()-6*864e5));
+  const done=tasks.filter(t=>t.status==="done"&&t.doneDate>=d7&&isTop(t)).map(t=>`${t.doneDate} | ${t.title} | ${AREA[t.area]||""}`);
+  const rd=(routineDays[today()]||{}).done||{};
+  const meets=upcoming().slice(0,8).map(m=>`${m.date} ${m.time} | ${m.title}`);
+  return `النهارده ${today()} (${DOW[new Date().getDay()]})، الساعة ${new Date().toTimeString().slice(0,5)} بتوقيت القاهرة.
+الأقسام: ${AREAS.map(a=>a[0]+"="+a[1]).join("، ")}.
+الروتين النهارده: ${routineItems.map(i=>i.t+(rd[i.id]?" ✓":" ✗")).join("، ")}.
+الميتنجات الجاية: ${meets.join(" ؛ ")||"مفيش"}.
+التسكات المفتوحة (id | الاسم | القسم | اللون | العميل | ...):
+${open.map(line).join("\n")||"مفيش"}
+اللي خلص آخر 7 أيام:
+${done.join("\n")||"مفيش"}`;
+}
+const AI_SYS=`انت «المساعد» جوه دفتر مالك. مالك فيديو إيديتور وموشن ديزاينر في مصر. بتساعده يقسّم تسكاته وينظّمها ويتابعها، بالمصري، مختصر وواضح.
+قواعد الدفتر:
+- الألوان: red مهم جداً، blue أقل أهمية (الافتراضي)، black ممكن يتأجل. الترتيب: الأحمر، بعده الأزرق، بعده الأسود.
+- شغل العملاء (القسم work) أولوية أولى لما اليوم يتزنق.
+- معاد نومه مش ثابت، فخطة اليوم بتتبني على عدد الساعات من وقت ما صحي. لو مقالش صحي إمتى وقدامه كام ساعة واتطلب منك خطة، اسأله.
+- خلي بالك من اللي متأجل من أيام، واسأله يتعمل النهارده ولا يتأجل ولا يتشال.
+- التاسك الكبير يتقسم لتسكات فرعية صغيرة واضحة (كل واحدة حاجة تتعمل في قعدة).
+- متمسحش أي حاجة. ومتقترحش تغيير غير لما يكون مفيد.
+رد دايماً بـ JSON بس، من غير أي كلام برّاه، بالشكل ده:
+{"reply":"كلامك لمالك (سطور قصيرة)","actions":[...]}
+الـ actions اقتراحات، مالك هو اللي هيوافق عليها. الأنواع المسموحة:
+{"type":"plan","id":"<id>"} يحط التاسك في النهارده
+{"type":"unplan","id":"<id>"} يشيله من النهارده
+{"type":"pri","id":"<id>","pri":"red|blue|black"}
+{"type":"add","title":"...","area":"work|content|study|side|personal","pri":"blue","client":"","today":true}
+{"type":"sub","parent":"<id>","title":"..."} تاسك فرعي تحت تاسك موجود
+{"type":"done","id":"<id>"} لو مالك قال إنه خلّصه
+{"type":"note","text":"..."} نوت يرجعلها بعدين
+استخدم الـ ids زي ما هي في القايمة بالظبط. لو مفيش تغيير، "actions":[]`;
+
+async function aiCall(userText){
+  const ctx=aiContext();
+  const hist=aiMsgs.slice(-8).map(m=>({role:m.role==="ai"?"assistant":"user",content:m.role==="ai"?JSON.stringify({reply:m.text,actions:[]}):m.text}));
+  const msgs=[{role:"system",content:AI_SYS+"\n\nحالة الدفتر دلوقتي:\n"+ctx},...hist,{role:"user",content:userText}];
+  let raw="";
+  const tryModels=[aiCfg.model,...(aiCfg.models||[]).filter(m=>m!==aiCfg.model&&/flash/i.test(m)).sort((a,b)=>aiRank(a)-aiRank(b)).slice(0,2)];
+  for(let k=0;k<tryModels.length;k++){try{raw=await aiOnce(msgs,tryModels[k]);break}catch(e){if(!(e.message==="limit"||e.message==="busy")||k===tryModels.length-1)throw e}}
+  return aiParse(raw);
+}
+const aiRank=m=>{const p=[/flash-lite$/i,/flash$/i,/flash-lite/i,/flash/i];const i=p.findIndex(x=>x.test(m));return i<0?9:i};
+async function aiOnce(msgs,model){let raw="";
+  if(aiCfg.prov==="gemini"){
+    const body={systemInstruction:{parts:[{text:msgs[0].content}]},contents:msgs.slice(1).map(m=>({role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]})),generationConfig:{responseMimeType:"application/json",temperature:.4}};
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(aiCfg.key)}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(r.status===429)throw new Error("limit");if(r.status===503||r.status===500)throw new Error("busy");if(r.status===400||r.status===403)throw new Error("key");if(!r.ok)throw new Error("net");
+    const j=await r.json();raw=((j.candidates||[])[0]?.content?.parts||[]).map(p=>p.text||"").join("");
+  }else{
+    const r=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+aiCfg.key,"X-Title":"Daftar Malek"},body:JSON.stringify({model,messages:msgs,temperature:.4})});
+    if(r.status===429)throw new Error("limit");if(r.status>=500)throw new Error("busy");if(r.status===401||r.status===403)throw new Error("key");if(!r.ok)throw new Error("net");
+    const j=await r.json();raw=(j.choices||[])[0]?.message?.content||"";
+  }
+  return raw;
+}
+function aiParse(raw){
+  let s=String(raw||"").trim().replace(/^```(?:json)?\s*/i,"").replace(/```\s*$/,"");
+  const a=s.indexOf("{"),b=s.lastIndexOf("}");let o=null;
+  if(a>=0&&b>a){try{o=JSON.parse(s.slice(a,b+1))}catch(_){}}
+  if(!o)return {reply:s||"مفهمتش، جرّب تاني.",actions:[]};
+  const ok=x=>x&&typeof x==="object";
+  const acts=(Array.isArray(o.actions)?o.actions:[]).filter(ok).filter(x=>{
+    if(["plan","unplan","pri","done"].includes(x.type))return tasks.some(t=>t.id===x.id)&&(x.type!=="pri"||["red","blue","black"].includes(x.pri));
+    if(x.type==="add")return typeof x.title==="string"&&x.title.trim();
+    if(x.type==="sub")return typeof x.title==="string"&&x.title.trim()&&tasks.some(t=>t.id===x.parent&&!t.parentId);
+    if(x.type==="note")return typeof x.text==="string"&&x.text.trim();
+    return false}).slice(0,25).map(x=>({...x,on:true}));
+  return {reply:String(o.reply||"").trim()||"تمام.",actions:acts};
+}
+function aiActText(a){const t=id=>{const x=tasks.find(y=>y.id===id);return x?"«"+clip(x.title,50)+"»":"تاسك"};
+  const P={red:"أحمر",blue:"أزرق",black:"أسود"};
+  switch(a.type){case "plan":return `حط ${t(a.id)} في النهارده`;case "unplan":return `شيل ${t(a.id)} من النهارده`;
+    case "pri":return `خلي ${t(a.id)} ${P[a.pri]}`;case "done":return `علّم ${t(a.id)} خلص`;
+    case "add":return `تاسك جديد: «${clip(a.title,60)}»${AREA[a.area]?" في "+AREA[a.area]:""}${a.today?" للنهارده":""}`;
+    case "sub":return `فرعي تحت ${t(a.parent)}: «${clip(a.title,60)}»`;case "note":return `نوت: «${clip(a.text,70)}»`}return ""}
+async function aiApply(mi){
+  const m=aiMsgs[mi];if(!m)return;let n=0;
+  for(const a of m.actions.filter(x=>x.on&&!x.applied)){
+    try{
+      if(a.type==="plan"){const t=tasks.find(x=>x.id===a.id);if(t)await write(t.id,t.repeat?{skip:"",planDate:today()}:{planDate:today()})}
+      else if(a.type==="unplan"){const t=tasks.find(x=>x.id===a.id);if(t)await write(t.id,t.repeat?{skip:today(),planDate:""}:{planDate:""})}
+      else if(a.type==="pri")await write(a.id,{pri:a.pri});
+      else if(a.type==="done"){const t=tasks.find(x=>x.id===a.id);if(t&&t.status!=="done"&&!subsOf(t.id).some(s=>s.status!=="done"))await toggleTask(t);else if(t&&t.status!=="done"){toast("فيه فرعيين مفتوحين، علّمهم الأول");continue}}
+      else if(a.type==="add"){const area=AREA[a.area]?a.area:"work";await write("t"+sid(),{title:a.title.trim().slice(0,160),area,kind:"",pri:["red","blue","black"].includes(a.pri)?a.pri:"blue",client:area==="work"?(a.client||findClient(a.title)||""):"",stage:"",due:"",notes:"",status:"open",planDate:a.today?today():"",createdAt:Date.now(),doneAt:null,doneDate:null},true)}
+      else if(a.type==="sub"){const p=tasks.find(x=>x.id===a.parent);if(!p)continue;
+        await write("t"+sid(),{title:a.title.trim().slice(0,160),area:p.area,kind:p.kind||"",pri:p.pri||"blue",client:p.client||"",stage:"",due:"",notes:"",status:"open",planDate:"",createdAt:Date.now(),doneAt:null,doneDate:null,parentId:p.id},true);
+        if(p.status==="done")await applyDone(p,false);expanded.add(p.id);saveExpanded()}
+      else if(a.type==="note"){await writeNote("n"+sid(),{text:a.text.trim().slice(0,2000),area:"",review:false,resolved:false,by:"claude",d:today(),createdAt:Date.now()},true)}
+      a.applied=true;n++}catch(_){}
+  }
+  aiKeep();paintAi();render();toast(n?`اتطبق ${n}`:"مفيش حاجة اتطبقت")}
+
+function aiSetupHtml(msg){const c=aiCfg||{prov:"gemini",key:"",model:""};const p=AI_PROV[c.prov]||AI_PROV.gemini;
+  return `<form class="ai-setup" id="ai-form" autocomplete="off">
+    <div class="note">المساعد بيشتغل بمفتاح مجاني من حسابك، والمفتاح بيتحفظ في المتصفح ده بس.</div>
+    <div class="chips" role="group" aria-label="الخدمة">${Object.entries(AI_PROV).map(([k,v])=>`<button type="button" class="chip" data-aiprov="${k}" aria-pressed="${c.prov===k}">${v.name}</button>`).join("")}</div>
+    <div class="note">${esc(p.hint)} اعمل مفتاح من <a href="${p.keyUrl}" target="_blank" rel="noopener">${p.keyUrl.replace(/^https:\/\//,"")}</a> والزقه هنا.</div>
+    <label>المفتاح<input id="ai-key" type="password" placeholder="${c.key?"محفوظ، سيبه فاضي لو مش هتغيره":"الصق المفتاح"}" spellcheck="false"></label>
+    ${c.models&&c.models.length?`<label>الموديل<select id="ai-model">${c.models.map(m=>`<option ${m===c.model?"selected":""}>${esc(m)}</option>`).join("")}</select></label>`:""}
+    ${msg?`<div class="err">${esc(msg)}</div>`:""}
+    <div class="srow"><button class="btn primary" type="submit">${c.key?"احفظ":"اربط"}</button>${c.key?`<button class="btn danger" type="button" data-aioff="1">افصل</button>`:""}</div></form>`}
+
+function aiPanel(){
+  if(!aiCfg||!aiCfg.key)return `<div class="ai-body">${aiSetupHtml("")}</div>`;
+  const chips=[["رتّبلي النهارده","رتّبلي النهارده. لو محتاج تعرف صحيت إمتى وقدامي كام ساعة اسألني."],["إيه المتأخر؟","إيه التسكات المتأجلة من أيام أو اللي الديدلاين بتاعها قرب أو عدّى؟ واقترح أعمل فيها إيه."],["قسّم تاسك كبير","اختار أكبر تاسك مفتوح مالوش فرعيين وقسّمه لخطوات صغيرة."],["أنا عملت إيه الأسبوع ده؟","لخّصلي عملت إيه آخر 7 أيام، وإيه القسم اللي مخدش حقه."]];
+  return `<div class="ai-msgs" id="ai-msgs">${aiMsgs.length?"":`<div class="note" style="padding:8px 2px">قوله أي حاجة: «صحيت 2 الضهر وقدامي 8 ساعات رتّبلي اليوم»، أو «قسّملي فيديو هايدي»، أو «خلّصت الكابشنز».</div>`}
+    ${aiMsgs.map((m,i)=>m.role==="user"?`<div class="ai-m me">${esc(m.text)}</div>`:`<div class="ai-m bot"><div>${esc(m.text).replace(/\n/g,"<br>")}</div>
+      ${(m.actions||[]).length?`<div class="ai-acts">${m.actions.map((a,j)=>`<label class="ai-act ${a.applied?"done":""}"><input type="checkbox" data-aiact="${i}|${j}" ${a.on?"checked":""} ${a.applied?"disabled":""}> <span>${esc(aiActText(a))}</span>${a.applied?" ✓":""}</label>`).join("")}
+        ${m.actions.some(a=>!a.applied)?`<button class="btn primary" type="button" data-aiapply="${i}">طبّق اللي متعلّم</button>`:""}</div>`:""}</div>`).join("")}
+    ${aiBusy?`<div class="ai-m bot ai-wait">بيفكر…</div>`:""}</div>
+  <div class="ai-chips">${chips.map(([l,q])=>`<button type="button" class="chip" data-aiq="${esc(q)}">${l}</button>`).join("")}</div>
+  <form class="ai-in" id="ai-in"><textarea id="ai-text" rows="2" placeholder="اكتب للمساعد…" aria-label="اكتب للمساعد"></textarea><button class="btn primary" type="submit" ${aiBusy?"disabled":""}>ابعت</button></form>
+  <div class="ai-foot"><button type="button" data-aiclear="1">مسح المحادثة</button><button type="button" data-aiset="1">إعدادات المساعد</button></div>`;
+}
+let aiShowSet=false;
+function paintAi(){const ov=$("#ai-ov");if(!ov)return;ov.hidden=!aiOpen;document.body.classList.toggle("ai-on",aiOpen);if(!aiOpen)return;
+  const keep=$("#ai-text")?$("#ai-text").value:"";
+  $("#ai-panel-in").innerHTML=aiShowSet?`<div class="ai-body">${aiSetupHtml("")}<div class="ai-foot"><button type="button" data-aiback="1">رجوع للمحادثة</button></div></div>`:aiPanel();
+  const t=$("#ai-text");if(t){t.value=keep}const ms=$("#ai-msgs");if(ms)ms.scrollTop=ms.scrollHeight}
+async function aiSend(text){text=String(text||"").trim();if(!text||aiBusy)return;
+  if(aiFocus){const t=tasks.find(x=>x.id===aiFocus);if(t)text+=`\n(التاسك المقصود: ${t.id} «${t.title}»)`;aiFocus=""}
+  aiMsgs.push({role:"user",text});aiBusy=true;paintAi();const t=$("#ai-text");if(t)t.value="";
+  try{const r=await aiCall(text);aiMsgs.push({role:"ai",text:r.reply,actions:r.actions})}
+  catch(e){aiMsgs.push({role:"ai",text:e.message==="key"?"المفتاح مش شغال. افتح «إعدادات المساعد» وحط مفتاح جديد.":e.message==="limit"?"خلصت الحدود المجانية للنهارده أو للدقيقة دي. جرّب كمان شوية، أو غيّر الموديل من الإعدادات.":"مقدرتش أوصل للخدمة. اتأكد إن النت شغال وجرّب تاني.",actions:[]})}
+  aiBusy=false;aiKeep();paintAi()}
+function openAi(q,focusId){aiOpen=true;aiShowSet=false;aiFocus=focusId||"";paintAi();if(q&&aiCfg&&aiCfg.key)aiSend(q);else setTimeout(()=>{const t=$("#ai-text")||$("#ai-key");t&&t.focus()},30)}
+document.addEventListener("click",async e=>{
+  if(e.target.closest("#ai-fab")){aiOpen?(aiOpen=false,paintAi()):openAi();return}
+  if(e.target.closest("[data-aiclose]")||e.target.id==="ai-ov"){aiOpen=false;paintAi();return}
+  const q=e.target.closest("[data-aiq]");if(q){aiSend(q.dataset.aiq);return}
+  const ap=e.target.closest("[data-aiapply]");if(ap){aiApply(+ap.dataset.aiapply);return}
+  if(e.target.closest("[data-aiclear]")){aiMsgs=[];aiKeep();paintAi();return}
+  if(e.target.closest("[data-aiset]")){aiShowSet=true;paintAi();return}
+  if(e.target.closest("[data-aiback]")){aiShowSet=false;paintAi();return}
+  const pv=e.target.closest("[data-aiprov]");if(pv){const c={...(aiCfg||{}),prov:pv.dataset.aiprov};if(c.prov!==(aiCfg||{}).prov){c.key="";c.models=[];c.model=""}aiSave(c.key?c:{...c});
+    const box=e.target.closest(".ai-setup");if(box)box.outerHTML=aiSetupHtml("");return}
+  if(e.target.closest("[data-aioff]")){aiSave(null);aiMsgs=[];aiKeep();aiShowSet=false;if(view==="settings")render();paintAi();toast("المساعد اتفصل");return}
+  const ed=e.target.closest("#ed-ai");if(ed&&editing){const id=editing.id,ti=editing.title;closeEditor();openAi(`قسّم التاسك «${ti}» لتسكات فرعية صغيرة واضحة.`,id);return}
+});
+document.addEventListener("change",e=>{const c=e.target.closest("[data-aiact]");if(!c)return;const [i,j]=c.dataset.aiact.split("|").map(Number);const a=aiMsgs[i]&&aiMsgs[i].actions[j];if(a){a.on=c.checked;aiKeep()}});
+document.addEventListener("keydown",e=>{if(e.target.id==="ai-text"&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("#ai-in").requestSubmit()}
+  if(e.key==="Escape"&&aiOpen){aiOpen=false;paintAi()}});
+document.addEventListener("submit",async e=>{
+  if(e.target.id==="ai-in"){e.preventDefault();aiSend($("#ai-text").value);return}
+  if(e.target.id!=="ai-form")return;e.preventDefault();
+  const box=e.target, base=aiCfg||{prov:"gemini"};const key=$("#ai-key").value.trim()||base.key||"";const sel=$("#ai-model");
+  if(!key){box.outerHTML=aiSetupHtml("الصق المفتاح الأول.");return}
+  const c={prov:base.prov||"gemini",key,model:sel?sel.value:base.model,models:base.models||[]};
+  try{if(!c.models.length||c.key!==base.key){c.models=await aiModels(c);c.model=aiPickModel(c.models)}}
+  catch(err){(document.getElementById("ai-form")||box).outerHTML=aiSetupHtml(err.message==="key"?"المفتاح ده مش شغال. اتأكد إنك نسخته كامل.":"مقدرتش أوصل للخدمة. جرّب تاني.");return}
+  if(!c.models.length){box.outerHTML=aiSetupHtml("ملقتش موديلات مجانية على الحساب ده.");return}
+  aiSave(c);toast("المساعد اتربط ✓");aiShowSet=false;if(view==="settings")render();paintAi();
+});
+
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -1568,7 +1781,7 @@ function openEditor(t){
   $("#f-today").checked=t?!!(t.planDate&&t.planDate<=today()):view==="today";
   edPri=t?.pri||"blue";paintPri();edRep=t&&t.repeat?[...(t.repeat.days||[])]:[];paintRep();
   $("#rep-field").hidden=!!(t&&(t.parentId||subsOf(t.id).length||t.status==="done"||t.repeatOf));fillKinds(t?.kind||"");
-  $("#ed-pomo").hidden=!t||t.status==="done";
+  $("#ed-pomo").hidden=!t||t.status==="done";$("#ed-ai").hidden=!t||!!t.parentId||t.status==="done"||!!t.repeatOf;
   $("#ed-delete").hidden=!t;$("#ed-delete").dataset.sure="";$("#ed-delete").textContent="امسح";
   const names=clientNames();
   $("#clients-list").innerHTML=names.map(n=>`<option value="${esc(n)}">`).join("");
