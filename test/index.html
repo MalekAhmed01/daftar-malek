@@ -254,6 +254,12 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .gh a{color:var(--accent)}
 .foot{display:flex;justify-content:center;gap:16px;padding:6px 0 0}
 .foot button{border:0;background:none;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.fold{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border-radius:6px}
+.fold:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.fold .arr{width:22px;height:22px;display:inline-grid;place-items:center;border-radius:6px;color:var(--muted);transition:transform .15s}
+.fold:hover .arr{background:var(--paper);color:var(--ink)}
+.fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
+.section.folded{padding-bottom:4px}
 select{-webkit-appearance:none;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238a93a2' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")!important;
   background-repeat:no-repeat!important;background-position:left 12px center!important;background-size:12px 8px!important;padding-left:34px!important;padding-right:12px!important}
@@ -473,6 +479,21 @@ function subsBlock(t,subs){
     <form class="inline" data-addsub="${t.id}"><input id="addsub-${t.id}" placeholder="تاسك فرعي جديد" maxlength="160" aria-label="تاسك فرعي جديد"><button class="btn" type="submit">أضف</button></form></div>`;
 }
 
+let folded=new Set();try{folded=new Set(JSON.parse(LS.getItem("folded")||"[]"))}catch(_){}
+const ARR=`<span class="arr" aria-hidden="true"><svg width="12" height="8" viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+function foldSection(key,title,list,opts,emptyMsg){
+  const shut=folded.has(key);
+  return `<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="${key}" aria-expanded="${!shut}">${ARR}${title}</button><small>${list.length}</small></h2>${shut?"":list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-fold]");if(!b)return;const k=b.dataset.fold;
+  folded.has(k)?folded.delete(k):folded.add(k);try{LS.setItem("folded",JSON.stringify([...folded]))}catch(_){}
+  render();const nb=document.querySelector(`[data-fold="${k}"]`);if(nb)nb.focus()});
+function doneByDay(){
+  const days=[...Array(7)].map((_,i)=>ymd(new Date(Date.now()-i*864e5)));
+  const out=days.map((d,i)=>{const l=tasks.filter(t=>t.status==="done"&&isTop(t)&&t.doneDate===d).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
+    return l.length?foldSection("d:"+(i===0?"today":d),i===0?"خلص النهارده":i===1?"خلص امبارح":"خلص "+fmtDay(d),l,{showPlan:false},""):""}).join("");
+  return out||`<section class="section"><h2>اللي خلص كل يوم</h2><div class="empty">لسه مفيش حاجة خلصت آخر 7 أيام.</div></section>`;
+}
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -505,7 +526,7 @@ function renderInner(){
   }else if(view==="all"){
     const open=tasks.filter(isOpen);
     const areas=areaFilter?[areaFilter]:AREAS.map(a=>a[0]);
-    v.innerHTML=areas.map(a=>section(AREA[a],sortTasks(open.filter(t=>t.area===a&&isTop(t))),{noArea:true},"مفيش تسكات مفتوحة هنا.")).join("");
+    v.innerHTML=areas.map(a=>{const l=sortTasks(open.filter(t=>t.area===a&&isTop(t)));return areaFilter?section(AREA[a],l,{noArea:true},"مفيش تسكات مفتوحة هنا."):foldSection(a,AREA[a],l,{noArea:true},"مفيش تسكات مفتوحة هنا.")}).join("");
   }else if(view==="personal"){
     const open=tasks.filter(t=>isOpen(t)&&isTop(t));
     const since=ymd(new Date(Date.now()-6*864e5));
@@ -560,7 +581,7 @@ function renderInner(){
       <div class="week">${counts.map(([k,n,c,by])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${n}</span><div class="track"><div class="fill" style="width:${c/max*100}%"></div></div><span>${c}</span></div>${c?`<div class="wby">${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([x,y])=>`<span>${esc(x)} ${y}</span>`).join("")}</div>`:""}`).join("")}</div>
       <div class="empty">الأقسام اللي بالأحمر ماخدتش أي وقت الأسبوع ده.</div></section>
       <section class="section"><h2>الروتين الثابت<small>آخر 7 أيام</small></h2>
-      <div class="week">${routineRows.map(([n,c])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${esc(n)}</span><div class="track"><div class="fill" style="width:${c/7*100}%;background:var(--done)"></div></div><span>${c}/7</span></div>`).join("")}</div></section>`+section("آخر اللي خلص",tasks.filter(t=>t.status==="done"&&isTop(t)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0)).slice(0,15),{showPlan:false},"لسه مفيش حاجة خلصت.");
+      <div class="week">${routineRows.map(([n,c])=>`<div class="wrow ${c?"":"zero"}"><span class="name">${esc(n)}</span><div class="track"><div class="fill" style="width:${c/7*100}%;background:var(--done)"></div></div><span>${c}/7</span></div>`).join("")}</div></section>`+doneByDay();
   }else{
     const done=tasks.filter(t=>t.status==="done"&&isTop(t)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0)).slice(0,60);
     v.innerHTML=section("آخر اللي خلص",done,{showPlan:false},"لسه مفيش حاجة خلصت.");
