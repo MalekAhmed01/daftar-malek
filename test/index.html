@@ -282,6 +282,12 @@ select{-webkit-appearance:none;appearance:none;
 .pomo .btn.primary{background:var(--sheet);color:var(--ink);border-color:var(--sheet)}
 body.has-pomo{padding-bottom:110px}
 .pomo-go{font-size:12px}
+.ic{display:inline-block;vertical-align:-1px;margin-inline-end:6px}
+.mini .ic{margin-inline-end:4px;width:10px;height:10px}
+body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pomo{background:#232a38;color:#eef1f6;border-top:1px solid #39425a}
+  :root:not([data-theme="light"]) .pomo .btn{color:#eef1f6;border-color:#4a5470}
+  :root:not([data-theme="light"]) .pomo .btn.primary{background:#eef1f6;color:#1b2130;border-color:#eef1f6}}
 .fcard{padding:4px 16px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
 .fbig{font-size:64px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .fbig.paused{opacity:.45}
@@ -473,7 +479,7 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   return `<div class="task p-${t.pri||"black"} ${done?"is-done":""}">
     <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}">${done?"✓":""}</button>
     <div class="body" data-edit="${t.id}"><div class="title">${esc(t.title)}</div>${t.closeNote?`<div class="closed-note">اتقفل بنوت: ${esc(t.closeNote)}</div>`:""}<div class="meta">${meta.join("")}</div></div>
-    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}">▶ ${pset.up!==false?"ابدأ":pset.focus}</button>${planBtn}</div>`:(planBtn||nightFix(t)||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}</div>`;
+    ${timer&&!done?`<div class="tools"><button class="mini pomo-go" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}">${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?(pomo.pausedAt?"واقف":"● شغال"):IC.play+(pset.up!==false?"ابدأ":pset.focus)}</button>${planBtn}</div>`:(planBtn||nightFix(t)||"<span></span>")}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}</div>`;
 }
 function subRow(s){
   const done=s.status==="done";
@@ -722,6 +728,8 @@ const savePomo=()=>{try{pomo?LS.setItem("pomo",JSON.stringify(pomo)):LS.removeIt
 const leftMs=()=>pomo.start+pomo.len+(pomo.pausedMs||0)-(pomo.pausedAt||Date.now());
 const doneMin=()=>Math.max(0,Math.floor(((pomo.pausedAt||Date.now())-pomo.start-(pomo.pausedMs||0))/60000));
 const clock=ms=>{const s=Math.max(0,Math.ceil(ms/1000));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=String(s%60).padStart(2,"0");return h?`${h}:${String(m).padStart(2,"0")}:${x}`:`${m}:${x}`};
+const IC={play:`<svg class="ic" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5v9l8-4.5z" fill="currentColor"/></svg>`,
+  pause:`<svg class="ic" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1.5" width="3" height="9" rx="1" fill="currentColor"/><rect x="7" y="1.5" width="3" height="9" rx="1" fill="currentColor"/></svg>`};
 const upMs=()=>(pomo.pausedAt||Date.now())-pomo.start-(pomo.pausedMs||0);
 function beep(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
   [0,.35,.7].forEach(s=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=880;g.gain.value=.2*(pset.vol??80)/100;o.connect(g);g.connect(audioCtx.destination);o.start(audioCtx.currentTime+s);o.stop(audioCtx.currentTime+s+.18)})}catch(_){}}
@@ -735,7 +743,8 @@ async function addSession(taskId,min,date){
 function unlockAudio(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume&&audioCtx.resume()}catch(_){}}
 async function startPomo(id){
   const t=tasks.find(x=>x.id===id);if(!t)return;unlockAudio();
-  if(pomo&&pomo.kind==="focus"&&!pomo.doneAt)await stopPomo(true);
+  if(pomo&&pomo.kind==="focus"&&!pomo.doneAt){if(pomo.id===id){pomo.pausedAt?resumePomo():pausePomo();return}
+    const m=doneMin(),old=pomo.title;await stopPomo(true);if(m>=1)toast(`اتسجل ${fmtMin(m)} على «${clip(old,30)}»`)}
   pomo={id,title:t.title,kind:"focus",start:Date.now(),len:pset.focus*60000,up:pset.up!==false};savePomo();paintPomo();render();
 }
 async function stopPomo(silent){
@@ -755,6 +764,7 @@ async function switchTask(id){
 }
 async function skipPomo(){
   if(!pomo){return}
+  if(pomo.kind==="focus"&&!pomo.doneAt&&doneMin()<1){pomo=null;savePomo();paintPomo();render();toast("أقل من دقيقة، متسجلش");return}
   if(pomo.kind==="focus"&&!pomo.doneAt){const m=doneMin();if(m>=1)await addSession(pomo.id,m);pomo.doneAt=Date.now();pomo.len=Math.max(1,m)*60000;cycle++;savePomo();
     toast(m>=1?`اتسجل ${fmtMin(m)}`:"اتخطت من غير تسجيل");if(pset.auto){startBreak();return}paintPomo();render();return}
   if(pomo.doneAt){startBreak();return}
@@ -781,7 +791,7 @@ function paintPomo(){
       <button class="btn primary" type="button" data-pomo-break="1">استراحة</button><button class="btn" type="button" data-pomo-again="1">جلسة كمان</button><button class="btn" type="button" data-pomo-close="1">قفل</button>`;
     else{const brk=pomo.kind==="break";
       inn.innerHTML=`<div class="pomo-t" id="pomo-t"></div><div class="pomo-what">${brk?(pomo.long?"استراحة طويلة":"استراحة"):esc(pomo.title)}<small>${pomo.pausedAt?"واقف مؤقتاً":(brk?"قوم اتحرك شوية":"تركيز")}</small></div>
-        ${brk?`<button class="btn" type="button" data-pomo-skip="1">خلّص الاستراحة</button>`:`<button class="btn" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?"▶ كمّل":"⏸ وقفة"}</button><button class="btn" type="button" data-pomo-skip="1">✓ خلّصت</button>`}`}
+        ${brk?`<button class="btn" type="button" data-pomo-skip="1">خلّص الاستراحة</button>`:`<button class="btn" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?IC.play+"كمّل":IC.pause+"وقفة"}</button><button class="btn" type="button" data-pomo-skip="1">✓ خلّصت</button>`}`}
   }
   if(pomo.doneAt)return;
   const tick=()=>{if(!pomo||pomo.doneAt)return;let txt;
@@ -803,10 +813,10 @@ function focusView(){
     if(!fsTask||!tasks.some(t=>t.id===fsTask&&t.status!=="done"&&inToday(t)))fsTask=first?first.id:"";
     const len=fmode==="focus"?pset.focus:fmode==="long"?pset.long:pset.brk;
     card=`<div class="chips" role="group" aria-label="الوضع">${[["focus","تركيز"],["short","استراحة قصيرة"],["long","استراحة طويلة"]].map(([k,n])=>`<button type="button" class="chip" data-fmode="${k}" aria-pressed="${fmode===k}">${n}</button>`).join("")}</div>
-      <div class="fbig">${clock(fmode==="focus"&&pset.up!==false?0:len*60000)}</div><div class="fstatus">${fmode==="focus"?"حان وقت التركيز!":"وقت الاستراحة"}</div>
-      ${fmode!=="focus"?`<div class="frow-btns"><button class="btn primary" type="button" data-fbreak="1">▶ ابدأ الاستراحة</button></div>`
+      <div class="fbig">${clock(fmode==="focus"&&pset.up!==false?0:len*60000)}</div><div class="fstatus">${fmode==="focus"?"اختار التاسك ودوس ابدأ":"وقت الاستراحة"}</div>
+      ${fmode!=="focus"?`<div class="frow-btns"><button class="btn primary" type="button" data-fbreak="1">${IC.play}ابدأ الاستراحة</button></div>`
       :fsTask?`<div class="fpick"><select id="fs-task" aria-label="التاسك">${taskOptions(fsTask)}</select></div>
-      <div class="frow-btns"><button class="btn primary" type="button" data-fstart="1">▶ ابدأ${pset.up!==false?"":` ${pset.focus} دقيقة`}</button></div>`
+      <div class="frow-btns"><button class="btn primary" type="button" data-fstart="1">${IC.play}ابدأ${pset.up!==false?"":` ${pset.focus} دقيقة`}</button></div>`
       :`<div class="fsub">مفيش تسكات لليوم. ضيفها من «النهارده» الأول.</div>`}`;
   }else if(pomo.doneAt){
     const long=cycle%pset.every===0;
@@ -815,21 +825,21 @@ function focusView(){
       <div class="flinks"><button type="button" data-pomo-close="1">قفل</button></div>`;
   }else if(pomo.kind==="break"){
     card=`<div class="fbig" id="f-big">${clock(leftMs())}</div><div class="fsub">${pomo.long?"استراحة طويلة":"استراحة"}، قوم اتحرك شوية</div>
-      <div class="frow-btns"><button class="btn primary" type="button" data-pomo-skip="1">⏭ خلّص الاستراحة</button></div>
+      <div class="frow-btns"><button class="btn primary" type="button" data-pomo-skip="1">خلّص الاستراحة</button></div>
       <div class="flinks"><button type="button" data-pomo-plus="1">+5 دقايق</button></div>`;
   }else{
     card=pomo.up?`<div class="fbig ${pomo.pausedAt?"paused":""}" id="f-big">${clock(upMs())}</div>
       <div class="fstatus">${esc(pomo.title)}</div>
       <div class="fsub">${pomo.pausedAt?`واقف عند ${fmtMin(doneMin())}. تكمّل، ولا تسجّل الوقت ده وتقف؟`:pomo.rang?`عدّى ${fmtMin(pset.focus)}، خد استراحة لو محتاج`:"بيعد لحد ما توقف"}</div>
       <div class="frow-btns">
-        <button class="btn primary" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?"▶ كمّل":"⏸ وقفة"}</button>
+        <button class="btn primary" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?IC.play+"كمّل":IC.pause+"وقفة"}</button>
         <button class="btn" type="button" data-pomo-skip="1">✓ ${pomo.pausedAt?"سجّل الوقت ده":"خلّصت"}</button></div>
       <div class="flinks"><button type="button" data-pomo-cancel="1">ألغي من غير تسجيل</button></div>`
      :`<div class="fbig ${pomo.pausedAt?"paused":""}" id="f-big">${clock(leftMs())}</div>
       <div class="fstatus">${esc(pomo.title)}</div>
       <div class="fsub">${pomo.pausedAt?"واقف مؤقتاً · ":""}اشتغلت ${fmtMin(doneMin())} لحد دلوقتي</div>
       <div class="frow-btns">
-        <button class="btn primary" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?"▶ كمّل":"⏸ وقفة"}</button>
+        <button class="btn primary" type="button" data-pomo-${pomo.pausedAt?"resume":"pause"}="1">${pomo.pausedAt?IC.play+"كمّل":IC.pause+"وقفة"}</button>
         <button class="btn" type="button" data-pomo-skip="1">✓ خلّصت</button></div>
       <div class="flinks"><button type="button" data-pomo-plus="1">+5 دقايق</button><button type="button" data-pomo-cancel="1">ألغي من غير تسجيل</button></div>`;
   }
