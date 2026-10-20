@@ -1029,6 +1029,13 @@ async function aiCall(userText){
 const aiRank=m=>{const p=[/flash-lite$/i,/flash$/i,/flash-lite/i,/flash/i];const i=p.findIndex(x=>x.test(m));return i<0?9:i};
 const aiErr=(k,d)=>{const e=new Error(k);e.detail=String(d||"").slice(0,180);return e};
 async function aiOnce(msgs,model){let raw="";
+  if(aiCfg.prov==="proxy"){
+    const body={action:"ai",system:msgs[0].content,contents:msgs.slice(1).map(m=>({role:m.role==="assistant"?"model":"user",text:m.content}))};
+    let r;try{r=await fetch(aiCfg.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify(body)})}catch(e){throw aiErr("net","السكريبت مش بيرد ("+(e.message||"fetch")+")")}
+    let j;try{j=await r.json()}catch(_){throw aiErr("net","رد غريب من السكريبت "+r.status)}
+    if(!j.ok)throw aiErr(j.err==="limit"?"limit":"net",j.detail||j.err||"");
+    return j.text||"";
+  }
   if(aiCfg.prov==="gemini"){
     const body={systemInstruction:{parts:[{text:msgs[0].content}]},contents:msgs.slice(1).map(m=>({role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]})),generationConfig:{responseMimeType:"application/json",temperature:.4}};
     const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(aiCfg.key)}`;

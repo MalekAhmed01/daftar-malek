@@ -967,6 +967,7 @@ const AI_PROV={
   gemini:{name:"Google Gemini (ننصح بيه)",keyUrl:"https://aistudio.google.com/apikey",hint:"مجاني ومستقر، ومش محتاج فيزا. ليه حد يومي (مئات الطلبات بموديلات Flash-Lite). جوجل ممكن تستخدم الكلام في تحسين خدماتها، فمتكتبش فيه حاجة سرية."},
   openrouter:{name:"OpenRouter",keyUrl:"https://openrouter.ai/settings/keys",hint:"بديل مجاني (موديلات آخرها :free)، حوالي 50 طلب في اليوم، والموديلات المجانية بتتغير كتير."}};
 let aiCfg=null;try{aiCfg=JSON.parse(LS.getItem(AI_KEY)||"null")}catch(_){}
+const DEMO_AI_URL="";if(!(aiCfg&&aiCfg.key)&&DEMO_AI_URL)aiCfg={prov:"proxy",url:DEMO_AI_URL,key:"proxy",model:"auto",models:[]};
 const aiSave=c=>{aiCfg=c;try{c?LS.setItem(AI_KEY,JSON.stringify(c)):LS.removeItem(AI_KEY)}catch(_){}};
 let aiMsgs=[], aiBusy=false, aiOpen=false, aiFocus="";
 try{aiMsgs=JSON.parse(LS.getItem("ai-chat")||"[]").slice(-20)}catch(_){}
@@ -1030,6 +1031,13 @@ async function aiCall(userText){
 const aiRank=m=>{const p=[/flash-lite$/i,/flash$/i,/flash-lite/i,/flash/i];const i=p.findIndex(x=>x.test(m));return i<0?9:i};
 const aiErr=(k,d)=>{const e=new Error(k);e.detail=String(d||"").slice(0,180);return e};
 async function aiOnce(msgs,model){let raw="";
+  if(aiCfg.prov==="proxy"){
+    const body={action:"ai",system:msgs[0].content,contents:msgs.slice(1).map(m=>({role:m.role==="assistant"?"model":"user",text:m.content}))};
+    let r;try{r=await fetch(aiCfg.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify(body)})}catch(e){throw aiErr("net","السكريبت مش بيرد ("+(e.message||"fetch")+")")}
+    let j;try{j=await r.json()}catch(_){throw aiErr("net","رد غريب من السكريبت "+r.status)}
+    if(!j.ok)throw aiErr(j.err==="limit"?"limit":"net",j.detail||j.err||"");
+    return j.text||"";
+  }
   if(aiCfg.prov==="gemini"){
     const body={systemInstruction:{parts:[{text:msgs[0].content}]},contents:msgs.slice(1).map(m=>({role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]})),generationConfig:{responseMimeType:"application/json",temperature:.4}};
     const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(aiCfg.key)}`;
