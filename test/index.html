@@ -260,6 +260,9 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+.cl-tools{display:flex;gap:6px}
+.cl-line{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:11px 16px;border-top:1px solid var(--line);font-size:14px}
+.cl-line span{color:var(--muted);font-size:13px}.cl-line:hover{background:var(--paper)}.cl-line:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
 .qa-meet{margin:-4px 16px 12px;padding:8px 12px;border-radius:9px;background:var(--accent-soft);color:var(--ink);font-size:13.5px;display:flex;flex-wrap:wrap;gap:4px 10px}
 .qa-meet .qm-to{color:var(--muted);font-size:12.5px}.qa-meet a,.note a{color:var(--accent)}
 .tag.meet{color:var(--accent);background:var(--accent-soft)}
@@ -376,7 +379,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
       <div class="field"><label for="f-area">القسم</label><select id="f-area"></select></div>
       <div class="field" id="kind-field"><label for="f-kind">النوع</label><select id="f-kind"></select></div>
     </div>
-    <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span></div>
+    <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span><label class="note" id="nopkg-wrap" hidden style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-nopkg" style="width:auto"> مش محسوب من الباكدج (ميتنج، مراجعة…)</label></div>
     <div class="field"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
     <div class="row2">
       <div class="field"><label for="f-due">اليوم / الديدلاين</label><input id="f-due" type="date"></div>
@@ -444,7 +447,7 @@ function clientStats(name){const n=cname(name);const c=clients.find(x=>cname(x.n
   const ts=tasks.filter(t=>!t.parentId&&cname(t.client)===n);
   const open=ts.filter(t=>t.status!=="done"), done=ts.filter(t=>t.status==="done");
   let pkg=null;if(c&&c.mode!=="single"&&c.target>0){const since=c.since||"";
-    pkg={target:c.target,since,done:done.filter(t=>t.kind!=="leads"&&(!since||(t.doneDate||"")>=since)).length}}
+    pkg={target:c.target,since,done:done.filter(t=>t.kind!=="leads"&&!t.noPkg&&(!since||(t.doneDate||"")>=since)).length}}
   return {c,open,done,pkg}}
 document.addEventListener("focusout",()=>{if(pendingRender){setTimeout(()=>{const a=document.activeElement;if(!(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA"))){pendingRender=false;render()}},0)}});
 let tasks=[], loaded=false, db=null, col=null, view="today", areaFilter="", editing=null, edPri="blue";
@@ -668,6 +671,60 @@ function notesView(){
     ${closed.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="notes-done-open" aria-expanded="${!shut}">${ARR}خلصت</button><small>${closed.length}</small></h2>${shut?"":closed.map(card).join("")}</section>`:""}`;
 }
 document.addEventListener("click",async e=>{const b=e.target.closest("[data-nreopen]");if(!b)return;await writeNote(b.dataset.nreopen,{resolved:false,resolvedAt:null});toast("رجعت للنوتس")});
+function clientMonthMin(n){const m=today().slice(0,8)+"01";return sessions.filter(s=>cname(s.client)===n&&s.date>=m).reduce((a,s)=>a+(s.min||0),0)}
+function clientLast(n){let d="";tasks.forEach(t=>{if(cname(t.client)!==n)return;const x=t.status==="done"?t.doneDate:ymd(new Date(t.createdAt||0));if(x&&x>d)d=x});
+  sessions.forEach(s=>{if(cname(s.client)===n&&s.date>d)d=s.date});return d}
+function findClient(text){const t=" "+String(text).toLowerCase()+" ";return clientNames().sort((a,b)=>b.length-a.length).find(n=>n.length>1&&t.includes(n.toLowerCase()))||""}
+function clientsList(names){
+  const rows=names.map(n=>({n,...clientStats(n)}));
+  const busy=rows.filter(r=>r.open.length||(r.pkg&&r.pkg.done<r.pkg.target)).sort((a,b)=>b.open.length-a.open.length||a.n.localeCompare(b.n,"ar"));
+  const idle=rows.filter(r=>!busy.includes(r)).map(r=>({...r,last:clientLast(r.n)})).sort((a,b)=>(b.last||"").localeCompare(a.last||""));
+  const shut=!folded.has("cl-idle-open");
+  return busy.map(r=>clientCard2(r.n)).join("")+(busy.length?"":`<div class="empty" style="padding-top:16px">مفيش شغل مفتوح لأي عميل دلوقتي.</div>`)+
+    (idle.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="cl-idle-open" aria-expanded="${!shut}">${ARR}مفيش ليهم شغل مفتوح</button><small>${idle.length}</small></h2>
+      ${shut?"":idle.map(r=>clOpen===r.n?clientCard2(r.n):`<button type="button" class="cl-line" data-clopen="${esc(r.n)}"><b>${esc(r.n)}</b><span>${r.done.length} خلص${r.last?` · آخر شغل ${esc(dayName(r.last))}`:""}${r.pkg?` · باكدج ${r.pkg.done}/${r.pkg.target}`:""}</span></button>`).join("")}</section>`:"");
+}
+let clOpen=null;
+function clientCard2(name){
+  const {c,open,done,pkg}=clientStats(name);const mm=clientMonthMin(name);
+  const pct=pkg?Math.min(100,Math.round(pkg.done/pkg.target*100)):0;
+  const sub=[`${open.length} مفتوح`,`${done.length} خلص`,mm?`⏱ ${fmtMin(mm)} الشهر ده`:""].filter(Boolean).join(" · ");
+  const pkgHtml=pkg?`<div class="prog"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span>${pkg.done} من ${pkg.target}</span></div>
+      <div class="next">${pkg.done>=pkg.target?`<b>الباكدج خلصت.</b> <button class="mini" type="button" data-clrenew="${esc(name)}">ابدأ باكدج جديدة</button>`:`<b>فاضل ${pkg.target-pkg.done}</b> من الباكدج`}${pkg.since?` · من ${esc(fmtDay(pkg.since))}`:""}</div>`:"";
+  const mode=clEdit===name?(clMode||(pkg?"package":"single")):"";
+  const form=clEdit===name?`<form class="cl-form" data-clsave2="${esc(name)}">
+      <label style="flex:1 1 160px">الاسم<input id="cl-name" maxlength="60" value="${esc(name)}" required></label>
+      <div class="chips" role="group" aria-label="نوع الشغل"><button type="button" class="chip" data-clmode="single" aria-pressed="${mode==="single"}">بالقطعة</button><button type="button" class="chip" data-clmode="package" aria-pressed="${mode==="package"}">باكدج</button></div>
+      ${mode==="package"?`<label>عدد الفيديوهات<input id="cl-target" type="number" min="1" max="999" value="${pkg?pkg.target:""}" required></label>
+      <label>من يوم<input id="cl-since" type="date" value="${esc(pkg&&pkg.since?pkg.since:today().slice(0,8)+"01")}"></label>`:""}
+      <button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" data-clcancel="1">إلغاء</button></form>`:"";
+  return `<article class="proj">
+    <div class="proj-head"><h3>${esc(name)}</h3><span class="cl-tools">${clEdit===name?"":`<button class="mini" type="button" data-cladd="${esc(name)}">+ تاسك</button><button class="mini" type="button" data-cledit="${esc(name)}">تعديل</button>`}</span></div>
+    <div class="note">${sub}${pkg?"":" · بالقطعة"}</div>
+    ${pkgHtml}${form}
+    ${open.length?`<div class="cl-tasks">${sortTasks(open).map(t=>row(t,{noArea:true,noClient:true})).join("")}</div>`:""}
+  </article>`;
+}
+let clMode="";
+document.addEventListener("click",async e=>{
+  const o=e.target.closest("[data-clopen]");if(o){clOpen=o.dataset.clopen;render();return}
+  const ed=e.target.closest("[data-cledit]");if(ed){clEdit=ed.dataset.cledit;clMode="";render();const el=$("#cl-name");el&&el.focus();return}
+  const md=e.target.closest("[data-clmode]");if(md){clMode=md.dataset.clmode;const keep=$("#cl-name").value;render();$("#cl-name").value=keep;return}
+  const rn=e.target.closest("[data-clrenew]");if(rn){if(await writeClient(rn.dataset.clrenew,{since:today()}))toast("باكدج جديدة من النهارده");return}
+});
+document.addEventListener("submit",async e=>{const f=e.target;if(!f.dataset||!f.dataset.clsave2)return;e.preventDefault();
+  const old=f.dataset.clsave2, nw=cname($("#cl-name").value);if(!nw)return;
+  const pkgOn=!!$("#cl-target");
+  const data=pkgOn?{mode:"package",target:parseInt($("#cl-target").value,10)||null,since:$("#cl-since").value||""}:{mode:"single",target:null,since:""};
+  if(pkgOn&&!(data.target>0))return;
+  if(nw!==old){
+    for(const t of tasks.filter(x=>cname(x.client)===old))await write(t.id,{client:nw});
+    for(const x of sessions.filter(x=>cname(x.client)===old))try{await sesCol.doc(x.id).update({client:nw})}catch(_){}
+    const oc=clients.find(x=>cname(x.name)===old), nc=clients.find(x=>cname(x.name)===nw);
+    if(oc&&!nc){try{await clientsCol.doc(oc.id).update({name:nw})}catch(_){}}else if(oc&&nc){try{await clientsCol.doc(oc.id).delete()}catch(_){}}
+  }
+  if(await writeClient(nw,data)){clEdit=null;clMode="";if(clOpen===old)clOpen=nw;toast(nw!==old?`اتغير لـ«${nw}» في كل التسكات`:"اتحفظ");render()}
+});
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -736,8 +793,8 @@ function renderInner(){
       (rev.length?`<section class="section"><h2>محتاج مراجعة<small>${rev.length}</small></h2>${rev.map(card).join("")}</section>`:"")+
       `<section class="section"><h2>كل النوتس<small>${rest.length}</small></h2>${rest.length?rest.map(card).join(""):`<div class="empty">لسه مفيش نوتس.</div>`}</section>`;
   }else if(view==="clients"){
-    const names=clientNames().sort((a,b)=>clientStats(b).open.length-clientStats(a).open.length||a.localeCompare(b,"ar"));
-    v.innerHTML=(names.length?names.map(clientCard).join(""):`<div class="empty" style="padding-top:16px">لسه مفيش عملاء. أي تاسك في «شغل» عليه اسم عميل هيظهر هنا، أو ضيف عميل من تحت.</div>`)+
+    const names=clientNames();
+    v.innerHTML=(names.length?clientsList(names):`<div class="empty" style="padding-top:16px">لسه مفيش عملاء. أي تاسك في «شغل» عليه اسم عميل هيظهر هنا، أو ضيف عميل من تحت.</div>`)+
       `<form class="proj" id="new-client"><div class="proj-head"><h3>عميل جديد</h3></div>
         <div class="cl-form"><label style="flex:1 1 160px">الاسم<input id="nc-name" maxlength="60" required></label>
         <div class="chips" role="group" aria-label="نوع الشغل"><button type="button" class="chip" data-ncmode="single" aria-pressed="true">بالقطعة</button><button type="button" class="chip" data-ncmode="package" aria-pressed="false">باكدج</button></div>
@@ -843,9 +900,9 @@ document.addEventListener("submit",async e=>{
   const inp=$("#qa-title");const title=inp.value.trim();if(!title)return;inp.value="";
   const mt=parseMeet(title);$("#qa-meet").hidden=true;
   if(mt){if(!calCfg)window.open(calUrl({title:mt.title,due:mt.date,time:mt.time}),"_blank","noopener");
-    const id="t"+sid();await write(id,{title:mt.title,area:$("#qa-area").value,kind:"",pri:"blue",client:"",stage:"",due:mt.date,time:mt.time,notes:"",status:"open",planDate:mt.date,createdAt:Date.now(),doneAt:null,doneDate:null},true);
+    const id="t"+sid();await write(id,{title:mt.title,area:$("#qa-area").value,kind:"",pri:"blue",client:$("#qa-area").value==="work"?findClient(mt.title):"",stage:"",due:mt.date,time:mt.time,notes:"",status:"open",planDate:mt.date,createdAt:Date.now(),doneAt:null,doneDate:null},true);
     render();if(calCfg)calSave(id);else toast(`اتضاف ${dayName(mt.date)} ${fmtTime(mt.time)}`);return}
-  await write("t"+sid(),{title,area:$("#qa-area").value,kind:"",pri:"blue",client:"",stage:"",due:"",notes:"",status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null},true);
+  await write("t"+sid(),{title,area:$("#qa-area").value,kind:"",pri:"blue",client:$("#qa-area").value==="work"?findClient(title):"",stage:"",due:"",notes:"",status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null},true);
   render();toast("اتضاف لخطة النهارده");
 });
 /* ===== pomodoro =====
@@ -1257,6 +1314,7 @@ function syncStage(){const a=$("#f-area").value,k=$("#f-kind").value;
   $("#stage-wrap").style.visibility=a==="work"?"visible":"hidden";
   $("#client-lab").textContent=a==="work"?"العميل":"المشروع أو تفاصيل (اختياري)";clientInfo()}
 function clientInfo(){const el=$("#client-info");const n=cname($("#f-client").value);
+  {const s0=n&&$("#f-area").value==="work"?clientStats(n):null;$("#nopkg-wrap").hidden=!(s0&&s0.pkg)}
   if($("#f-area").value!=="work"||!n){el.textContent="";return}
   const s=clientStats(n);if(!s.c&&!s.open.length&&!s.done.length){el.textContent="عميل جديد، هيتضاف لصفحة العملاء.";return}
   el.textContent=[`${s.open.length} مفتوح`,`${s.done.length} خلص`,s.pkg?`الباكدج ${s.pkg.done} من ${s.pkg.target}`:""].filter(Boolean).join(" · ")}
@@ -1276,7 +1334,7 @@ function openEditor(t){
   $("#ed-subs").textContent=subs.length?`التسكات الفرعية (${subs.filter(s=>s.status==="done").length}/${subs.length})`:"+ تسكات فرعية";
   $("#f-title").value=t?.title||"";
   $("#f-area").value=t?.area||(view==="personal"?"personal":(areaFilter||"work"));
-  $("#f-client").value=t?.client||"";
+  $("#f-client").value=t?.client||"";$("#f-nopkg").checked=!!t?.noPkg;
   $("#f-stage").value=t?.stage||"";
   $("#f-due").value=t?.due||"";$("#f-time").value=t?.time||"";$("#time-note").hidden=!(t?.time);
   $("#f-notes").value=t?.notes||"";$("#notes-wrap").open=!!(t&&t.notes);
@@ -1315,7 +1373,7 @@ $("#editor").addEventListener("submit",async e=>{
   const par=parentOf(editing);
   const area=par?par.area:$("#f-area").value;
   const wantToday=$("#f-today").checked;
-  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",due:$("#f-due").value,time:$("#f-due").value?$("#f-time").value:"",notes:$("#f-notes").value.trim()};
+  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,due:$("#f-due").value,time:$("#f-due").value?$("#f-time").value:"",notes:$("#f-notes").value.trim()};
   const meetGo=!!(data.due&&data.time&&(!editing||editing.due!==data.due||(editing.time||"")!==data.time||(calCfg&&editing.calId&&editing.title!==data.title)));
   if(meetGo&&!calCfg)window.open(calUrl({...editing,...data}),"_blank","noopener");
   let doneOn=$("#f-done").value, needResolve=false;
@@ -1366,7 +1424,7 @@ async function writeClient(name,data){
 }
 document.addEventListener("click",async e=>{
   const pk=e.target.closest("[data-clpkg]");if(pk){clEdit=pk.dataset.clpkg;render();const el=$("#cl-target");el&&el.focus();return}
-  if(e.target.closest("[data-clcancel]")){clEdit=null;render();return}
+  if(e.target.closest("[data-clcancel]")){clEdit=null;clMode="";render();return}
   const dl=e.target.closest("[data-cldel]");if(dl){if(await writeClient(dl.dataset.cldel,{mode:"single",target:null,since:""})){clEdit=null;toast("بقى بالقطعة")}return}
   const nm=e.target.closest("[data-ncmode]");if(nm){$("#new-client").dataset.mode=nm.dataset.ncmode;$("#nc-target-wrap").hidden=nm.dataset.ncmode!=="package";
     document.querySelectorAll("[data-ncmode]").forEach(b=>b.setAttribute("aria-pressed",b===nm));if(nm.dataset.ncmode==="package")$("#nc-target").focus();return}
