@@ -961,7 +961,7 @@ document.addEventListener("click",e=>{
 /* ===== المساعد: free AI that plans and organises tasks, like Claude does in the tracking chat.
    Provider: OpenRouter (free models) or Google Gemini (free tier), with Malek's own free key kept in this browser only (ai-cfg).
    The model answers with a short reply + a list of proposed changes; nothing is written until Malek ticks and presses «طبّق». */
-const AI_KEY="ai-cfg";
+const AI_KEY="ai-cfg", AI_VER="20/10 18:50";
 const AI_PROV={
   gemini:{name:"Google Gemini (ننصح بيه)",keyUrl:"https://aistudio.google.com/apikey",hint:"مجاني ومستقر، ومش محتاج فيزا. ليه حد يومي (مئات الطلبات بموديلات Flash-Lite). جوجل ممكن تستخدم الكلام في تحسين خدماتها، فمتكتبش فيه حاجة سرية."},
   openrouter:{name:"OpenRouter",keyUrl:"https://openrouter.ai/settings/keys",hint:"بديل مجاني (موديلات آخرها :free)، حوالي 50 طلب في اليوم، والموديلات المجانية بتتغير كتير."}};
@@ -973,7 +973,7 @@ const aiKeep=()=>{try{LS.setItem("ai-chat",JSON.stringify(aiMsgs.slice(-20).map(
 
 async function aiModels(c){
   if(c.prov==="gemini"){const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(c.key)}&pageSize=200`);
-    if(r.status===400||r.status===403)throw new Error("key");if(!r.ok)throw new Error("net");const j=await r.json();
+    if(!r.ok){let m="";try{m=((await r.json()).error||{}).message||""}catch(_){}throw aiErr(r.status===400||r.status===403||r.status===401?"key":"net",r.status+": "+m)}const j=await r.json();
     return (j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent")&&/flash|gemma/i.test(m.name)&&!/image|tts|audio|live|embed/i.test(m.name)).map(m=>m.name.replace(/^models\//,""))}
   const r=await fetch("https://openrouter.ai/api/v1/models");if(!r.ok)throw new Error("net");const j=await r.json();
   return (j.data||[]).filter(m=>/:free$/.test(m.id)).map(m=>m.id)}
@@ -1102,7 +1102,7 @@ function aiPanel(){
     ${aiBusy?`<div class="ai-m bot ai-wait">بيفكر…</div>`:""}</div>
   <div class="ai-chips">${chips.map(([l,q])=>`<button type="button" class="chip" data-aiq="${esc(q)}">${l}</button>`).join("")}</div>
   <form class="ai-in" id="ai-in"><textarea id="ai-text" rows="2" placeholder="اكتب للمساعد…" aria-label="اكتب للمساعد"></textarea><button class="btn primary" type="submit" ${aiBusy?"disabled":""}>ابعت</button></form>
-  <div class="ai-foot"><button type="button" data-aiclear="1">مسح المحادثة</button><button type="button" data-aiset="1">إعدادات المساعد</button></div>`;
+  <div class="ai-foot"><button type="button" data-aiclear="1">مسح المحادثة</button><span class="note" style="font-size:11px">نسخة ${AI_VER}</span><button type="button" data-aiset="1">إعدادات المساعد</button></div>`;
 }
 let aiShowSet=false;
 function paintAi(){const ov=$("#ai-ov");if(!ov)return;ov.hidden=!aiOpen;document.body.classList.toggle("ai-on",aiOpen);if(!aiOpen)return;
