@@ -967,7 +967,7 @@ const AI_PROV={
   gemini:{name:"Google Gemini (ننصح بيه)",keyUrl:"https://aistudio.google.com/apikey",hint:"مجاني ومستقر، ومش محتاج فيزا. ليه حد يومي (مئات الطلبات بموديلات Flash-Lite). جوجل ممكن تستخدم الكلام في تحسين خدماتها، فمتكتبش فيه حاجة سرية."},
   openrouter:{name:"OpenRouter",keyUrl:"https://openrouter.ai/settings/keys",hint:"بديل مجاني (موديلات آخرها :free)، حوالي 50 طلب في اليوم، والموديلات المجانية بتتغير كتير."}};
 let aiCfg=null;try{aiCfg=JSON.parse(LS.getItem(AI_KEY)||"null")}catch(_){}
-const DEMO_AI_URL="";if(!(aiCfg&&aiCfg.key)&&DEMO_AI_URL)aiCfg={prov:"proxy",url:DEMO_AI_URL,key:"proxy",model:"auto",models:[]};
+const DEMO_AI_URL="https://script.google.com/macros/s/AKfycbw8H1t2h8qpjJYmgKMG-ch0W8dUPuVjN2js7XNzFqCQ5KOKG2UwQ5EQ7mJVFiTlJXhaMA/exec";if(!(aiCfg&&aiCfg.key)&&DEMO_AI_URL)aiCfg={prov:"proxy",url:DEMO_AI_URL,key:"proxy",model:"auto",models:[]};
 const aiSave=c=>{aiCfg=c;try{c?LS.setItem(AI_KEY,JSON.stringify(c)):LS.removeItem(AI_KEY)}catch(_){}};
 let aiMsgs=[], aiBusy=false, aiOpen=false, aiFocus="";
 try{aiMsgs=JSON.parse(LS.getItem("ai-chat")||"[]").slice(-20)}catch(_){}
