@@ -260,6 +260,9 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+.tag.meet{color:var(--accent);background:var(--accent-soft)}
+a.tag.cal{color:var(--accent);text-decoration:none;border:1px solid var(--accent-soft)}
+a.tag.cal:hover{background:var(--accent-soft)}
 select{-webkit-appearance:none;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238a93a2' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")!important;
   background-repeat:no-repeat!important;background-position:left 12px center!important;background-size:12px 8px!important;padding-left:34px!important;padding-right:12px!important}
@@ -358,9 +361,11 @@ body.has-pomo{padding-bottom:110px}
     <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span></div>
     <div class="field"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
     <div class="row2">
-      <div class="field"><label for="f-due">الديدلاين</label><input id="f-due" type="date"></div>
-      <label class="note" style="display:flex;gap:8px;align-items:center;align-self:end;min-height:42px"><input type="checkbox" id="f-today" style="width:auto"> حطه في خطة النهارده</label>
+      <div class="field"><label for="f-due">اليوم / الديدلاين</label><input id="f-due" type="date"></div>
+      <div class="field"><label for="f-time">الساعة <span class="note">(للميتنج)</span></label><input id="f-time" type="time"></div>
     </div>
+    <div class="note" id="time-note" hidden>ميتنج: لما تحفظ، الكالندر هيفتح والاسم واليوم والساعة متكتبين. دوس Save هناك.</div>
+    <label class="note" style="display:flex;gap:8px;align-items:center;min-height:32px"><input type="checkbox" id="f-today" style="width:auto"> حطه في خطة النهارده</label>
     <div hidden>
       <div id="stage-wrap"><select id="f-stage"><option value="">—</option><option value="draft">درافت</option><option value="edits">تعديلات</option><option value="delivery">تسليم</option></select></div>
       <input id="f-done" type="date">
@@ -452,7 +457,8 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false}={}){
   if(!noArea)meta.push(`<span class="tag">${esc(AREA[t.area]||"")}</span>`);
   if(t.client&&!parent&&!noClient)meta.push(`<span class="tag">${esc(t.client)}</span>`);
   if(kindName(t)&&!parent)meta.push(`<span class="tag">${esc(kindName(t))}</span>`);
-  if(t.due)meta.push(`<span class="tag ${overdue?"late":""}">ديدلاين ${esc(fmtDay(t.due))}</span>`);
+  if(t.due&&t.time)meta.push(`<span class="tag meet">ميتنج ${esc(fmtDay(t.due))}، ${fmtTime(t.time)}</span>`,done?"":`<a class="tag cal" href="${esc(calUrl(t))}" target="_blank" rel="noopener">+ الكالندر</a>`);
+  else if(t.due)meta.push(`<span class="tag ${overdue?"late":""}">ديدلاين ${esc(fmtDay(t.due))}</span>`);
   if(done&&t.doneDate&&t.doneDate!==today())meta.push(`<span class="tag">خلص ${esc(fmtDay(t.doneDate))}</span>`);
   if(late)meta.push(`<span class="tag late">متأجل من ${esc(fmtDay(t.planDate))}</span>`);
   const fm=focusOf(t);if(fm)meta.push(`<span class="tag" title="وقت التركيز">⏱ ${fmtMin(fm)}</span>`);
@@ -494,6 +500,14 @@ function doneByDay(){
     return l.length?foldSection("d:"+(i===0?"today":d),i===0?"خلص النهارده":i===1?"خلص امبارح":"خلص "+fmtDay(d),l,{showPlan:false},""):""}).join("");
   return out||`<section class="section"><h2>اللي خلص كل يوم</h2><div class="empty">لسه مفيش حاجة خلصت آخر 7 أيام.</div></section>`;
 }
+const fmtTime=s=>{const [h,m]=String(s).split(":").map(Number);return `${h%12||12}:${String(m).padStart(2,"0")} ${h<12?"ص":"م"}`};
+function calUrl(t){const d=t.due.replace(/-/g,""),[h,m]=t.time.split(":").map(Number),e=new Date(2000,0,1,h,m+60);
+  const st=`${d}T${String(h).padStart(2,"0")}${String(m).padStart(2,"0")}00`;
+  const ed=(e.getDate()>1?ymd(new Date(new Date(t.due+"T12:00").getTime()+864e5)).replace(/-/g,""):d)+`T${String(e.getHours()).padStart(2,"0")}${String(e.getMinutes()).padStart(2,"0")}00`;
+  const q=new URLSearchParams({action:"TEMPLATE",text:t.title,dates:st+"/"+ed,ctz:"Africa/Cairo",details:[t.client,t.notes].filter(Boolean).join("\n")});
+  return "https://calendar.google.com/calendar/render?"+q}
+document.addEventListener("input",e=>{if(e.target.id!=="f-time"&&e.target.id!=="f-due")return;const m=$("#f-due").value&&$("#f-time").value;
+  $("#time-note").hidden=!m;if(m&&$("#f-due").value>today())$("#f-today").checked=false});
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -1072,7 +1086,7 @@ function openEditor(t){
   $("#f-area").value=t?.area||(view==="personal"?"personal":(areaFilter||"work"));
   $("#f-client").value=t?.client||"";
   $("#f-stage").value=t?.stage||"";
-  $("#f-due").value=t?.due||"";
+  $("#f-due").value=t?.due||"";$("#f-time").value=t?.time||"";$("#time-note").hidden=!(t?.time);
   $("#f-notes").value=t?.notes||"";$("#notes-wrap").open=!!(t&&t.notes);
   $("#f-done").value=t?.status==="done"?(t.doneDate||""):"";
   $("#f-today").checked=t?!!(t.planDate&&t.planDate<=today()):view==="today";
@@ -1109,7 +1123,8 @@ $("#editor").addEventListener("submit",async e=>{
   const par=parentOf(editing);
   const area=par?par.area:$("#f-area").value;
   const wantToday=$("#f-today").checked;
-  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",due:$("#f-due").value,notes:$("#f-notes").value.trim()};
+  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",due:$("#f-due").value,time:$("#f-due").value?$("#f-time").value:"",notes:$("#f-notes").value.trim()};
+  if(data.due&&data.time&&(!editing||editing.due!==data.due||(editing.time||"")!==data.time))window.open(calUrl({...editing,...data}),"_blank","noopener");
   let doneOn=$("#f-done").value, needResolve=false;
   if(doneOn&&editing&&!par&&editing.status!=="done"&&subsOf(editing.id).some(s=>s.status!=="done")){doneOn="";needResolve=true}
   if(doneOn){const was=editing&&editing.status==="done"&&editing.doneDate===doneOn;
@@ -1118,13 +1133,14 @@ $("#editor").addEventListener("submit",async e=>{
   if(editing){
     const was=!!(editing.planDate&&editing.planDate<=today());
     if(wantToday!==was)data.planDate=wantToday?today():"";
+    if(data.time&&data.due>=today()&&(editing.due!==data.due||(editing.time||"")!==data.time))data.planDate=data.due;
     const id=editing.id, subs=par?[]:subsOf(id);closeEditor();
     if(await write(id,data,false)){
       for(const s of subs)if(s.area!==data.area||(s.client||"")!==data.client||(s.kind||"")!==data.kind)await write(s.id,{area:data.area,client:data.client,kind:data.kind});
       if(par)await syncParent(par.id);
       if(needResolve)openResolve(id);else toast("اتحفظ")}
   }else{
-    Object.assign(data,doneOn?{planDate:"",createdAt:Date.now()}:{status:"open",planDate:wantToday?today():"",createdAt:Date.now(),doneAt:null,doneDate:null});
+    Object.assign(data,doneOn?{planDate:"",createdAt:Date.now()}:{status:"open",planDate:data.time&&data.due>=today()?data.due:wantToday?today():"",createdAt:Date.now(),doneAt:null,doneDate:null});
     const id="t"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
     closeEditor();await write(id,data,true);toast("اتضاف");
   }
