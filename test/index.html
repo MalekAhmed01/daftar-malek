@@ -267,6 +267,13 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+/* round 5b */
+.rt-strip.rt-hide{display:none!important}
+.rt-done{all:unset;cursor:pointer;font-size:13.5px;color:var(--done);padding:4px 12px;border-radius:99px;border:1px solid var(--line);background:var(--sheet)}
+.rt-done:hover{background:var(--paper)}.rt-done:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+body header .ai-fab{all:unset;order:2;box-sizing:border-box;cursor:pointer;width:36px;height:36px;display:grid;place-items:center;border-radius:999px;border:1px solid var(--line);color:var(--accent);background:var(--sheet);font-size:16px}
+body header .ai-fab .lbl{display:none}
+body header .ai-fab:hover{background:var(--paper)}body header .ai-fab:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 /* round 5: priority shape, run labels, header line, late decisions */
 body .task.p-red .check,body .sub.p-red .check{border-width:2.5px;background:color-mix(in srgb,var(--red) 16%,transparent)}
 body .task.p-black .check,body .sub.p-black .check{border-style:dashed}
@@ -278,7 +285,7 @@ body .pri-run+.task{border-top:0;padding-top:6px}
 .section h2 .late-all{all:unset;cursor:pointer;margin-inline-start:auto;font-size:13.5px;font-weight:500;color:var(--accent);padding:3px 12px;border-radius:99px;background:var(--accent-soft);white-space:nowrap}
 .section h2 .late-all:hover{filter:brightness(.97)}.section h2 .late-all:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 .section h2 .late-all+small{margin-inline-start:8px}
-body .task>.tools .mini.keep-today{opacity:1!important;display:inline-flex!important;color:var(--accent)}
+body .task>.tools .mini.keep-today{color:var(--accent)}
 header .h-sub{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin-top:2px}
 header .h-sub #counts{order:0!important;flex-basis:auto!important;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 header .h-sub #counts .dp-bar{width:72px!important}
@@ -955,9 +962,9 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
     {const nx=courseNext(t.course);if(nx&&t.status!=="done")meta.push(`<span class="tag next-les">الجاي: ${esc(clip(nx.l.t,34))}</span>`)}}
   if(subs.length){const d=subs.filter(s=>s.status==="done").length;
     meta.push(`<button type="button" class="subprog" data-expand="${t.id}" aria-expanded="${expanded.has(t.id)}"><span class="track"><span class="fill" style="width:${d/subs.length*100}%"></span></span>${d}/${subs.length}</button>`)}
-  if(!noArea)meta.push(`<span class="tag">${esc(AREA[t.area]||"")}</span>`);
+  if(!noArea&&!(view==="today"&&t.client&&!parent))meta.push(`<span class="tag">${esc(AREA[t.area]||"")}</span>`);
   if(t.client&&!parent&&!noClient)meta.push(`<span class="tag">${esc(t.client)}</span>`);
-  if(kindName(t)&&!parent)meta.push(`<span class="tag">${esc(kindName(t))}</span>`);
+  if(kindName(t)&&!parent&&view!=="today")meta.push(`<span class="tag">${esc(kindName(t))}</span>`);
   if(t.due)meta.push(`<span class="tag ${overdue?"late":""}">ديدلاين ${esc(fmtDay(t.due))}</span>`);
   if(done&&t.doneDate&&t.doneDate!==today()&&!noDone)meta.push(`<span class="tag">خلص ${esc(fmtDay(t.doneDate))}</span>`);
   if(late&&!t.repeat&&view!=="today")meta.push(`<span class="tag">من ${esc(fmtDay(t.planDate).split("،")[0])}</span>`);
@@ -2077,14 +2084,14 @@ document.addEventListener("change",e=>{if(e.target.id==="qa-date-in"&&e.target.v
 function todayView(todayList,doneToday){
   const late=todayList.filter(t=>!t.repeat&&!isLong(t)&&t.planDate&&t.planDate<today());
   const lateIds=new Set(late.map(t=>t.id));
-  const now=todayList.filter(t=>!lateIds.has(t.id));
+  const now=todayList.filter(t=>!lateIds.has(t.id));lateFoldable=now.length>0;
   const plan=sortTasks(now.filter(t=>!PERSONAL.has(t.area))), mine=sortTasks(now.filter(t=>PERSONAL.has(t.area)));
   const doneShown=doneToday.filter(isTop);
   const rd=(routineDays[today()]||{}).done||{};const rdn=routineItems.filter(i=>rd[i.id]).length;
   const pendingReview=notes.filter(n=>n.by==="claude"&&!n.resolved).length;
   const grp=(key,title,list,opts,extra="",act="")=>list.length?foldSectionP(key,`<span class="h-t">${title}${extra}</span>`,list,opts,act):"";
   return meetStrip()+quickAdd2()+
-    `<div class="today-strip"><div class="rt-strip" role="group" aria-label="الروتين"><span class="rt-l"><span class="rt-w">الروتين </span><small>${rdn}/${routineItems.length}</small></span>${routineItems.map(i=>`<button type="button" class="rt ${rd[i.id]?"on":""}" data-rt="${i.id}" aria-pressed="${!!rd[i.id]}"><span class="box">${rd[i.id]?"✓":""}</span><span>${esc(i.t)}</span></button>`).join("")}</div>
+    `<div class="today-strip">${rtFold()?`<button type="button" class="rt-done" data-rtopen="1" aria-expanded="false" aria-label="الروتين خلص كله، افتحه">الروتين <span aria-hidden="true">✓</span></button>`:""}<div class="rt-strip ${rtFold()?"rt-hide":""}" role="group" aria-label="الروتين"><span class="rt-l"><span class="rt-w">الروتين </span><small>${rdn}/${routineItems.length}</small></span>${routineItems.map(i=>`<button type="button" class="rt ${rd[i.id]?"on":""}" data-rt="${i.id}" aria-pressed="${!!rd[i.id]}"><span class="box">${rd[i.id]?"✓":""}</span><span>${esc(i.t)}</span></button>`).join("")}</div>
       </div>`+
     goalsBox("today")+
     (todayList.length?"":`<div class="empty big-empty">يومك فاضي. اكتب أول تاسك فوق ودوس Enter.</div>`)+
@@ -2115,8 +2122,8 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-setgo]");i
 
 const PRI_KEY=t=>t.pri==="red"?"red":t.pri==="black"||!t.pri?"black":"blue";
 function priRuns(list,opts){const lv=new Set(list.map(PRI_KEY));let prev=null,out="";
-  list.forEach(t=>{const k=PRI_KEY(t);if(k!==prev){prev=k;if(k!=="blue"||lv.size>1)out+=`<div class="pri-run p-${k}"><i class="pdot p-${k}" aria-hidden="true"></i>${PRI_N[k]}</div>`}out+=row(t,opts)});return out}
-function foldSectionP(key,title,list,opts,act=""){const shut=folded.has(key);
+  list.forEach(t=>{const k=PRI_KEY(t);if(k!==prev){prev=k;if(k!=="blue"&&lv.size>1)out+=`<div class="pri-run p-${k}"><i class="pdot p-${k}" aria-hidden="true"></i>${PRI_N[k]}</div>`}out+=row(t,opts)});return out}
+function foldSectionP(key,title,list,opts,act=""){const shut=key==="t:late"?lateShut():folded.has(key);
   return `<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="${key}" aria-expanded="${!shut}">${ARR}${title}</button>${act}<small>${list.length}</small></h2>${shut?"":priRuns(list,opts)}</section>`}
 
 {const hs=document.querySelector("header .h-sub"),c=document.getElementById("counts");if(hs&&c)hs.append(c)}
@@ -2129,6 +2136,15 @@ document.addEventListener("click",async e=>{
   const was=late.map(t=>[t.id,t.planDate]);
   for(const t of late)await write(t.id,{planDate:today()});
   render();toast(late.length===1?"اتحط في النهارده":`اتحطوا في النهارده (${late.length})`,async()=>{for(const [id,d] of was)await write(id,{planDate:d});render()})});
+
+let rtOpen=false;
+const rtFold=()=>{if(rtOpen||!routineItems.length)return false;const rd=(routineDays[today()]||{}).done||{};return routineItems.every(i=>rd[i.id])};
+document.addEventListener("click",e=>{if(!e.target.closest("[data-rtopen]"))return;rtOpen=true;render();const f=document.querySelector("[data-rt]");if(f)f.focus()});
+
+let lateFoldable=false,lateSet=null;try{const v=LS.getItem("lateFold")||"";if(v.startsWith(today()+":"))lateSet=v.split(":")[1]}catch(_){}
+const lateShut=()=>lateSet?lateSet==="shut":lateFoldable;
+document.addEventListener("click",e=>{const b=e.target.closest('[data-fold="t:late"]');if(!b)return;e.stopImmediatePropagation();
+  lateSet=lateShut()?"open":"shut";try{LS.setItem("lateFold",today()+":"+lateSet)}catch(_){}render();const nb=document.querySelector('[data-fold="t:late"]');if(nb)nb.focus()},true);
 
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
