@@ -267,6 +267,19 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+/* round 6b: header date line */
+body header .h-sub{gap:4px 10px;align-items:center}
+body header .h-sub #counts{flex:1;min-width:0;gap:6px 10px}
+body header .h-sub .dprog{gap:8px;font-size:14px;color:var(--muted)}
+body header .h-sub .dprog::before{content:"";width:3px;height:3px;border-radius:50%;background:currentColor;opacity:.7}
+body header .h-sub .dprog b{font-weight:600;color:var(--ink)}
+body header .h-sub #counts .dp-bar{width:56px!important;height:4px!important;background:color-mix(in srgb,var(--ink) 14%,transparent)!important}
+body header .h-sub .ts-act{margin-inline-start:auto!important;gap:2px}
+body header .h-sub .ts-act button{all:unset!important;cursor:pointer!important;display:inline-flex!important;align-items:center;gap:6px;font-size:13.5px!important;color:var(--accent)!important;padding:4px 8px!important;border-radius:8px!important;white-space:nowrap}
+body header .h-sub .ts-act button:hover{background:var(--accent-soft)!important}
+body header .h-sub .ts-act button:focus-visible{box-shadow:0 0 0 2px var(--accent)!important}
+body header .h-sub .ts-act .hint-chip{font-weight:600!important}
+@media (max-width:640px){body header .h-sub .dprog::before{display:none}}
 /* round 6: side list */
 .side-tg{all:unset;cursor:pointer;margin-inline-start:auto;width:32px;height:32px;display:none;place-items:center;border-radius:8px;color:var(--muted)}
 .side-tg:hover{background:color-mix(in srgb,var(--ink) 6%,transparent);color:var(--ink)}.side-tg:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
