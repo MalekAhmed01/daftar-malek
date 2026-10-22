@@ -278,6 +278,26 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+/* round 6: side list */
+.side-tg{all:unset;cursor:pointer;margin-inline-start:auto;width:32px;height:32px;display:none;place-items:center;border-radius:8px;color:var(--muted)}
+.side-tg:hover{background:color-mix(in srgb,var(--ink) 6%,transparent);color:var(--ink)}.side-tg:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+.nv-g .g-arr{display:inline-flex;color:var(--muted);transition:transform .15s}
+.nv-g[aria-expanded="false"] .g-arr{transform:rotate(90deg)}
+.ng-in{display:flex;flex-direction:column;gap:1px;padding-inline-start:14px}
+@media (min-width:960px){
+  .side-tg{display:grid}
+  #side .ng-foot{margin-top:auto}
+  body .wrap{transition:grid-template-columns .18s ease-out}
+  body.side-rail .wrap{grid-template-columns:64px minmax(0,1fr)!important}
+  body.side-rail #side{padding:8px 6px;align-items:center;overflow-x:hidden}
+  body.side-rail .side-top{flex-direction:column;padding:6px 0 12px;gap:8px}
+  body.side-rail .side-top b,body.side-rail #side .nn,body.side-rail #side .g-arr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  body.side-rail #side .ng{align-items:center;width:100%}
+  body.side-rail #side .nv{width:44px;justify-content:center;padding:6px;position:relative}
+  body.side-rail #side .nc{position:absolute;top:1px;inset-inline-start:0;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:99px;background:var(--accent);color:var(--sheet);font-size:10.5px;line-height:16px;text-align:center}
+  body header #open-settings{display:none!important}
+}
+@media (prefers-reduced-motion:reduce){body .wrap{transition:none}.nv-g .g-arr{transition:none}}
 /* round 5b */
 .rt-strip.rt-hide{display:none!important}
 .rt-done{all:unset;cursor:pointer;font-size:13.5px;color:var(--done);padding:4px 12px;border-radius:99px;border:1px solid var(--line);background:var(--sheet)}
@@ -819,7 +839,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 </style>
 
 <div class="wrap" dir="rtl" lang="ar">
-  <nav id="side" aria-label="القايمة"><div class="side-top"><span class="logo" aria-hidden="true"></span><b id="app-name">دفتري</b></div>
+  <nav id="side" aria-label="القايمة"><div class="side-top"><span class="logo" aria-hidden="true"></span><b id="app-name">دفتري</b><button type="button" class="side-tg" id="side-tg" aria-expanded="false" aria-label="كبّر القايمة" title="كبّر القايمة"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M15 4.5v15"/></svg></button></div>
     <div id="side-list"></div></nav>
   <div class="side-ov" id="side-ov" hidden></div>
   <div class="maincol">
@@ -2015,11 +2035,16 @@ function navCounts(){const open=tasks.filter(isOpen);
   return {today:tasks.filter(t=>inToday(t)).length,upcoming:upDays().reduce((a,[,l])=>a+l.length,0),all:open.filter(isTop).length,
     areas:Object.fromEntries(AREAS.map(([k])=>[k,open.filter(t=>t.area===k&&isTop(t)).length])),notes:notes.filter(n=>!n.resolved).length}}
 function paintShell(){const box=document.getElementById("side-list");if(!box)return;const c=navCounts(),cur=navKey();
-  const it=(k,ic,name,n)=>`<button type="button" class="nv" data-nav="${k}" ${cur===k?'aria-current="page"':""}><span class="ni">${NI[ic]}</span><span class="nn">${esc(name)}</span>${n?`<i class="nc">${n}</i>`:""}</button>`;
-  box.innerHTML=`<div class="ng">${it("today","today","النهارده",c.today)}${it("upcoming","upcoming","الجاي",c.upcoming)}${it("all","all","كل التسكات",c.all)}</div>
-    <div class="ng"><div class="nh">الأقسام</div>${AREAS.map(([k,n])=>it("area:"+k,"area",n,c.areas[k])).join("")}</div>
-    <div class="ng">${it("clients","clients","العملاء",0)}${it("focus","focus","تركيز",0)}${it("week","week","الأسبوع",0)}</div>
-    <div class="ng">${it("notes","notes","النوتس",c.notes)}${it("journal","journal","يوميات",0)}${it("files","files","ملفات",0)}</div>
+  paintRail();const desk=isDesk(),rail=document.body.classList.contains("side-rail");
+  const it=(k,ic,name,n)=>`<button type="button" class="nv" data-nav="${k}" ${cur===k?'aria-current="page"':""} ${rail?`title="${esc(name)}"`:""}><span class="ni">${NI[ic]}</span><span class="nn">${esc(name)}</span>${n?`<i class="nc">${n}</i>`:""}</button>`;
+  const MORE=["clients","week","journal","files"];
+  const grp=(key,ic,name,inner,here)=>{if(!desk)return `<div class="nh">${name}</div>${inner}`;
+    const open=!rail&&(sideOpenG[key]||here);
+    return `<button type="button" class="nv nv-g" data-sidegroup="${key}" aria-expanded="${open}" ${rail?`title="${esc(name)}"`:""}><span class="ni">${NI[ic]}</span><span class="nn">${name}</span><span class="g-arr" aria-hidden="true">${ARR}</span></button>${open?`<div class="ng-in">${inner}</div>`:""}`};
+  box.innerHTML=`<div class="ng">${it("today","today","النهارده",c.today)}${it("upcoming","upcoming","الجاي",0)}${it("all","all","كل التسكات",0)}</div>
+    <div class="ng">${grp("areas","area","الأقسام",AREAS.map(([k,n])=>it("area:"+k,"area",n,0)).join(""),cur.startsWith("area:"))}</div>
+    <div class="ng">${it("focus","focus","تركيز",0)}${it("notes","notes","النوتس",0)}</div>
+    <div class="ng">${grp("more","more","المزيد",it("clients","clients","العملاء",0)+it("week","week","الأسبوع",0)+it("journal","journal","يوميات",0)+it("files","files","ملفات",0),MORE.includes(cur))}</div>
     <div class="ng ng-foot">${it("settings","settings","الإعدادات",0)}</div>`;
   const titles={today:"النهارده",upcoming:"الجاي",all:"كل التسكات",clients:"العملاء",focus:"تركيز",week:"الأسبوع",notes:"النوتس",journal:"يوميات",files:"ملفات",settings:"الإعدادات"};
   const vt=document.getElementById("view-title");if(vt){vt.textContent=cur.startsWith("area:")?(AREA[areaFilter]||"قسم"):(titles[cur]||"");vt.tabIndex=-1}
@@ -2157,6 +2182,20 @@ let lateFoldable=false,lateSet=null;try{const v=LS.getItem("lateFold")||"";if(v.
 const lateShut=()=>lateSet?lateSet==="shut":lateFoldable;
 document.addEventListener("click",e=>{const b=e.target.closest('[data-fold="t:late"]');if(!b)return;e.stopImmediatePropagation();
   lateSet=lateShut()?"open":"shut";try{LS.setItem("lateFold",today()+":"+lateSet)}catch(_){}render();const nb=document.querySelector('[data-fold="t:late"]');if(nb)nb.focus()},true);
+
+let sideWide=false,sideOpenG={areas:false,more:false};
+try{sideWide=LS.getItem("sideWide")==="1";Object.assign(sideOpenG,JSON.parse(LS.getItem("sideGroups")||"{}"))}catch(_){}
+const isDesk=()=>matchMedia("(min-width:960px)").matches;
+function paintRail(){const rail=isDesk()&&!sideWide;document.body.classList.toggle("side-rail",rail);
+  const b=document.getElementById("side-tg");if(b){const l=rail?"كبّر القايمة":"صغّر القايمة";b.setAttribute("aria-expanded",String(!rail));b.setAttribute("aria-label",l);b.title=l}}
+function setWide(w){sideWide=w;try{LS.setItem("sideWide",w?"1":"0")}catch(_){}paintRail();paintShell()}
+document.addEventListener("click",e=>{
+  if(e.target.closest("#side-tg")){setWide(!sideWide);const b=document.getElementById("side-tg");if(b)b.focus();return}
+  const g=e.target.closest("[data-sidegroup]");if(g){const k=g.dataset.sidegroup;
+    if(document.body.classList.contains("side-rail")){sideOpenG[k]=true;setWide(true)}else{sideOpenG[k]=!sideOpenG[k];paintShell()}
+    try{LS.setItem("sideGroups",JSON.stringify(sideOpenG))}catch(_){}
+    const nb=document.querySelector(`[data-sidegroup="${k}"]`);if(nb)nb.focus()}});
+addEventListener("resize",()=>{paintRail();try{paintShell()}catch(_){}});
 
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
