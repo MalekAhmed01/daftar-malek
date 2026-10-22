@@ -267,6 +267,34 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+/* round 5: priority shape, run labels, header line, late decisions */
+body .task.p-red .check,body .sub.p-red .check{border-width:2.5px;background:color-mix(in srgb,var(--red) 16%,transparent)}
+body .task.p-black .check,body .sub.p-black .check{border-style:dashed}
+body .task.is-done .check{border-style:solid}
+.pri-run{display:flex;align-items:center;gap:6px;padding:8px 16px 0;line-height:16px;font-size:12.5px;font-weight:600;color:var(--muted);border-top:1px solid var(--line)}
+body .pri-run+.task{border-top:0;padding-top:6px}
+.pri-run.p-red{color:var(--red)}
+.pri-run .pdot{width:8px;height:8px}
+.section h2 .late-all{all:unset;cursor:pointer;margin-inline-start:auto;font-size:13.5px;font-weight:500;color:var(--accent);padding:3px 12px;border-radius:99px;background:var(--accent-soft);white-space:nowrap}
+.section h2 .late-all:hover{filter:brightness(.97)}.section h2 .late-all:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.section h2 .late-all+small{margin-inline-start:8px}
+body .task>.tools .mini.keep-today{opacity:1!important;display:inline-flex!important;color:var(--accent)}
+header .h-sub{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin-top:2px}
+header .h-sub #counts{order:0!important;flex-basis:auto!important;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header .h-sub #counts .dp-bar{width:72px!important}
+header .h-sub .ts-act{display:flex;align-items:center;gap:8px;margin:0}
+header .h-sub .ts-act .hint-chip{padding:3px 10px;font-size:13px}
+header .h-sub .ts-act button{white-space:nowrap}
+@media (max-width:640px){
+  body .rt-w{display:none}body .today-strip{gap:0!important}
+  body header{display:grid!important;grid-template-columns:1fr auto auto auto;align-items:center;gap:2px 8px}
+  body header .h-title{display:contents}
+  body header #view-title{grid-column:1;grid-row:1}
+  body header .h-sub{grid-column:1/-1;grid-row:2;gap:4px 12px}
+  body header #sync,body header #ai-fab,body header #open-settings{grid-row:1}
+  header .h-sub #counts .dp-bar{display:none!important}
+  header .h-sub #counts{gap:4px 12px}
+  body .task>.tools .mini.keep-today{display:none!important}}
 /* type scale: 13 minimum, 15 body, 16 task titles, 17 section heads, 26 page title */
 body{font-size:15px}
 .task .title,.sub .title{font-size:16px;line-height:1.5}
@@ -780,7 +808,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
   <header>
     <div class="h-title">
       <h1 id="view-title">النهارده</h1>
-      <div class="date" id="today-label"></div>
+      <div class="h-sub"><div class="date" id="today-label"></div></div>
     </div>
     <div class="counts" id="counts"></div>
     <span class="sync" id="sync" hidden><i></i><span id="sync-t"></span></span>
@@ -914,7 +942,7 @@ const isLong=t=>!!t&&!t.parentId&&(!!t.course||tasks.some(x=>x.parentId===t.id))
 const inToday=t=>isOpen(t)&&(t.repeat?(t.lastDone!==today()&&t.skip!==today()&&(repDue(t)||(t.planDate&&t.planDate<=today()))):(t.planDate&&(isLong(t)?t.planDate===today():t.planDate<=today())));
 const repText=r=>{const d=(r&&r.days)||[];if(d.length===7)return "كل يوم";return "كل "+[6,0,1,2,3,4,5].filter(x=>d.includes(x)).map(x=>DOW[x]).join(" و")};
 
-function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=false}={}){
+function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=false,lateRow=false}={}){
   const done=t.status==="done";
   const late=!done&&t.planDate&&t.planDate<today()&&!isLong(t);
   const overdue=!done&&t.due&&t.due<today();
@@ -940,9 +968,9 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   const onT=t.repeat?inToday(t):(planned||late);
   const planBtn=(!done&&showPlan)?`<button class="mini ${onT?"on":""}" data-plan="${t.id}" type="button">${onT?(view==="today"?"أجّل":"✓ النهارده"):"+ النهارده"}</button>`:"";
   return `<div class="task p-${t.pri||"black"} ${done?"is-done":""} ${!done&&justAdded&&Date.now()-justAdded<1500&&t.createdAt>=justAdded-50?"fresh":""}">
-    <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}">${done?"✓":""}</button>
+    <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}، ${PRI_N[PRI_KEY(t)]}">${done?"✓":""}</button>
     <div class="body" data-edit="${t.id}"><div class="title">${esc(t.title)}</div>${t.closeNote?`<div class="closed-note">اتقفل بنوت: ${esc(t.closeNote)}</div>`:""}<div class="meta">${meta.join("")}</div></div>
-    ${done?(nightFix(t)||"<span></span>"):`<div class="tools">${timer||pomo&&pomo.id===t.id?`<button class="mini pomo-go ${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?"live":""}" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}" title="ابدأ التايمر">${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?(pomo.pausedAt?"واقف":"● شغال"):IC.play}</button>`:""}${planBtn}<button class="mini row-more" type="button" data-rowmenu="${t.id}" aria-haspopup="menu" aria-expanded="false" aria-label="حاجات تانية لـ ${esc(t.title)}"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5.5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.5" cy="12" r="1.7"/></svg></button></div>`}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}${t.course&&expanded.has("c:"+t.id)?courseBlock2(t):""}</div>`;
+    ${done?(nightFix(t)||"<span></span>"):`<div class="tools">${lateRow?`<button class="mini keep-today" type="button" data-keeptoday="${t.id}" aria-label="${esc(t.title)}: النهارده">النهارده</button>`:""}${timer||pomo&&pomo.id===t.id?`<button class="mini pomo-go ${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?"live":""}" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}" title="ابدأ التايمر">${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?(pomo.pausedAt?"واقف":"● شغال"):IC.play}</button>`:""}${planBtn}<button class="mini row-more" type="button" data-rowmenu="${t.id}" aria-haspopup="menu" aria-expanded="false" aria-label="حاجات تانية لـ ${esc(t.title)}"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5.5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.5" cy="12" r="1.7"/></svg></button></div>`}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}${t.course&&expanded.has("c:"+t.id)?courseBlock2(t):""}</div>`;
 }
 function subRow(s){
   const done=s.status==="done";
@@ -2054,13 +2082,13 @@ function todayView(todayList,doneToday){
   const doneShown=doneToday.filter(isTop);
   const rd=(routineDays[today()]||{}).done||{};const rdn=routineItems.filter(i=>rd[i.id]).length;
   const pendingReview=notes.filter(n=>n.by==="claude"&&!n.resolved).length;
-  const grp=(key,title,list,opts,extra="")=>list.length?foldSection(key,`<span class="h-t">${title}${extra}</span>`,list,opts,""):"";
+  const grp=(key,title,list,opts,extra="",act="")=>list.length?foldSectionP(key,`<span class="h-t">${title}${extra}</span>`,list,opts,act):"";
   return meetStrip()+quickAdd2()+
-    `<div class="today-strip"><div class="rt-strip" role="group" aria-label="الروتين"><span class="rt-l">الروتين <small>${rdn}/${routineItems.length}</small></span>${routineItems.map(i=>`<button type="button" class="rt ${rd[i.id]?"on":""}" data-rt="${i.id}" aria-pressed="${!!rd[i.id]}"><span class="box">${rd[i.id]?"✓":""}</span><span>${esc(i.t)}</span></button>`).join("")}</div>
-      <div class="ts-act">${pendingReview?`<button type="button" class="hint-chip" data-goto="notes">كلود كاتبلك ${pendingReview===1?"نوت":pendingReview+" نوتس"}</button>`:""}<button type="button" class="h-link paper-l" data-paper="1">انسخ للورقة</button></div></div>`+
+    `<div class="today-strip"><div class="rt-strip" role="group" aria-label="الروتين"><span class="rt-l"><span class="rt-w">الروتين </span><small>${rdn}/${routineItems.length}</small></span>${routineItems.map(i=>`<button type="button" class="rt ${rd[i.id]?"on":""}" data-rt="${i.id}" aria-pressed="${!!rd[i.id]}"><span class="box">${rd[i.id]?"✓":""}</span><span>${esc(i.t)}</span></button>`).join("")}</div>
+      </div>`+
     goalsBox("today")+
     (todayList.length?"":`<div class="empty big-empty">يومك فاضي. اكتب أول تاسك فوق ودوس Enter.</div>`)+
-    grp("t:late","من الأيام اللي فاتت",sortTasks(late),{timer:true},`<small class="h-note">ماخلصوش، فاترحّلوا للنهارده</small>`)+
+    grp("t:late","من الأيام اللي فاتت",sortTasks(late),{timer:true,lateRow:true},"",`<button type="button" class="late-all" data-lateall="1">كلهم للنهارده</button>`)+
     grp("t:plan","النهارده",plan,{timer:true})+
     grp("t:mine","شخصي",mine,{timer:true})+
     (doneShown.length?foldSection("t:done",`<span class="h-t">خلص النهارده</span>`,doneShown,{showPlan:false},""):"")}
@@ -2069,6 +2097,7 @@ document.addEventListener("click",async e=>{
   const rm=e.target.closest("[data-rowmenu]");if(rm){const t=tasks.find(x=>x.id===rm.dataset.rowmenu);if(!t)return;const onT=inToday(t)||(t.planDate&&t.planDate>today());
     openMenu(rm,`<button type="button" role="menuitem" data-pomo="${t.id}">${IC.play}<span>ابدأ التايمر</span></button>
       <button type="button" role="menuitem" data-plan="${t.id}"><span>${onT?(view==="today"?"أجّل (شيله من النهارده)":"شيله من يومه"):"حطه النهارده"}</span></button>
+      ${!t.repeat&&t.planDate&&t.planDate<today()&&!isLong(t)?`<button type="button" role="menuitem" data-keeptoday="${t.id}"><span>النهارده</span></button>`:""}
       ${t.repeat?"":`<button type="button" role="menuitem" data-tomorrow="${t.id}"><span>بكره</span></button>`}
       <button type="button" role="menuitem" data-edit="${t.id}"><span>افتح التفاصيل</span></button>`,"حاجات تانية");return}
   const tm=e.target.closest("[data-tomorrow]");if(tm){const t=tasks.find(x=>x.id===tm.dataset.tomorrow);if(!t)return;await write(t.id,{planDate:plusDays(1)});toast("اتنقل لبكره");render()}});
@@ -2084,6 +2113,23 @@ function settingsIndex(html){const names=[];let i=0;
   return nav+html}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-setgo]");if(!b)return;const s=document.querySelector(`[data-setsec="${b.dataset.setgo}"]`);if(s){s.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});const f=s.querySelector("input,button,select,summary");if(f)f.focus({preventScroll:true})}});
 
+const PRI_KEY=t=>t.pri==="red"?"red":t.pri==="black"||!t.pri?"black":"blue";
+function priRuns(list,opts){const lv=new Set(list.map(PRI_KEY));let prev=null,out="";
+  list.forEach(t=>{const k=PRI_KEY(t);if(k!==prev){prev=k;if(k!=="blue"||lv.size>1)out+=`<div class="pri-run p-${k}"><i class="pdot p-${k}" aria-hidden="true"></i>${PRI_N[k]}</div>`}out+=row(t,opts)});return out}
+function foldSectionP(key,title,list,opts,act=""){const shut=folded.has(key);
+  return `<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="${key}" aria-expanded="${!shut}">${ARR}${title}</button>${act}<small>${list.length}</small></h2>${shut?"":priRuns(list,opts)}</section>`}
+
+{const hs=document.querySelector("header .h-sub"),c=document.getElementById("counts");if(hs&&c)hs.append(c)}
+
+document.addEventListener("click",async e=>{
+  const k=e.target.closest("[data-keeptoday]");if(k){const t=tasks.find(x=>x.id===k.dataset.keeptoday);if(!t)return;const was=t.planDate;
+    await write(t.id,{planDate:today()});render();toast("اتحط في النهارده",async()=>{await write(t.id,{planDate:was});render()});return}
+  if(!e.target.closest("[data-lateall]"))return;
+  const late=tasks.filter(t=>inToday(t)&&!t.repeat&&!isLong(t)&&t.planDate&&t.planDate<today());if(!late.length)return;
+  const was=late.map(t=>[t.id,t.planDate]);
+  for(const t of late)await write(t.id,{planDate:today()});
+  render();toast(late.length===1?"اتحط في النهارده":`اتحطوا في النهارده (${late.length})`,async()=>{for(const [id,d] of was)await write(id,{planDate:d});render()})});
+
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -2098,7 +2144,9 @@ function renderInner(){
   const todayList=tasks.filter(inToday);
   const doneToday=tasks.filter(t=>t.status==="done"&&t.doneDate===today());
   {const dn=doneToday.filter(t=>!subsOf(t.id).length).length,tot=dn+todayList.length;
-   $("#counts").innerHTML=tot?`<div class="dprog ${!todayList.length?"all":""}" role="img" aria-label="خلص ${dn} من ${tot} النهارده"><span class="dp-t">${!todayList.length?"خلصت يومك كله":`خلصت <b>${dn}</b> من ${tot}`}</span><span class="dp-bar"><i style="width:${Math.round(dn/tot*100)}%"></i></span></div>`:"";}
+   $("#counts").innerHTML=tot?`<div class="dprog ${!todayList.length?"all":""}" role="img" aria-label="خلص ${dn} من ${tot} النهارده"><span class="dp-t">${!todayList.length?"خلصت يومك كله":`خلصت <b>${dn}</b> من ${tot}`}</span><span class="dp-bar"><i style="width:${Math.round(dn/tot*100)}%"></i></span></div>`:"";
+   if(view==="today"){const pr=notes.filter(n=>n.by==="claude"&&!n.resolved).length;
+     $("#counts").innerHTML+=`<div class="ts-act">${pr?`<button type="button" class="hint-chip" data-goto="notes">كلود كاتبلك ${pr===1?"نوت":pr+" نوتس"}</button>`:""}<button type="button" class="h-link paper-l" data-paper="1">انسخ للورقة</button></div>`}}
   $("#chips").hidden=view!=="all";const tb=document.querySelector(".wrap>.bar");if(tb)tb.hidden=ghScreen||view!=="all";
   const v=$("#view");
   if(!loaded||ghScreen){return}
