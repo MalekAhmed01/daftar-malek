@@ -268,19 +268,18 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
 /* identity: paper + three pens + the logo orange */
-:root:root{--paper:#FBF8F1;--sheet:#FFFDF8;--grid:#ECE5D7;--ink:#24201B;--muted:#6E665A;--line:#E3DCCD;--accent:#3D372F;--accent-soft:#ECE5D8;--brand:#B85512;--brand-ink:#FFFFFF;
+:root:root{--paper:#FBF8F1;--sheet:#FFFDF8;--grid:#ECE5D7;--ink:#24201B;--muted:#6E665A;--line:#E3DCCD;--accent:#2557B8;--accent-soft:#E3EAF7;--brand:#2557B8;--brand-ink:#FFFFFF;--logo:#D9691F;
   --red:#C8382B;--blue:#2557B8;--black:#2B2824;--side:#F4EFE5;--rail:#ECE6D9;--dot:rgba(60,40,10,.075);--hair:#EDE7DB}
-@media (prefers-color-scheme:dark){:root:root:not([data-theme="light"]){--paper:#1A1A1A;--sheet:#212121;--grid:#2A2A2A;--ink:#F7F7F7;--muted:#B8B8B8;--line:#363636;
-  --accent:#F2F2F2;--accent-soft:#2A2A2A;--brand:#F28A3A;--brand-ink:#1A1A1A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#161616;--rail:#121212;--dot:transparent;--hair:#2C2C2C}}
-:root:root[data-theme="dark"]{--paper:#1A1A1A;--sheet:#212121;--grid:#2A2A2A;--ink:#F7F7F7;--muted:#B8B8B8;--line:#363636;
-  --accent:#F2F2F2;--accent-soft:#2A2A2A;--brand:#F28A3A;--brand-ink:#1A1A1A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#161616;--rail:#121212;--dot:transparent;--hair:#2C2C2C}
-/* «ب الهادي» (Malek chose it, 25 Oct): the interface is neutral; the selected thing is brighter and bolder, not coloured.
-   The orange is only the logo, the main button and the assistant button. */
+@media (prefers-color-scheme:dark){:root:root:not([data-theme="light"]){--paper:#17181A;--sheet:#1E1F22;--grid:#26282C;--ink:#F5F6F8;--muted:#B3B7BE;--line:#30333A;
+  --accent:#8DB6F7;--accent-soft:#1F2A3D;--brand:#8DB6F7;--brand-ink:#101114;--logo:#F28A3A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#131416;--rail:#101113;--dot:rgba(255,255,255,.045);--hair:#26282C}}
+:root:root[data-theme="dark"]{--paper:#17181A;--sheet:#1E1F22;--grid:#26282C;--ink:#F5F6F8;--muted:#B3B7BE;--line:#30333A;
+  --accent:#8DB6F7;--accent-soft:#1F2A3D;--brand:#8DB6F7;--brand-ink:#101114;--logo:#F28A3A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#131416;--rail:#101113;--dot:rgba(255,255,255,.045);--hair:#26282C}
+/* «ج الحبر الأزرق» (Malek, 25 Oct, after «ب» still looked faded): the blue of his pen is the interface colour
+   (selected, links, the main button); the orange is only the logo and the assistant's star. */
 html body .btn.primary,html body button.btn.primary{background:var(--brand)!important;border-color:var(--brand)!important;color:var(--brand-ink)!important}
-html body header #ai-fab{background:var(--brand)!important;color:var(--brand-ink)!important;border-color:transparent!important}
+html body header #ai-fab{background:var(--sheet)!important;color:var(--logo)!important;border-color:var(--line)!important}
 html body #view [aria-current="page"],html body #side .nv[aria-current="page"],html body .rl[aria-current="page"]{font-weight:600}
-/* Still «باهت» on his big screen (25 Oct): the dot grid read like a mesh over the page in dark, and Readex Pro at 400 is thin in Arabic.
-   Dark has no dots now; text is whiter, gray is lighter, and the base weight is 500 (titles 600). */
+/* Readex Pro at 400 is thin in Arabic: base weight 500, titles 600, whiter text, lighter gray. (The dots stay: Malek likes them.) */
 html body{font-weight:500}
 html body #view .task .body .title,html body #side .nv,html body #view .section>h2,html body .rl{font-weight:600}
 html body #view .task .meta{opacity:1!important}
