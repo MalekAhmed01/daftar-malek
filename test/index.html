@@ -270,15 +270,20 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 /* identity: paper + three pens + the logo orange */
 :root:root{--paper:#FBF8F1;--sheet:#FFFDF8;--grid:#ECE5D7;--ink:#24201B;--muted:#6E665A;--line:#E3DCCD;--accent:#3D372F;--accent-soft:#ECE5D8;--brand:#B85512;--brand-ink:#FFFFFF;
   --red:#C8382B;--blue:#2557B8;--black:#2B2824;--side:#F4EFE5;--rail:#ECE6D9;--dot:rgba(60,40,10,.075);--hair:#EDE7DB}
-@media (prefers-color-scheme:dark){:root:root:not([data-theme="light"]){--paper:#1A1A1A;--sheet:#212121;--grid:#2A2A2A;--ink:#EDEDED;--muted:#A0A0A0;--line:#2F2F2F;
-  --accent:#F2F2F2;--accent-soft:#2A2A2A;--brand:#F28A3A;--brand-ink:#1A1A1A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#161616;--rail:#121212;--dot:rgba(255,255,255,.045);--hair:#262626}}
-:root:root[data-theme="dark"]{--paper:#1A1A1A;--sheet:#212121;--grid:#2A2A2A;--ink:#EDEDED;--muted:#A0A0A0;--line:#2F2F2F;
-  --accent:#F2F2F2;--accent-soft:#2A2A2A;--brand:#F28A3A;--brand-ink:#1A1A1A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#161616;--rail:#121212;--dot:rgba(255,255,255,.045);--hair:#262626}
+@media (prefers-color-scheme:dark){:root:root:not([data-theme="light"]){--paper:#1A1A1A;--sheet:#212121;--grid:#2A2A2A;--ink:#F7F7F7;--muted:#B8B8B8;--line:#363636;
+  --accent:#F2F2F2;--accent-soft:#2A2A2A;--brand:#F28A3A;--brand-ink:#1A1A1A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#161616;--rail:#121212;--dot:transparent;--hair:#2C2C2C}}
+:root:root[data-theme="dark"]{--paper:#1A1A1A;--sheet:#212121;--grid:#2A2A2A;--ink:#F7F7F7;--muted:#B8B8B8;--line:#363636;
+  --accent:#F2F2F2;--accent-soft:#2A2A2A;--brand:#F28A3A;--brand-ink:#1A1A1A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#161616;--rail:#121212;--dot:transparent;--hair:#2C2C2C}
 /* «ب الهادي» (Malek chose it, 25 Oct): the interface is neutral; the selected thing is brighter and bolder, not coloured.
    The orange is only the logo, the main button and the assistant button. */
 html body .btn.primary,html body button.btn.primary{background:var(--brand)!important;border-color:var(--brand)!important;color:var(--brand-ink)!important}
 html body header #ai-fab{background:var(--brand)!important;color:var(--brand-ink)!important;border-color:transparent!important}
 html body #view [aria-current="page"],html body #side .nv[aria-current="page"],html body .rl[aria-current="page"]{font-weight:600}
+/* Still «باهت» on his big screen (25 Oct): the dot grid read like a mesh over the page in dark, and Readex Pro at 400 is thin in Arabic.
+   Dark has no dots now; text is whiter, gray is lighter, and the base weight is 500 (titles 600). */
+html body{font-weight:500}
+html body #view .task .body .title,html body #side .nv,html body #view .section>h2,html body .rl{font-weight:600}
+html body #view .task .meta{opacity:1!important}
 html body .maincol{background-image:radial-gradient(var(--dot) 1.1px,transparent 1.4px);background-size:22px 22px}
 /* steps under their task */
 html body .sub-chev{all:unset;cursor:pointer;flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:6px;color:var(--muted);margin-inline-end:-4px}
