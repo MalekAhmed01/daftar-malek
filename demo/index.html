@@ -278,6 +278,77 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+/* identity: paper + three pens + the logo orange */
+:root:root{--paper:#FBF8F1;--sheet:#FFFDF8;--grid:#ECE5D7;--ink:#24201B;--muted:#6E665A;--line:#E3DCCD;--accent:#B85512;--accent-soft:#F6E7D7;
+  --red:#C8382B;--blue:#2557B8;--black:#2B2824;--side:#F4EFE5;--rail:#ECE6D9;--dot:rgba(60,40,10,.075);--hair:#EDE7DB}
+@media (prefers-color-scheme:dark){:root:root:not([data-theme="light"]){--paper:#1C1A17;--sheet:#221F1B;--grid:#2B2722;--ink:#ECE6DC;--muted:#A39A8C;--line:#322E28;
+  --accent:#F0893B;--accent-soft:#3A2A1C;--red:#E8604F;--blue:#729EEA;--black:#B3AA9C;--side:#181614;--rail:#13110F;--dot:rgba(255,240,220,.05);--hair:#28251F}}
+:root:root[data-theme="dark"]{--paper:#1C1A17;--sheet:#221F1B;--grid:#2B2722;--ink:#ECE6DC;--muted:#A39A8C;--line:#322E28;
+  --accent:#F0893B;--accent-soft:#3A2A1C;--red:#E8604F;--blue:#729EEA;--black:#B3AA9C;--side:#181614;--rail:#13110F;--dot:rgba(255,240,220,.05);--hair:#28251F}
+html body .maincol{background-image:radial-gradient(var(--dot) 1.1px,transparent 1.4px);background-size:22px 22px}
+/* steps under their task */
+html body .sub-chev{all:unset;cursor:pointer;flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:6px;color:var(--muted);margin-inline-end:-4px}
+html body .sub-chev:hover{background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink)}
+html body .sub-chev:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+html body .sub-chev[aria-expanded="false"] .arr{transform:rotate(90deg)}
+html body .task:has(.sub-chev){grid-template-columns:22px 24px minmax(0,1fr) auto}
+html body .task .subs{grid-column:1/-1;margin-inline-start:34px;border:0;background:transparent;padding:0}
+html body .task .subs .sub{border-bottom:1px solid var(--hair)}
+html body #rail,html body #dock-empty{display:none}
+/* phone: the task opens as a full page */
+@media (max-width:959px){
+  html body #overlay{align-items:stretch!important;padding:0!important}
+  html body #overlay .editor{max-width:none!important;height:100%;max-height:none!important;border-radius:0!important;padding-top:max(16px,env(safe-area-inset-top,0px))}
+  html body #overlay .editor .actions{flex-wrap:wrap;gap:8px;position:sticky;bottom:calc(-18px - env(safe-area-inset-bottom,0px));background:var(--sheet);padding:10px 0 4px;border-top:1px solid var(--line)}
+  html body #overlay .editor .actions .grow{display:flex;flex-wrap:wrap;gap:6px}
+  html body #overlay .editor .actions .btn{white-space:nowrap;flex:none;padding:8px 14px}
+}
+@media (min-width:960px){
+  html body{padding:0!important}
+  html body.dz .wrap{display:grid!important;grid-template-columns:56px var(--lists,0px) minmax(0,1fr) var(--dock,0px)!important;max-width:none!important;margin:0!important;padding:0!important;gap:0!important;min-height:100vh}
+  html body.dz.lists-on .wrap{--lists:200px}
+  html body.dz.dock-on .wrap{--dock:400px}
+  html body.dz #rail{grid-column:1;display:flex;flex-direction:column;align-items:center;gap:4px;position:sticky;top:0;height:100vh;box-sizing:border-box;padding:12px 0;background:var(--rail)}
+  html body.dz #side{grid-column:2!important;display:none!important}
+  html body.dz.lists-on #side{display:flex!important;flex-direction:column;justify-self:stretch!important;position:sticky;top:0;height:100vh;max-height:none!important;width:auto!important;margin:0!important;box-sizing:border-box;padding:14px 8px!important;overflow-y:auto;background:var(--side);border-radius:0}
+  html body.dz #side .side-top,html body.dz #side .ng-foot{display:none!important}
+  html body.dz .wrap>.maincol{grid-column:3!important;max-width:none!important;width:100%;box-sizing:border-box;padding:16px 32px 60px;min-height:100vh}
+  html body.dz:not(.dock-on) .wrap>.maincol>*:not(.tabs){max-width:980px;width:100%;margin-inline:auto}
+  html body.dz.v-keep .wrap>.maincol>*{max-width:1400px!important}
+  /* rail */
+  html body .rl{all:unset;box-sizing:border-box;cursor:pointer;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:var(--muted)}
+  html body .rl svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  html body .rl:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 7%,transparent)}
+  html body .rl[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+  html body .rl:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+  html body .rl-home{margin-bottom:10px}
+  html body .rl-home .logo{width:28px;height:28px}
+  html body .rl-gap{flex:1}
+  /* lists */
+  html body.dz #side .nv{min-height:34px;font-size:14px;border-radius:7px;padding-inline:10px;gap:10px}
+  html body.dz #side .nv[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  html body.dz #side .nh{font-size:12px;font-weight:600;color:var(--muted);padding:12px 10px 4px}
+  html body.dz #side .hash{font-weight:400;color:var(--muted);width:18px;text-align:center;display:inline-block}
+  html body.dz #side .nc{font-style:normal;font-size:12.5px;color:var(--muted);background:none;margin-inline-start:auto}
+  html body.dz #side .ng{display:flex;flex-direction:column;gap:1px;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  /* the detail panel */
+  html body.dz.dock-on #dock-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:fixed;inset:0 auto 0 0;width:400px;color:var(--muted);font-size:14.5px;background:var(--paper);border-inline-start:1px solid var(--line);z-index:5;text-align:center;padding:24px;box-sizing:border-box}
+  html body.dz.dock-on #dock-empty svg{opacity:.45}
+  html body.dz.dock-on #overlay{position:fixed!important;inset:0 auto 0 0!important;width:400px;background:transparent!important;padding:0!important;display:block;z-index:30!important}
+  html body.dz.dock-on #overlay[hidden]{display:none!important}
+  html body.dz.dock-on #overlay .editor{max-width:none!important;width:400px;height:100vh;max-height:none!important;border-radius:0!important;box-shadow:none!important;background:var(--paper);border-inline-start:1px solid var(--line);overflow-y:auto;padding:16px 20px 24px;animation:none!important}
+  html body.dz.dock-on #overlay .editor h3{font-size:13px;font-weight:500;color:var(--muted)}
+  html body.dz.dock-on #overlay .editor .actions{flex-wrap:wrap;gap:8px;position:sticky;bottom:-24px;background:var(--paper);padding:12px 0 6px;margin-top:4px;border-top:1px solid var(--line)}
+  html body.dz.dock-on #overlay .editor .actions .grow{display:flex;flex-wrap:wrap;gap:6px}
+  html body.dz.dock-on #overlay .editor .actions .btn{min-height:36px;padding:6px 12px;font-size:13.5px;white-space:nowrap;flex:none}
+  html body.dz.dock-on header #ai-fab{inset-inline-end:422px}
+  html body.dz.dock-on .ai-ov .ai-panel{margin-inline-end:422px}
+}
+@media (min-width:1440px){
+  html body.dz.dock-on .wrap{--dock:440px}
+  html body.dz.dock-on #dock-empty,html body.dz.dock-on #overlay,html body.dz.dock-on #overlay .editor{width:440px}
+  html body.dz.dock-on header #ai-fab{inset-inline-end:462px}
+}
 @media (max-width:959px){
   html body #view .section{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0 0 4px!important}
   html body #view .section>h2{padding:12px 2px 6px}
@@ -291,13 +362,6 @@ html body .s-menu{all:unset;cursor:pointer;display:none;width:34px;height:34px;p
 html body .s-menu:hover{background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink)}
 html body .s-menu:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 @media (min-width:960px){html body .s-menu{display:grid}html body #side .side-tg{display:none!important}}
-@media (min-width:960px){
-  html body .wrap>.maincol>*:not(.tabs){max-width:960px!important;width:100%;margin-inline:auto!important}
-  html body.v-keep .wrap>.maincol>*{max-width:1400px!important}
-  html body #view .task .body .meta{margin-inline-start:0!important}
-  html body #view .task .body .title{flex:0 1 auto}
-  html body #view section.section>h2,html body #view div.section>h2{justify-content:flex-start;gap:10px}
-}
 @media (min-width:1300px){
   html body #view .pj-sec .pj-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));column-gap:32px;align-items:start}
   html body #view .pj-sec .pj-list>.empty{grid-column:1/-1}
@@ -320,19 +384,8 @@ html body .ai-chips.big .chip:hover,html body .ai-chips.big .chip:focus-visible{
 html body .ai-chips.big .chip::before{content:"›";color:var(--accent);margin-inline-end:8px;font-weight:700}
 html body .ai-in textarea{border-radius:12px}
 @media (min-width:960px){
-  /* the app fills the screen */
-  html body{padding:0!important}
+  /* the layout itself (rail, lists, page, detail panel) lives in zzzzzz_design.py */
   html body #view .task,html body #view .task.is-done{background:transparent}
-  html body .wrap{grid-template-columns:var(--side-w,232px) minmax(0,1fr)!important;max-width:none!important;margin:0!important;padding:0!important;gap:0!important;min-height:100vh}
-  html body.side-rail .wrap,html body.v-keep.side-rail .wrap{grid-template-columns:64px minmax(0,1fr)!important}
-  html body.v-keep .wrap{grid-template-columns:var(--side-w,232px) minmax(0,1fr)!important}
-  html body .wrap>#side{grid-column:1!important;justify-self:stretch!important;width:auto!important;margin:0!important;position:sticky;top:0;height:100vh;max-height:none!important;box-sizing:border-box;padding:10px 8px!important;overflow-y:auto;border-radius:0;background:color-mix(in srgb,var(--ink) 3.5%,var(--paper))}
-  html body .wrap>.maincol{grid-column:2!important;max-width:none!important;width:100%;box-sizing:border-box;padding:14px 36px 60px}
-  html body .wrap>.maincol>*:not(.tabs){max-width:1100px}
-  html body.v-keep .wrap>.maincol>*{max-width:1400px}
-  html body.v-keep .maincol{max-width:none!important}
-  /* side list items: TickTick size */
-  html body #side .nv{min-height:34px;font-size:14px;border-radius:7px}
   /* flat lists */
   html body #view .section{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0 0 6px!important}
   html body #view .section>h2{font-size:14px;padding:10px 4px 6px;border:0}
@@ -1265,7 +1318,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 </style>
 
 <div class="wrap" dir="rtl" lang="ar">
-  <nav id="side" aria-label="القايمة"><div class="side-top"><button type="button" class="app-home" data-nav="today" title="النهارده"><span class="logo" aria-hidden="true"></span><b id="app-name">دفتري</b></button><button type="button" class="side-tg" id="side-tg" aria-expanded="false" aria-label="كبّر القايمة" title="كبّر القايمة"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M15 4.5v15"/></svg></button></div>
+  <nav id="rail" aria-label="الأجزاء"></nav><nav id="side" aria-label="القايمة"><div class="side-top"><button type="button" class="app-home" data-nav="today" title="النهارده"><span class="logo" aria-hidden="true"></span><b id="app-name">دفتري</b></button><button type="button" class="side-tg" id="side-tg" aria-expanded="false" aria-label="كبّر القايمة" title="كبّر القايمة"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M15 4.5v15"/></svg></button></div>
     <div id="side-list"></div></nav>
   <div class="side-ov" id="side-ov" hidden></div>
   <div class="maincol">
@@ -1306,6 +1359,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
   <div class="foot" id="foot" hidden><button type="button" id="gh-settings">الاتصال بـ GitHub</button></div>
 </div></div>
 
+<aside id="dock-empty" aria-hidden="true"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h9l3 3v14H6z"/><path d="M15 3.5v3h3M9 11h6M9 14h6M9 17h3"/></svg><p>دوس على أي تاسك عشان تشوف تفاصيله هنا</p></aside>
 <div class="overlay" id="overlay" hidden>
   <form class="editor" id="editor" autocomplete="off">
     <h3 id="ed-title">تاسك جديد</h3>
@@ -1446,7 +1500,7 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   const onT=t.repeat?inToday(t):(planned||late);
   const planBtn=(!done&&showPlan)?`<button class="mini ${onT?"on":""}" data-plan="${t.id}" type="button">${onT?(view==="today"?"أجّل":"✓ النهارده"):"+ النهارده"}</button>`:"";
   return `<div class="task p-${t.pri||"black"} ${done?"is-done":""} ${!done&&justAdded&&Date.now()-justAdded<1500&&t.createdAt>=justAdded-50?"fresh":""}">
-    <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}، ${PRI_N[PRI_KEY(t)]}">${done?"✓":""}</button>
+    ${subs.length?`<button type="button" class="sub-chev" data-expand="${t.id}" aria-expanded="${expanded.has(t.id)}" aria-label="${expanded.has(t.id)?"اقفل":"افتح"} خطوات ${esc(t.title)}">${ARR}</button>`:""}<button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}، ${PRI_N[PRI_KEY(t)]}">${done?"✓":""}</button>
     <div class="body" data-edit="${t.id}"><div class="title">${esc(t.title)}</div>${t.closeNote?`<div class="closed-note">اتقفل بنوت: ${esc(t.closeNote)}</div>`:""}<div class="meta">${meta.join("")}</div></div>
     ${done?(nightFix(t)||"<span></span>"):`<div class="tools">${lateRow?`<button class="mini keep-today" type="button" data-keeptoday="${t.id}" aria-label="${esc(t.title)}: النهارده">النهارده</button>`:""}${timer||pomo&&pomo.id===t.id?`<button class="mini pomo-go ${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?"live":""}" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}" title="ابدأ التايمر">${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?(pomo.pausedAt?"واقف":"● شغال"):IC.play}</button>`:""}${planBtn}<button class="mini row-more" type="button" data-rowmenu="${t.id}" aria-haspopup="menu" aria-expanded="false" aria-label="حاجات تانية لـ ${esc(t.title)}"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5.5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.5" cy="12" r="1.7"/></svg></button></div>`}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}${t.course&&expanded.has("c:"+t.id)?courseBlock2(t):""}</div>`;
 }
@@ -2581,7 +2635,7 @@ function todayView(todayList,doneToday){
       </div>`+
     goalsBox("today")+
     (todayList.length?"":`<div class="empty big-empty">يومك فاضي. اكتب أول تاسك فوق ودوس Enter.</div>`)+
-    grp("t:late","من الأيام اللي فاتت",sortTasks(late),{timer:true,lateRow:true},"",`<button type="button" class="late-all" data-lateall="1">كلهم للنهارده</button>`)+
+    grp("t:late","متأخر",sortTasks(late),{timer:true,lateRow:true},"",`<button type="button" class="late-all" data-lateall="1">كلهم للنهارده</button>`)+
     grp("t:plan","النهارده",plan,{timer:true})+
     grp("t:mine","شخصي",mine,{timer:true})+
     (doneShown.length?foldSection("t:done",`<span class="h-t">خلص النهارده</span>`,doneShown,{showPlan:false},""):"")}
@@ -3144,6 +3198,46 @@ addEventListener("popstate",()=>{if(ovIgnore){ovIgnore--;return}
 {const _g=goView;let t=0;goView=function(k){document.body.classList.add("v-enter");clearTimeout(t);t=setTimeout(()=>document.body.classList.remove("v-enter"),450);_g(k)}}
 document.body.classList.add("v-enter");setTimeout(()=>document.body.classList.remove("v-enter"),900);
 document.addEventListener("click",e=>{const b=e.target.closest("[data-sidewide]");if(!b)return;setWide(!sideWide);const n=document.querySelector("[data-sidewide]");if(n){n.setAttribute("aria-expanded",String(sideWide));n.focus()}});
+const TASKV=k=>["today","upcoming","all","clients","team"].includes(k)||String(k).startsWith("area:");
+let listsHidden=false;try{listsHidden=LS.getItem("listsHidden")==="1"}catch(_){}
+const SPARK='<svg viewBox="0 0 24 24"><path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z" fill="currentColor" stroke="none"/></svg>';
+function paintRail2(){const r=document.getElementById("rail");if(!r)return;const cur=navKey();
+  const sec=TASKV(cur)?"tasks":["notes","journal","files"].includes(cur)?"notes":cur==="proj"||view==="project"?"proj":cur;
+  const it=(key,nav,ic,name)=>`<button type="button" class="rl" ${nav?`data-nav="${nav}"`:""} ${sec===key?'aria-current="page"':""} aria-label="${name}" title="${name}"><span class="ni">${ic}</span></button>`;
+  r.innerHTML=`<button type="button" class="rl rl-home" data-nav="today" aria-label="النهارده" title="النهارده"><span class="logo" aria-hidden="true"></span></button>
+    ${it("tasks","today",NI.all,"التسكات")}${it("focus","focus",NI.focus,"تركيز")}${it("notes","notes",NI.notes,"النوتس")}${it("proj","proj",NI.projects||NI.all,"المشاريع")}${it("week","week",NI.week,"الأسبوع")}
+    <button type="button" class="rl" data-search="1" aria-label="دوّر" title="دوّر (Ctrl+K)"><span class="ni">${NI.search}</span></button>
+    <button type="button" class="rl" data-aiopen="1" aria-label="المساعد" title="المساعد"><span class="ni">${SPARK}</span></button>
+    <span class="rl-gap"></span>${it("settings","settings",NI.settings,"الإعدادات")}`}
+function paintLists(){const box=document.getElementById("side-list");if(!box)return;const c=navCounts(),cur=navKey();
+  const it=(k,ic,name,n)=>`<button type="button" class="nv" data-nav="${k}" ${cur===k?'aria-current="page"':""}><span class="ni">${ic}</span><span class="nn">${esc(name)}</span>${n?`<i class="nc">${n}</i>`:""}</button>`;
+  box.innerHTML=`<div class="ng">${it("today",NI.today,"النهارده",c.today)}${it("upcoming",NI.upcoming,"الجاي",c.upcoming||0)}${it("all",NI.all,"كل التسكات",c.all)}</div>
+    <div class="nh">الأقسام</div><div class="ng">${AREAS.map(([k,n])=>it("area:"+k,'<b class="hash">#</b>',n,c.areas[k]||0)).join("")}</div>
+    <div class="ng">${it("clients",NI.clients,"العملاء",0)}${team.length?it("team",NI.team,"الفريق",0):""}</div>`}
+function paintShell2(){const desk=isDesk();const cur=navKey();
+  document.body.classList.toggle("dz",desk);
+  if(!desk){document.body.classList.remove("lists-on","dock-on");return}
+  document.body.classList.remove("side-rail");
+  paintRail2();
+  const task=TASKV(cur)&&view!=="project";
+  document.body.classList.toggle("lists-on",task&&!listsHidden);
+  document.body.classList.toggle("dock-on",task&&matchMedia("(min-width:1280px)").matches);
+  if(task)paintLists()}
+{const _p=paintShell;paintShell=function(){_p();paintShell2()}}
+addEventListener("resize",()=>{try{paintShell2()}catch(_){}});
+document.addEventListener("click",e=>{
+  const w=e.target.closest("[data-sidewide]");if(w&&isDesk()){e.stopImmediatePropagation();listsHidden=!listsHidden;try{LS.setItem("listsHidden",listsHidden?"1":"0")}catch(_){}paintShell2();return}
+  if(e.target.closest("[data-aiopen]")){e.preventDefault();openAi();return}},true);
+// the detail panel: switching to another task saves the open one first
+let edDirty=false;
+document.addEventListener("input",e=>{if(e.target.closest&&e.target.closest("#editor"))edDirty=true});
+document.addEventListener("change",e=>{if(e.target.closest&&e.target.closest("#editor"))edDirty=true});
+document.addEventListener("submit",e=>{if(e.target.id==="editor")edDirty=false},true);
+{const _o=openEditor;openEditor=function(t){
+  if(document.body.classList.contains("dock-on")&&!$("#overlay").hidden&&edDirty&&$("#f-title").value.trim()&&!(t&&editing&&t.id===editing.id)){
+    const f=$("#editor");edDirty=false;try{f.requestSubmit()}catch(_){}
+    setTimeout(()=>{_o(t);edDirty=false},60);return}
+  _o(t);edDirty=false}}
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
