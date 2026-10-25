@@ -955,7 +955,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
     <div hidden>
       <div id="stage-wrap"><select id="f-stage"><option value="">—</option><option value="draft">درافت</option><option value="edits">تعديلات</option><option value="delivery">تسليم</option></select></div>
     </div>
-    <div class="field" id="done-field" hidden><label for="f-done">خلص يوم</label><input id="f-done" type="date"></div>
+    <details class="field" id="done-field" hidden><summary class="lab" style="cursor:pointer">خلص يوم: <span id="done-sum"></span></summary><input id="f-done" type="date" aria-label="خلص يوم"></details>
     <details class="field" id="notes-wrap"><summary class="lab" style="cursor:pointer">ملاحظات</summary><textarea id="f-notes" maxlength="1000"></textarea></details>
     <div class="actions">
       <div class="grow"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" id="ed-cancel">إلغاء</button><button class="btn" type="button" id="ed-subs" hidden>+ تسكات فرعية</button><button class="btn" type="button" id="ed-ai" hidden>✦ قسّمه</button><button class="btn" type="button" id="ed-pomo" hidden>▶ بومودورو</button></div>
@@ -2303,6 +2303,8 @@ document.addEventListener("submit",async e=>{const f=e.target.closest("[data-pja
   await write(id,{title,area:course?"study":"side",kind:"",pri:"blue",client:"",stage:"",due:"",notes:"",status:"open",planDate:"",createdAt:Date.now(),doneAt:null,doneDate:null,...(course?{course:{chapters:[]}}:{long:true})},true);
   goView("project:"+id)},true);
 
+function paintDoneSum(){const v=$("#f-done").value,s=$("#done-sum");if(s)s.textContent=!v?"—":v===today()?"النهارده":fmtDay(v)}
+document.addEventListener("input",e=>{if(e.target.id==="f-done")paintDoneSum()});
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -2950,7 +2952,7 @@ function openEditor(t){
   $("#f-stage").value=t?.stage||"";
   $("#f-due").value=t?.due||"";
   $("#f-notes").value=t?.notes||"";$("#notes-wrap").open=!!(t&&t.notes);
-  $("#f-done").value=t?.status==="done"?(t.doneDate||""):"";$("#f-done").max=today();$("#done-field").hidden=!(t&&t.status==="done");
+  $("#f-done").value=t?.status==="done"?(t.doneDate||""):"";$("#f-done").max=today();$("#done-field").hidden=!(t&&t.status==="done");$("#done-field").open=false;paintDoneSum();
   $("#f-today").checked=t?!!(t.planDate&&t.planDate<=today()):view==="today";
   edPri=t?.pri||"blue";paintPri();edRep=t&&t.repeat?[...(t.repeat.days||[])]:[];paintRep();
   $("#rep-field").hidden=!!(t&&(t.parentId||subsOf(t.id).length||t.status==="done"||t.repeatOf));fillKinds(t?.kind||"");
