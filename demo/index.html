@@ -278,9 +278,81 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
-@media (min-width:1600px){html{zoom:1.1}}
-@media (min-width:1920px){html{zoom:1.2}}
-@media (min-width:2400px){html{zoom:1.35}}
+body:not(.v-enter) #view>*{animation:none!important}
+/* the last small targets the audit found */
+@media (pointer:coarse){html body header .h-sub .ts-act button{min-height:40px!important}html body #view .ar-btns .x{width:40px!important;height:40px!important}
+  html body #view summary{display:flex;align-items:center}html body .k-ic{width:42px;height:42px}}
+@media (min-width:960px){html body #view .fold{min-height:26px}}
+/* the assistant, TickTick style */
+html body .ai-ov{background:transparent!important;pointer-events:none;display:flex;align-items:flex-end;justify-content:flex-end;padding:0 0 calc(76px + env(safe-area-inset-bottom,0px));box-sizing:border-box}
+html body .ai-ov .ai-panel{pointer-events:auto;width:min(380px,calc(100vw - 24px));height:min(600px,calc(100vh - 110px));margin:0 12px;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.28);overflow:hidden}
+html body .ai-hello{display:flex;flex-direction:column;gap:6px;padding:14px 4px 10px}
+html body .ai-hello b{font-size:20px;line-height:1.3}
+html body .ai-hello span:last-child{color:var(--muted);font-size:14.5px}
+html body .ai-spark svg{width:30px;height:30px;fill:var(--accent)}
+html body .ai-chips.big{display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:0 6px 8px}
+html body .ai-chips.big .chip{all:unset;box-sizing:border-box;cursor:pointer;padding:9px 10px;border-radius:9px;font-size:14px;color:var(--ink)}
+html body .ai-chips.big .chip:hover,html body .ai-chips.big .chip:focus-visible{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+html body .ai-chips.big .chip::before{content:"›";color:var(--accent);margin-inline-end:8px;font-weight:700}
+html body .ai-in textarea{border-radius:12px}
+@media (min-width:960px){
+  /* the app fills the screen */
+  html body{padding:0!important}
+  html body #view .task,html body #view .task.is-done{background:transparent}
+  html body .wrap{grid-template-columns:var(--side-w,232px) minmax(0,1fr)!important;max-width:none!important;margin:0!important;padding:0!important;gap:0!important;min-height:100vh}
+  html body.side-rail .wrap,html body.v-keep.side-rail .wrap{grid-template-columns:64px minmax(0,1fr)!important}
+  html body.v-keep .wrap{grid-template-columns:var(--side-w,232px) minmax(0,1fr)!important}
+  html body .wrap>#side{grid-column:1!important;justify-self:stretch!important;width:auto!important;margin:0!important;position:sticky;top:0;height:100vh;max-height:none!important;box-sizing:border-box;padding:10px 8px!important;overflow-y:auto;border-radius:0;background:color-mix(in srgb,var(--ink) 3.5%,var(--paper))}
+  html body .wrap>.maincol{grid-column:2!important;max-width:none!important;width:100%;box-sizing:border-box;padding:14px 36px 60px}
+  html body .wrap>.maincol>*:not(.tabs){max-width:1100px}
+  html body.v-keep .wrap>.maincol>*{max-width:1400px}
+  html body.v-keep .maincol{max-width:none!important}
+  /* side list items: TickTick size */
+  html body #side .nv{min-height:34px;font-size:14px;border-radius:7px}
+  /* flat lists */
+  html body #view .section{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0 0 6px!important}
+  html body #view .section>h2{font-size:14px;padding:10px 4px 6px;border:0}
+  html body #view .section>h2 small{font-weight:500}
+  html body #view .task{padding-top:7px;padding-bottom:7px;border-top:0;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+  html body #view .task:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+  html body #view .task .body{display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap}
+  html body #view .task .title{flex:1 1 220px;min-width:0;font-size:15px}
+  html body #view .task .meta{margin:0;margin-inline-start:auto;font-size:12.5px;opacity:.9}
+  html body #view .pj-blk,html body #view .pj-head{border-top-color:color-mix(in srgb,var(--line) 70%,transparent)}
+  /* the quick add: a quiet filled bar */
+  html body #view .qa2,html body #view .quick2{background:color-mix(in srgb,var(--ink) 4%,var(--paper))!important;border-color:transparent!important;box-shadow:none!important}
+  /* the assistant button floats in the corner */
+  html body header #ai-fab{position:fixed;inset-inline-end:22px;bottom:22px;width:48px!important;height:48px!important;z-index:45;box-shadow:0 6px 18px rgba(0,0,0,.25);background:var(--sheet);font-size:20px}
+  html body .ai-ov{padding-bottom:84px}
+  html body .ai-ov .ai-panel{margin-inline-end:22px}
+}
+/* nothing can push the page sideways (an iPhone then shows it cut on one side) */
+html,body{overflow-x:clip}
+/* 12px is the smallest text */
+body .tb b,body .tb-days span,body .rt .box,body .k-h,body .lab-chip small,body .fbadge,body .wrap .dnav .car{font-size:12px}
+body .rd-t .fbadge{font-size:11px}
+/* finger screens: 44px to tap */
+@media (pointer:coarse){
+  body .check{position:relative}
+  body .check::before{content:"";position:absolute;inset:-11px;border-radius:12px}
+  body .row-more{width:44px!important;height:44px!important}
+  body header .gear,body header .ai-fab,body header .s-open{width:42px!important;height:42px!important}
+  body .chip,body .lab-chip,body .kb-chip,body .hint-chip,body .h-link,body .mini,body .c-today,body .late-all,body .rt-done,body .sub-tg,body .qa-t{min-height:40px;box-sizing:border-box}
+  body .lab-chip,body .h-link,body .mini,body .c-today{display:inline-flex;align-items:center}
+  body #view input:not([type=checkbox]):not([type=radio]):not([type=range]),body #view select,body .editor input:not([type=checkbox]),body .editor select,body .btn{min-height:44px;box-sizing:border-box}
+  body .k-ic{width:42px;height:42px}
+  body .tabs button{min-height:52px}
+  body header .ts-act button,body .rt,body .late-all,body .fold,body .dnav button,body .kb-chip,body .kc.add,body #view summary,body .sw{min-height:40px!important;box-sizing:border-box}
+  body .dnav button{min-width:44px!important}
+  body .qa-more,body .k-viewrow .k-ic{min-width:44px!important;min-height:44px!important}
+  body .ar-btns .x{width:40px!important;height:40px!important}
+  body .kx{min-width:32px!important;min-height:32px!important;position:relative}
+  body .subprog::before{content:"";position:absolute;inset:-8px}
+  body .subprog{position:relative}
+  /* an iPhone zooms in on any box with text under 16px and stays zoomed, cutting the page: 16px everywhere on a finger screen */
+  body input:not([type=checkbox]):not([type=radio]):not([type=range]),body textarea,body select{font-size:16px!important}
+}
+@media (min-width:2400px){html{zoom:1.15}}
 @media (max-width:600px){body .kcard .k-tools{display:none}body .kcard .k-pin:not([aria-pressed="true"]){display:none}body .kcard{padding-bottom:10px}}
 @media (max-width:360px){body header{column-gap:4px!important}body header #sync-t{display:none}body header .h-sub{min-width:0}}
 body .set-nav,body .rt-strip{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 32px);mask-image:linear-gradient(to left,transparent 0,#000 32px)}
@@ -1901,13 +1973,13 @@ function aiSetupHtml(msg){const c=aiCfg||{prov:"gemini",key:"",model:""};const p
 function aiPanel(){
   if(!aiCfg||!aiCfg.key)return `<div class="ai-body">${aiSetupHtml("")}</div>`;
   const chips=[["رتّبلي النهارده","رتّبلي النهارده. لو محتاج تعرف صحيت إمتى وقدامي كام ساعة اسألني."],["إيه المتأخر؟","إيه التسكات المتأجلة من أيام أو اللي الديدلاين بتاعها قرب أو عدّى؟ واقترح أعمل فيها إيه."],["قسّم تاسك كبير","اختار أكبر تاسك مفتوح مالوش فرعيين وقسّمه لخطوات صغيرة."],["أنا عملت إيه الأسبوع ده؟","لخّصلي عملت إيه آخر 7 أيام، وإيه القسم اللي مخدش حقه."]];
-  return `<div class="ai-msgs" id="ai-msgs">${aiMsgs.length?"":`<div class="note" style="padding:8px 2px">قوله أي حاجة: «صحيت 2 الضهر وقدامي 8 ساعات رتّبلي اليوم»، أو «قسّملي فيديو هايدي»، أو «خلّصت الكابشنز».</div>`}
+  return `<div class="ai-msgs" id="ai-msgs">${aiMsgs.length?"":`<div class="ai-hello"><span class="ai-spark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/></svg></span><b>${new Date().getHours()<12?"صباح الخير":"مساء الخير"}</b><span>أقدر أساعدك في إيه؟</span></div>`}
     ${aiMsgs.map((m,i)=>m.role==="user"?`<div class="ai-m me">${esc(m.text)}</div>`:`<div class="ai-m bot"><div>${esc(m.text).replace(/\n/g,"<br>")}</div>
       ${(m.actions||[]).length?`<div class="ai-acts">${m.actions.map((a,j)=>`<label class="ai-act ${a.applied?"done":""}"><input type="checkbox" data-aiact="${i}|${j}" ${a.on?"checked":""} ${a.applied?"disabled":""}> <span>${esc(aiActText(a))}</span>${a.applied?" ✓":""}</label>`).join("")}
         ${m.actions.some(a=>!a.applied)?`<button class="btn primary" type="button" data-aiapply="${i}">طبّق اللي متعلّم</button>`:""}</div>`:""}</div>`).join("")}
     ${aiBusy?`<div class="ai-m bot ai-wait">بيفكر…</div>`:""}</div>
-  <div class="ai-chips">${chips.map(([l,q])=>`<button type="button" class="chip" data-aiq="${esc(q)}">${l}</button>`).join("")}</div>
-  <form class="ai-in" id="ai-in"><textarea id="ai-text" rows="2" placeholder="اكتب للمساعد…" aria-label="اكتب للمساعد"></textarea><button class="btn primary" type="submit" ${aiBusy?"disabled":""}>ابعت</button></form>
+  <div class="ai-chips ${aiMsgs.length?"":"big"}">${chips.map(([l,q])=>`<button type="button" class="chip" data-aiq="${esc(q)}">${l}</button>`).join("")}</div>
+  <form class="ai-in" id="ai-in"><textarea id="ai-text" rows="2" placeholder="فضّي دماغك أو اكتب خطتك…" aria-label="اكتب للمساعد"></textarea><button class="btn primary" type="submit" ${aiBusy?"disabled":""}>ابعت</button></form>
   <div class="ai-foot"><button type="button" data-aiclear="1">مسح المحادثة</button><span class="note" style="font-size:11px">نسخة ${AI_VER}</span><button type="button" data-aiset="1">إعدادات المساعد</button></div>`;
 }
 let aiShowSet=false;
@@ -3023,6 +3095,30 @@ function projBlock(t){const p=projProg(t),pct=p.n?Math.round(p.d/p.n*100):0,shut
   return `<div class="pj-blk ${shut?"shut":""}"><div class="pj-bh"><button type="button" class="fold" data-fold="pj:${t.id}" aria-expanded="${!shut}">${ARR}<span class="pj-t">${esc(t.title)}</span></button>
       <span class="pj-n">${p.n?`${p.d} من ${p.n}${p.unit?" "+p.unit:""}`:""}</span><button type="button" class="h-link pj-go" data-nav="project:${t.id}" aria-label="افتح ${esc(t.title)}">افتح ›</button></div>
     ${p.n?`<span class="pj-bar"><i style="width:${pct}%"></i></span>`:""}${inner}</div>`}
+const ROUTES={today:"today",upcoming:"upcoming",all:"all",clients:"clients",team:"team",proj:"projects",focus:"focus",week:"week",notes:"notes",journal:"journal",files:"files",settings:"settings"};
+function routeKey(){if(view==="project")return "project/"+projId;if(view==="all"&&areaFilter)return "area/"+areaFilter;
+  if(view==="notes")return notesMode==="notes"?"notes":notesMode;return ROUTES[view]||view}
+function keyFromHash(h){const p=(h||"").replace(/^#\/?/,"").split("/").filter(Boolean).map(x=>{try{return decodeURIComponent(x)}catch(_){return x}});if(!p.length)return null;
+  if(p[0]==="area"&&p[1])return AREA[p[1]]?"area:"+p[1]:null;if(p[0]==="project"&&p[1])return "project:"+p[1];if(p[0]==="projects")return "proj";
+  return ROUTES[p[0]]&&p[0]!=="proj"?p[0]:null}
+let routeLock=false;
+function routeSync(push){const h="#/"+routeKey().split("/").map(encodeURIComponent).join("/");
+  if(location.hash!==h){try{push?history.pushState({v:1},"",h):history.replaceState({v:1},"",h)}catch(_){}}
+  const t=document.getElementById("view-title");if(t&&t.textContent)document.title=t.textContent+" · "+(((typeof appName!=="undefined"&&appName)||"").trim()||"دفتر مالك")}
+{const _go=goView;goView=function(k){_go(k);if(!routeLock&&k!=="more")routeSync(true)}}
+// windows (task, note, search, labels, paper) take one step of «back» on the phone
+const OVS=["#overlay","#kmodal","#search-ov","#paper-ov","#klab"];let ovDepth=0,ovIgnore=0;
+const ovOpen=()=>OVS.some(s=>{const e=document.querySelector(s);return e&&!e.hidden});
+new MutationObserver(()=>{const o=ovOpen();
+  if(o&&!ovDepth){ovDepth=1;try{history.pushState({ov:1},"",location.hash)}catch(_){}}
+  else if(!o&&ovDepth){ovDepth=0;ovIgnore++;try{history.back()}catch(_){ovIgnore--}}}).observe(document.body,{subtree:true,attributes:true,attributeFilter:["hidden"]});
+addEventListener("popstate",()=>{if(ovIgnore){ovIgnore--;return}
+  if(ovDepth&&ovOpen()){ovDepth=0;document.dispatchEvent(new KeyboardEvent("keydown",{key:"Escape",bubbles:true,cancelable:true}));
+    setTimeout(()=>{OVS.forEach(s=>{const e=document.querySelector(s);if(e&&!e.hidden&&s!=="#overlay"&&s!=="#kmodal")e.hidden=true});if(!$("#overlay").hidden&&typeof closeEditor==="function")closeEditor();if(!$("#kmodal").hidden&&typeof kClose==="function")kClose()},0);return}
+  const k=keyFromHash(location.hash);if(!k){routeSync(false);return}
+  routeLock=true;try{goView(k)}finally{routeLock=false}routeSync(false)});
+{const _g=goView;let t=0;goView=function(k){document.body.classList.add("v-enter");clearTimeout(t);t=setTimeout(()=>document.body.classList.remove("v-enter"),450);_g(k)}}
+document.body.classList.add("v-enter");setTimeout(()=>document.body.classList.remove("v-enter"),900);
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -3776,6 +3872,9 @@ document.addEventListener("submit",async e=>{
     if(await writeClient(name,pk?{mode:"package",target,since:today().slice(0,8)+"01"}:{mode:"single"})){$("#nc-name").value="";$("#nc-target").value="";toast("العميل اتضاف")}}
 });
 try{const v=LS.getItem("view");if(v&&["today","upcoming","focus","all","clients","notes","week"].includes(v))view=v;const af=LS.getItem("areaFilter");if(view==="all"&&af)areaFilter=af}catch(_){}
+{const rk=keyFromHash(location.hash);if(rk){if(rk.startsWith("area:")){view="all";areaFilter=rk.slice(5)}else if(rk.startsWith("project:")){view="project";projId=rk.slice(8)}
+  else if(rk==="notes"||rk==="journal"||rk==="files"){view="notes";notesMode=rk}else{view=rk;if(rk==="all")areaFilter=""}}}
+setTimeout(()=>routeSync(false),0);
 setTabs();renderChips();render();
 
 
