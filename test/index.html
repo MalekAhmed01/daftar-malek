@@ -267,6 +267,30 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+@media (max-width:959px){
+  html body #view .section{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0 0 4px!important}
+  html body #view .section>h2{padding:12px 2px 6px}
+  html body #view .task{padding-inline:2px;border-top:0;border-bottom:1px solid color-mix(in srgb,var(--line) 75%,transparent);background:transparent}
+  html body #view .task .body .title{font-size:16px;line-height:1.45}
+  /* on the phone a row shows only «⋯» (its menu has the timer, «النهارده» and «بكره»); a running timer stays visible */
+  html body #view .task>.tools>.mini:not(.row-more):not(.pomo-go.live){display:none!important}
+  html body #view .pj-blk .pj-bh,html body #view .pj-blk>.pj-bar,html body #view .pj-les,html body #view .pj-blk .pj-add{padding-inline:2px;margin-inline:0}
+}
+html body .s-menu{all:unset;cursor:pointer;display:none;width:34px;height:34px;place-items:center;border-radius:8px;color:var(--muted);flex:none}
+html body .s-menu:hover{background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink)}
+html body .s-menu:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+@media (min-width:960px){html body .s-menu{display:grid}html body #side .side-tg{display:none!important}}
+@media (min-width:960px){
+  html body .wrap>.maincol>*:not(.tabs){max-width:960px!important;width:100%;margin-inline:auto!important}
+  html body.v-keep .wrap>.maincol>*{max-width:1400px!important}
+  html body #view .task .body .meta{margin-inline-start:0!important}
+  html body #view .task .body .title{flex:0 1 auto}
+  html body #view section.section>h2,html body #view div.section>h2{justify-content:flex-start;gap:10px}
+}
+@media (min-width:1300px){
+  html body #view .pj-sec .pj-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));column-gap:32px;align-items:start}
+  html body #view .pj-sec .pj-list>.empty{grid-column:1/-1}
+}
 body:not(.v-enter) #view>*{animation:none!important}
 /* the last small targets the audit found */
 @media (pointer:coarse){html body header .h-sub .ts-act button{min-height:40px!important}html body #view .ar-btns .x{width:40px!important;height:40px!important}
@@ -1236,7 +1260,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
   <div class="maincol">
   <header>
     <div class="h-title">
-      <div class="h-row"><h1 id="view-title">النهارده</h1><button type="button" class="s-title" data-search="1" aria-label="دوّر (Ctrl+K)" title="دوّر (Ctrl+K)"><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
+      <div class="h-row"><button type="button" class="s-menu" data-sidewide="1" aria-label="القايمة الجانبية" title="القايمة الجانبية"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><h1 id="view-title">النهارده</h1><button type="button" class="s-title" data-search="1" aria-label="دوّر (Ctrl+K)" title="دوّر (Ctrl+K)"><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
       <div class="h-sub"><div class="date" id="today-label"></div></div>
     </div>
     <div class="counts" id="counts"></div>
@@ -3107,6 +3131,7 @@ addEventListener("popstate",()=>{if(ovIgnore){ovIgnore--;return}
   routeLock=true;try{goView(k)}finally{routeLock=false}routeSync(false)});
 {const _g=goView;let t=0;goView=function(k){document.body.classList.add("v-enter");clearTimeout(t);t=setTimeout(()=>document.body.classList.remove("v-enter"),450);_g(k)}}
 document.body.classList.add("v-enter");setTimeout(()=>document.body.classList.remove("v-enter"),900);
+document.addEventListener("click",e=>{const b=e.target.closest("[data-sidewide]");if(!b)return;setWide(!sideWide);const n=document.querySelector("[data-sidewide]");if(n){n.setAttribute("aria-expanded",String(sideWide));n.focus()}});
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
