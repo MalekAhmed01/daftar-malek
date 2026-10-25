@@ -267,6 +267,65 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+/* team */
+body .tm-card h2 small{font-weight:400}
+body .tm-form{display:flex;flex-wrap:wrap;gap:10px;padding:12px 16px;align-items:flex-end}
+body .tm-form label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);flex:1 1 200px}
+body .tm-form input{font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+body .tm-acts{display:flex;gap:8px;align-items:center;flex:1 1 100%}
+body .tm-foot{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;padding:10px 16px 14px;border-top:1px solid var(--line);font-size:14px}
+body .tm-note{padding:0 16px 14px;margin:0;font-size:12.5px}
+body .tag.who{color:var(--accent)}
+body .tm-card .tag.who{display:none}
+body .tm-open{align-self:flex-start}
+body .tm-hint{margin-bottom:12px}
+/* books */
+body .bk-add input[type=number]{flex:0 0 7em;width:7em}
+body .bk input{font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+body .bk input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+body .bk-now{display:flex;flex-direction:column;gap:12px;padding:14px 16px}
+body .bk-author{color:var(--muted);font-size:14px}
+body .bk-log{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0}
+body .bk-log label{font-size:15px;font-weight:600}
+body .bk-log input{width:6.5em;flex:none;text-align:center;font-variant-numeric:tabular-nums}
+body .bk-of{color:var(--muted);font-variant-numeric:tabular-nums}
+body .bk-log .c-today{margin-inline-start:auto;opacity:1!important}
+body .bk-stats{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:14px;color:var(--muted)}
+body .bk-stats b{color:var(--ink)}
+body .bk-set{display:flex;flex-wrap:wrap;gap:10px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+body .bk-set label{display:flex;align-items:center;gap:8px}
+body .bk-set input{width:8em}
+body .bk-days{display:flex;flex-direction:column}
+body .bk-day{display:flex;justify-content:space-between;gap:12px;padding:9px 16px;border-top:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
+body .bk-day span:last-child{color:var(--muted)}
+/* notes like Keep */
+body .kgrid{columns:250px;column-gap:12px;padding:12px 16px 16px}
+body .kcard{break-inside:avoid;display:flex;flex-direction:column;gap:8px;margin:0 0 12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--sheet);transition:box-shadow .15s,border-color .15s}
+body .kcard:hover{border-color:color-mix(in srgb,var(--ink) 22%,var(--line));box-shadow:0 2px 10px color-mix(in srgb,var(--ink) 8%,transparent)}
+body .kcard.done .k-text{color:var(--muted)}
+body .k-text{white-space:pre-wrap;line-height:1.6;cursor:text;border-radius:6px}
+body .kcard.done .k-text{cursor:default}
+body .k-text:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+body .k-ed{width:100%;box-sizing:border-box;min-height:80px;resize:vertical;font:inherit;line-height:1.6}
+body .kcard .note-top{font-size:12px}
+body .kcard .note-actions{flex-wrap:wrap;gap:4px;opacity:.55;transition:opacity .15s}
+body .kcard:hover .note-actions,body .kcard:focus-within .note-actions{opacity:1}
+@media (hover:none){body .kcard .note-actions{opacity:1}}
+body .k-labs,body .lab-pick,body .lab-bar{display:flex;flex-wrap:wrap;gap:6px}
+body .lab-bar{padding:4px 0 10px}
+body .lab-pick{align-items:center}
+body #note-form .lab-pick{padding:2px 0}
+body .lab-chip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;line-height:1;padding:6px 10px;border-radius:99px;
+  --lc:hsl(var(--lh,215) 55% 48%);background:color-mix(in srgb,var(--lc) 13%,var(--sheet));color:color-mix(in srgb,var(--lc) 62%,var(--ink));border:1px solid transparent}
+body .lab-chip small{font-size:11px;opacity:.75}
+body .lab-chip.all,body .lab-chip.none{--lc:var(--ink)}
+body .lab-chip[aria-pressed="true"]{border-color:color-mix(in srgb,var(--lc) 70%,transparent);background:color-mix(in srgb,var(--lc) 24%,var(--sheet));font-weight:600}
+body .lab-pick .lab-chip[aria-pressed="false"]{background:transparent;border-color:var(--line);color:var(--muted)}
+body .lab-chip:hover{filter:brightness(.97)}
+body .lab-chip:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+body .lab-pick .lab-new{font:inherit;font-size:12.5px;width:9.5em;height:auto!important;min-height:0!important;padding:5px 10px!important;border-radius:99px!important;border:1px dashed var(--line)!important;background:transparent!important;box-shadow:none!important;outline:none;color:var(--ink)}
+body .lab-pick .lab-new:focus{border-style:solid!important;border-color:var(--accent)!important}
+@media (max-width:520px){body .kgrid{columns:1;padding:10px}body .kcard{padding:10px 12px;margin-bottom:8px}}
 body .s-box{max-width:620px;gap:10px;max-height:min(80vh,640px)}
 body #s-q{font-size:17px}
 body .s-hint{margin:6px 2px;color:var(--muted);font-size:14px}
@@ -970,6 +1029,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
       <div class="field" id="kind-field"><label for="f-kind">النوع</label><select id="f-kind"></select></div>
     </div>
     <label class="note" id="course-wrap" hidden style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="f-course" style="width:auto"> ده كورس (فصول ودروس)</label>
+    <div class="field" id="who-field" hidden><label for="f-who">مع مين</label><select id="f-who"></select></div>
     <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span><label class="note" id="nopkg-wrap" hidden style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-nopkg" style="width:auto"> مش محسوب من الباكدج (ميتنج، مراجعة…)</label></div>
     <div class="field"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
     <div class="field" id="rep-field"><span class="lab">بيتكرر</span><div class="chips rep-chips" id="f-rep" role="group" aria-label="بيتكرر"></div></div>
@@ -1063,7 +1123,7 @@ const sortTasks=a=>a.slice().sort((x,y)=>(PRI_RANK[x.pri]??9)-(PRI_RANK[y.pri]??
 const isOpen=t=>t.status!=="done";
 const DOW=["الحد","الاتنين","التلات","الأربع","الخميس","الجمعة","السبت"];
 const repDue=t=>!!(t.repeat&&(t.repeat.days||[]).includes(new Date().getDay()));
-const isLong=t=>!!t&&!t.parentId&&(!!t.long||!!t.course||tasks.some(x=>x.parentId===t.id));
+const isLong=t=>!!t&&!t.parentId&&(!!t.long||!!t.course||!!t.book||tasks.some(x=>x.parentId===t.id));
 const inToday=t=>isOpen(t)&&(t.repeat?(t.lastDone!==today()&&t.skip!==today()&&(repDue(t)||(t.planDate&&t.planDate<=today()))):(t.planDate&&(isLong(t)?t.planDate===today():t.planDate<=today())));
 const repText=r=>{const d=(r&&r.days)||[];if(d.length===7)return "كل يوم";return "كل "+[6,0,1,2,3,4,5].filter(x=>d.includes(x)).map(x=>DOW[x]).join(" و")};
 
@@ -1079,6 +1139,8 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   if(t.course){const [d,n]=courseCount(t.course);
     meta.push(`<button type="button" class="subprog" data-expand="c:${t.id}" aria-expanded="${expanded.has("c:"+t.id)}"><span class="track"><span class="fill" style="width:${n?d/n*100:0}%"></span></span>${n?`${d}/${n} درس`:"ضيف الفصول"}</button>`);
     {const nx=courseNext(t.course);if(nx&&t.status!=="done")meta.push(`<span class="tag next-les">الجاي: ${esc(clip(nx.l.t,34))}</span>`)}}
+  {const p=personOf(t);if(p)meta.push(`<span class="tag who">مع ${esc(p.name)}</span>`)}
+  if(t.book&&t.status!=="done"&&t.book.total)meta.push(`<span class="tag next-les">ص ${Math.min(t.book.page||0,t.book.total)} من ${t.book.total}</span>`);
   if(subs.length){const d=subs.filter(s=>s.status==="done").length;
     meta.push(`<button type="button" class="subprog" data-expand="${t.id}" aria-expanded="${expanded.has(t.id)}"><span class="track"><span class="fill" style="width:${d/subs.length*100}%"></span></span>${d}/${subs.length}</button>`)}
   if(!noArea&&!(view==="today"&&t.client&&!parent))meta.push(`<span class="tag">${esc(AREA[t.area]||"")}</span>`);
@@ -2138,10 +2200,10 @@ function paintShell(){const box=document.getElementById("side-list");if(!box)ret
     return `<button type="button" class="nv nv-g" data-sidegroup="${key}" aria-expanded="${open}" ${rail?`title="${esc(name)}"`:""}><span class="ni">${NI[ic]}</span><span class="nn">${name}</span><span class="g-arr" aria-hidden="true">${ARR}</span></button>${open?`<div class="ng-in">${inner}</div>`:""}`};
   box.innerHTML=`<div class="ng"><button type="button" class="nv" data-search="1" ${rail?'title="دوّر"':""}><span class="ni">${NI.search}</span><span class="nn">دوّر</span></button>${it("today","today","النهارده",c.today)}${it("upcoming","upcoming","الجاي",0)}${it("all","all","كل التسكات",0)}</div>
     <div class="ng">${grp("areas","area","الأقسام",AREAS.map(([k,n])=>it("area:"+k,"area",n,0)).join(""),cur.startsWith("area:"))}</div>
-    <div class="ng">${it("clients","clients","العملاء",0)}${(NI.projects?it("proj","projects","المشاريع",0):"")}${it("focus","focus","تركيز",0)}${it("notes","notes","النوتس",0)}</div>
+    <div class="ng">${it("clients","clients","العملاء",0)}${team.length?it("team","team","الفريق",0):""}${(NI.projects?it("proj","projects","المشاريع",0):"")}${it("focus","focus","تركيز",0)}${it("notes","notes","النوتس",0)}</div>
     <div class="ng">${grp("more","more","المزيد",it("week","week","الأسبوع",0)+it("journal","journal","يوميات",0)+it("files","files","ملفات",0),MORE.includes(cur))}</div>
     <div class="ng ng-foot">${it("settings","settings","الإعدادات",0)}</div>`;
-  const titles={proj:"المشاريع",today:"النهارده",upcoming:"الجاي",all:"كل التسكات",clients:"العملاء",focus:"تركيز",week:"الأسبوع",notes:"النوتس",journal:"يوميات",files:"ملفات",settings:"الإعدادات"};
+  const titles={team:"الفريق",proj:"المشاريع",today:"النهارده",upcoming:"الجاي",all:"كل التسكات",clients:"العملاء",focus:"تركيز",week:"الأسبوع",notes:"النوتس",journal:"يوميات",files:"ملفات",settings:"الإعدادات"};
   const vt=document.getElementById("view-title");if(vt){const pt=view==="project"&&tasks.find(x=>x.id===projId);vt.textContent=pt?pt.title:cur.startsWith("area:")?(AREA[areaFilter]||"قسم"):(titles[cur]||"");vt.tabIndex=-1}
   const tl=document.getElementById("today-label");if(tl)tl.textContent=view==="today"?fmtDay(today()):view==="all"?`${areaFilter?c.areas[areaFilter]||0:c.all} مفتوح`:"";
   const cn=document.getElementById("counts");if(cn)cn.hidden=view!=="today";
@@ -2309,16 +2371,19 @@ document.addEventListener("click",async e=>{const b=e.target.closest("[data-lest
 let projId="";
 NI.projects='<svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="6" rx="2"/><rect x="3.5" y="14" width="17" height="6" rx="2"/><path d="M7 7h5M7 17h8"/></svg>';
 const projItems=()=>tasks.filter(t=>isOpen(t)&&isLong(t));
-function projProg(t){if(t.course){const [d,n]=courseCount(t.course);const nx=courseNext(t.course);return {d,n,next:nx?nx.l.t:"",unit:"درس"}}
+function projProg(t){if(t.book){const b=t.book;return {d:Math.min(b.page||0,b.total||0),n:b.total||0,next:"",unit:"صفحة"}}if(t.course){const [d,n]=courseCount(t.course);const nx=courseNext(t.course);return {d,n,next:nx?nx.l.t:"",unit:"درس"}}
   const s=subsOf(t.id);const open=sortTasks(s.filter(x=>x.status!=="done"));return {d:s.length-open.length,n:s.length,next:open[0]?open[0].title:"",unit:""}}
 function longCard(t){const p=projProg(t);const pct=p.n?Math.round(p.d/p.n*100):0;
   return `<button type="button" class="pj-card" data-nav="project:${t.id}"><span class="pj-top"><b class="pj-t">${esc(t.title)}</b><span class="pj-n">${p.n?`${p.d} من ${p.n}${p.unit?" "+p.unit:""}`:"لسه مفيش خطوات"}</span></span>
     ${p.n?`<span class="pj-bar"><i style="width:${pct}%"></i></span>`:""}${p.next?`<span class="pj-next">الجاي: ${esc(clip(p.next,60))}</span>`:""}</button>`}
-function projectsView(){const all=projItems();const pj=all.filter(t=>!t.course),cs=all.filter(t=>t.course);
+function projectsView(){const all=projItems();const pj=all.filter(t=>!t.course&&!t.book),cs=all.filter(t=>t.course),bk=all.filter(t=>t.book);
   const grp=(title,list,form,ph)=>`<section class="section pj-sec"><h2><span class="h-t">${title}</span><small>${list.length}</small></h2>
     <div class="pj-list">${list.map(longCard).join("")||`<div class="empty">لسه مفيش.</div>`}</div>
     <form class="inline pj-add" data-pjadd="${form}"><input maxlength="160" placeholder="${ph}" aria-label="${ph}"><button class="btn" type="submit">أضف</button></form></section>`;
-  return grp("مشاريع",pj,"proj","مشروع جديد")+grp("كورسات",cs,"course","كورس جديد")}
+  return grp("مشاريع",pj,"proj","مشروع جديد")+grp("كورسات",cs,"course","كورس جديد")+
+    `<section class="section pj-sec"><h2><span class="h-t">كتب</span><small>${bk.length}</small></h2>
+    <div class="pj-list">${bk.map(longCard).join("")||`<div class="empty">لسه مفيش. ضيف الكتاب اللي بتقراه وعدد صفحاته.</div>`}</div>
+    <form class="inline pj-add bk-add" data-bkadd="1"><input id="bk-title" maxlength="160" placeholder="كتاب جديد" aria-label="اسم الكتاب"><input id="bk-total" type="number" min="1" max="5000" placeholder="كام صفحة" aria-label="عدد الصفحات"><button class="btn" type="submit">أضف</button></form></section>`}
 function projectView(){const t=tasks.find(x=>x.id===projId);if(!t)return `<div class="empty big-empty">المشروع ده مش موجود. <button type="button" class="h-link" data-nav="proj">ارجع للمشاريع</button></div>`;
   const p=projProg(t);const pct=p.n?Math.round(p.d/p.n*100):0;
   let nextBtn="";
@@ -2331,7 +2396,7 @@ function projectView(){const t=tasks.find(x=>x.id===projId);if(!t)return `<div c
       ${p.next?`<div class="pj-nx"><span>الجاي: <b>${esc(p.next)}</b></span>${nextBtn}</div>`:""}
       ${t.notes?`<div class="pj-notes" dir="auto">${esc(t.notes)}</div>`:""}
       <div class="pj-acts"><button type="button" class="h-link" data-edit="${t.id}">${t.notes?"عدّل الهدف والتفاصيل":"اكتب الهدف والتفاصيل"}</button></div></section>
-    ${t.course?`<section class="section pj-course">${courseBlock2(t)}</section>`
+    ${t.book?bookBlock(t):t.course?`<section class="section pj-course">${courseBlock2(t)}</section>`
       :`<section class="section"><h2><span class="h-t">الخطوات</span><small>${open.length}</small></h2>${open.map(s=>row(s,{timer:true,inProj:true})).join("")||`<div class="empty">ضيف أول خطوة تحت.</div>`}
         <form class="inline pj-add" data-addsub="${t.id}"><input id="addsub-${t.id}" maxlength="160" placeholder="خطوة جديدة" aria-label="خطوة جديدة"><button class="btn" type="submit">أضف</button></form></section>
         ${done.length?foldSection("pj:done:"+t.id,`<span class="h-t">خلصوا</span>`,done,{showPlan:false,inProj:true},""):""}`}`}
@@ -2357,7 +2422,7 @@ function searchHits(raw){const q=sNorm(raw.trim());if(q.length<2)return null;con
   const ts=tasks.filter(t=>has(t.title)||has(t.notes)||has(t.client)).sort((a,b)=>(a.status==="done")-(b.status==="done")||(b.createdAt||0)-(a.createdAt||0));
   if(ts.length)g.push(["التسكات",ts.length,ts.slice(0,8).map(t=>{const p=parentOf(t);const sub=[t.status==="done"?"خلص"+(t.doneDate?" "+fmtDay(t.doneDate):""):"",p?"↳ "+p.title:"",t.client||AREA[t.area]||""].filter(Boolean).join(" · ");
     return {k:"task:"+t.id,title:has(t.title)?sSnip(t.title,q):esc(t.title),sub:has(t.notes)&&!has(t.title)?sSnip(t.notes,q):esc(sub),done:t.status==="done"}})]);
-  const ns=notes.filter(n=>has(n.text));
+  const ns=notes.filter(n=>has(n.text)||nLabelsOf(n).some(has));
   if(ns.length)g.push(["النوتس",ns.length,ns.slice(0,6).map(n=>({k:"note:"+n.id,title:sSnip(n.text,q),sub:n.resolved?"خلصت":"",done:!!n.resolved}))]);
   const js=Object.values(journal).filter(j=>j&&j.d&&has(j.text)).sort((a,b)=>a.d<b.d?1:-1);
   if(js.length)g.push(["اليوميات",js.length,js.slice(0,6).map(j=>({k:"journal:"+j.d,title:esc(dayName(j.d))+" "+esc(fmtShort(j.d)),sub:sSnip(jStrip(j.text),q)}))]);
@@ -2390,6 +2455,146 @@ document.addEventListener("keydown",e=>{const open=!$("#search-ov").hidden;
   if(e.key==="Enter"&&e.target.id==="s-q"){e.preventDefault();goSearch(items[0].dataset.sr);return}
   if(e.key==="ArrowDown"){e.preventDefault();items[Math.min(items.length-1,at+1)].focus();return}
   if(e.key==="ArrowUp"){e.preventDefault();if(at<=0)$("#s-q").focus();else items[at-1].focus()}},true);
+let nFilter="",nNewLabels=[],nPick="",nEdit="";
+try{nFilter=LS.getItem("noteLabel")||""}catch(_){}
+const nLabelsOf=n=>Array.isArray(n.labels)?n.labels.filter(Boolean):[];
+function allLabels(){const c={};notes.forEach(n=>nLabelsOf(n).forEach(l=>c[l]=(c[l]||0)+1));return Object.keys(c).sort((a,b)=>c[b]-c[a]||a.localeCompare(b,"ar"))}
+function labHue(s){let h=0;for(const ch of String(s))h=(h*31+ch.codePointAt(0))%360;return [12,35,95,150,190,215,265,320][h%8]}
+const labChip=(l,attrs="",on=null)=>`<button type="button" class="lab-chip" style="--lh:${labHue(l)}" ${on===null?"":`aria-pressed="${on}"`} ${attrs}>${esc(l)}</button>`;
+function labPicker(key,cur){const ls=[...new Set([...allLabels(),...cur])];
+  return `<div class="lab-pick" data-labpick="${esc(key)}">${ls.map(l=>labChip(l,`data-labtog="${esc(key)}|${esc(l)}"`,cur.includes(l))).join("")}
+    <input class="lab-new" data-labnew="${esc(key)}" maxlength="24" placeholder="+ تصنيف جديد" aria-label="تصنيف جديد"></div>`}
+function noteCard2(n){const ls=nLabelsOf(n),ed=nEdit===n.id;
+  return `<article class="kcard ${n.resolved?"done":""}" data-nid="${n.id}">
+    ${ed?`<textarea class="k-ed" data-nedit="${n.id}" maxlength="2000" aria-label="عدّل النوت">${esc(n.text)}</textarea>`
+      :`<div class="note-text k-text" ${n.resolved?"":`data-nedit-open="${n.id}" tabindex="0" role="button" aria-label="عدّل النوت"`}>${esc(n.text)}</div>`}
+    ${ls.length?`<div class="k-labs">${ls.map(l=>labChip(l,`data-labfilter="${esc(l)}" title="اعرض «${esc(l)}» بس"`)).join("")}</div>`:""}
+    <div class="note-top"><span class="by ${n.by==="claude"?"claude":""}">${n.by==="claude"?"كلود":"أنا"}</span><span>${esc(fmtShort(n.d||""))}</span>${n.area?`<span>${esc(AREA[n.area]||"")}</span>`:""}${n.resolved?`<span>${n.taskId||tasks.some(t=>t.noteId===n.id&&t.noteKind==="task")?"اتعملت تاسك":"خلصت"}</span>`:""}</div>
+    ${nPick===n.id?labPicker(n.id,ls):""}
+    <div class="note-actions">${n.resolved?`<button class="mini" type="button" data-nreopen="${n.id}">رجّعها</button>`
+      :`<button class="mini" type="button" data-npick="${n.id}" aria-expanded="${nPick===n.id}">تصنيف</button><button class="mini" type="button" data-ntask="${n.id}">اعملها تاسك</button><button class="mini" type="button" data-nresolve="${n.id}">خلصت</button>`}
+      <button class="mini danger" type="button" data-ndel="${n.id}">امسح</button></div></article>`}
+function notesView2(){
+  const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
+  const labs=allLabels();if(nFilter&&nFilter!=="__none"&&!labs.includes(nFilter))nFilter="";
+  const pass=n=>!nFilter||(nFilter==="__none"?!nLabelsOf(n).length:nLabelsOf(n).includes(nFilter));
+  const by=(a,b)=>(b.createdAt||0)-(a.createdAt||0);
+  const open=notes.filter(n=>!n.resolved&&pass(n)).sort(by), closed=notes.filter(n=>n.resolved&&pass(n)).sort((a,b)=>(b.resolvedAt||b.createdAt||0)-(a.resolvedAt||a.createdAt||0)).slice(0,60);
+  const cnt=l=>notes.filter(n=>!n.resolved&&(l==="__none"?!nLabelsOf(n).length:nLabelsOf(n).includes(l))).length;
+  const bar=labs.length?`<div class="lab-bar" role="group" aria-label="التصنيفات"><button type="button" class="lab-chip all" data-labfilter="" aria-pressed="${!nFilter}">الكل</button>${labs.map(l=>labChip(l,`data-labfilter="${esc(l)}"`,nFilter===l).replace("</button>",`<small>${cnt(l)}</small></button>`)).join("")}<button type="button" class="lab-chip none" data-labfilter="__none" aria-pressed="${nFilter==="__none"}">من غير تصنيف<small>${cnt("__none")}</small></button></div>`:"";
+  const shut=!folded.has("notes-done-open");
+  return `<form class="compose" id="note-form">
+      <textarea id="n-text" maxlength="2000" placeholder="اكتب أي حاجة عايز ترجعلها، فكرة أو حاجة تقراها أو تعملها بعدين" aria-label="نوت جديدة"></textarea>
+      ${labPicker("new",nNewLabels)}
+      <div class="compose-row"><select id="n-area" aria-label="القسم">${areaOpts}</select><span style="flex:1"></span><button class="btn primary" type="submit">احفظ النوت</button></div></form>
+    ${bar}
+    <section class="section"><h2>${nFilter==="__none"?"من غير تصنيف":nFilter?esc(nFilter):"النوتس"}<small>${open.length}</small></h2>${open.length?`<div class="kgrid">${open.map(noteCard2).join("")}</div>`:`<div class="empty">${nFilter?"مفيش نوتس مفتوحة في التصنيف ده.":"مفيش نوتس مفتوحة."}</div>`}</section>
+    ${closed.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="notes-done-open" aria-expanded="${!shut}">${ARR}خلصت</button><small>${closed.length}</small></h2>${shut?"":`<div class="kgrid">${closed.map(noteCard2).join("")}</div>`}</section>`:""}`}
+function setNFilter(v){nFilter=v;try{LS.setItem("noteLabel",v)}catch(_){}nNewLabels=v&&v!=="__none"?[v]:[];render()}
+async function setNoteLabels(key,ls){if(key==="new"){nNewLabels=ls;const keep=$("#n-text")?$("#n-text").value:"";render();if($("#n-text"))$("#n-text").value=keep;return}
+  await writeNote(key,{labels:ls})}
+function nKeepText(){return $("#n-text")?$("#n-text").value:""}
+document.addEventListener("click",async e=>{
+  const f=e.target.closest("[data-labfilter]");if(f){setNFilter(f.dataset.labfilter);return}
+  const p=e.target.closest("[data-npick]");if(p){nPick=nPick===p.dataset.npick?"":p.dataset.npick;const keep=nKeepText();render();if($("#n-text"))$("#n-text").value=keep;
+    const i=document.querySelector(`[data-labnew="${nPick}"]`);if(i)i.focus();return}
+  const t=e.target.closest("[data-labtog]");if(t){const s=t.dataset.labtog,i=s.indexOf("|"),key=s.slice(0,i),l=s.slice(i+1);
+    const cur=key==="new"?[...nNewLabels]:nLabelsOf(notes.find(x=>x.id===key)||{});
+    await setNoteLabels(key,cur.includes(l)?cur.filter(x=>x!==l):[...cur,l]);return}
+  const o=e.target.closest("[data-nedit-open]");if(o){nEdit=o.dataset.neditOpen;const keep=nKeepText();render();if($("#n-text"))$("#n-text").value=keep;
+    const ta=document.querySelector(`[data-nedit="${nEdit}"]`);if(ta){ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);ta.style.height=ta.scrollHeight+"px"}}});
+async function nSaveEdit(ta){const id=ta.dataset.nedit,v=ta.value.trim();nEdit="";const n=notes.find(x=>x.id===id);
+  if(n&&v&&v!==n.text){await writeNote(id,{text:v});toast("اتعدلت")}else render()}
+document.addEventListener("focusout",e=>{const ta=e.target.closest&&e.target.closest("[data-nedit]");if(ta&&nEdit===ta.dataset.nedit)nSaveEdit(ta)});
+document.addEventListener("keydown",async e=>{const el=e.target;
+  if(el.dataset&&el.dataset.neditOpen!==undefined&&(e.key==="Enter"||e.key===" ")){e.preventDefault();el.click();return}
+  if(el.dataset&&el.dataset.nedit){if(e.key==="Escape"){e.preventDefault();e.stopPropagation();nEdit="";render();return}
+    if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();el.blur();return}}
+  if(el.dataset&&el.dataset.labnew&&e.key==="Enter"){e.preventDefault();const l=el.value.trim().replace(/\s+/g," ").slice(0,24);if(!l)return;const key=el.dataset.labnew;
+    const cur=key==="new"?[...nNewLabels]:nLabelsOf(notes.find(x=>x.id===key)||{});if(!cur.includes(l))await setNoteLabels(key,[...cur,l]);
+    const i=document.querySelector(`[data-labnew="${key}"]`);if(i)i.focus()}});
+document.addEventListener("input",e=>{if(e.target.dataset&&e.target.dataset.nedit){e.target.style.height="auto";e.target.style.height=e.target.scrollHeight+"px"}});
+function bookPace(b){const since=daysAgo(13);const log=(b.log||[]).filter(x=>x.d>=since);
+  const pages=log.reduce((a,x)=>a+Math.max(0,(x.to||0)-(x.from||0)),0);const days=new Set(log.map(x=>x.d)).size;
+  return {pages,days,perDay:days?pages/14:0}}
+function bookBlock(t){const b=t.book||{},total=b.total||0,page=Math.min(b.page||0,total),left=Math.max(0,total-page);
+  const pc=bookPace(b),eta=pc.perDay>0&&left?Math.ceil(left/pc.perDay):0;
+  const on=t.planDate===today();
+  const byDay={};(b.log||[]).forEach(x=>{const r=byDay[x.d]||(byDay[x.d]={from:x.from,to:x.to});r.from=Math.min(r.from,x.from);r.to=Math.max(r.to,x.to)});
+  const days=Object.keys(byDay).sort().reverse();const shut=!folded.has("bk-log:"+t.id);
+  return `<section class="section bk"><div class="bk-now">
+      ${b.author?`<div class="bk-author">${esc(b.author)}</div>`:""}
+      <form class="bk-log" data-bklog="${t.id}"><label for="bk-page-${t.id}">وصلت لصفحة</label><input id="bk-page-${t.id}" type="number" min="0" max="${total||5000}" value="${page||""}" placeholder="${page}" inputmode="numeric"><span class="bk-of">من ${total}</span><button class="btn primary" type="submit">سجّل</button>
+        <button type="button" class="c-today ${on?"on":""}" data-plan="${t.id}" aria-pressed="${on}">${on?"✓ النهارده":"+ النهارده"}</button></form>
+      <div class="bk-stats">${left?`<span>فاضل <b>${left}</b> صفحة</span>`:`<span><b>وصلت لآخر الكتاب.</b></span>`}
+        ${pc.pages?`<span>آخر أسبوعين: ${pc.pages} صفحة في ${pc.days===1?"يوم واحد":pc.days===2?"يومين":pc.days+(pc.days<=10?" أيام":" يوم")}</span>`:""}
+        ${eta?`<span>بالمعدل ده هتخلصه في حوالي ${eta} ${eta===1?"يوم":eta===2?"يومين":eta<=10?"أيام":"يوم"}</span>`:""}</div>
+      ${!left&&total&&t.status!=="done"?`<div class="next"><button class="mini" type="button" data-toggle="${t.id}">علّم الكتاب خلص</button></div>`:""}
+      <div class="bk-set"><label>عدد الصفحات<input type="number" min="1" max="5000" value="${total}" data-bktotal="${t.id}"></label><label>الكاتب<input maxlength="60" value="${esc(b.author||"")}" data-bkauthor="${t.id}" placeholder="اختياري"></label></div></div></section>
+    ${days.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="bk-log:${t.id}" aria-expanded="${!shut}">${ARR}أيام القراية</button><small>${days.length}</small></h2>
+      ${shut?"":`<div class="bk-days">${days.map(d=>`<div class="bk-day"><span>${esc(dayName(d))} ${esc(fmtShort(d))}</span><span>ص ${byDay[d].from} ← ${byDay[d].to} · <b>${byDay[d].to-byDay[d].from}</b> صفحة</span></div>`).join("")}</div>`}</section>`:""}`}
+async function setBook(id,fn){const t=tasks.find(x=>x.id===id);if(!t||!t.book)return;const b=JSON.parse(JSON.stringify(t.book));fn(b);await write(id,{book:b})}
+document.addEventListener("submit",async e=>{const f=e.target;if(!f.dataset)return;
+  if(f.dataset.bkadd){e.preventDefault();e.stopPropagation();const title=$("#bk-title").value.trim(),total=Math.min(5000,Math.max(0,parseInt($("#bk-total").value)||0));
+    if(!title){$("#bk-title").focus();return}if(!total){toast("اكتب عدد صفحات الكتاب");$("#bk-total").focus();return}
+    const id="t"+sid();await write(id,{title,area:"study",kind:"",pri:"blue",client:"",stage:"",due:"",notes:"",status:"open",planDate:"",createdAt:Date.now(),doneAt:null,doneDate:null,book:{total,page:0,author:"",log:[]}},true);
+    goView("project:"+id);return}
+  if(f.dataset.bklog){e.preventDefault();const id=f.dataset.bklog,t=tasks.find(x=>x.id===id);if(!t)return;const inp=f.querySelector("input");
+    const total=t.book.total||5000,to=Math.min(total,Math.max(0,parseInt(inp.value)||0)),from=t.book.page||0;
+    if(to===from){toast("ده نفس المكان اللي كنت فيه");return}
+    await setBook(id,b=>{b.page=to;if(to>from)(b.log=b.log||[]).push({d:today(),from,to})});
+    toast(to>from?`اتسجل: ${to-from} صفحة`+(to>=total?" · وصلت لآخر الكتاب":""):"رجعت لصفحة "+to)}},true);
+document.addEventListener("change",async e=>{const el=e.target;if(!el.dataset)return;
+  if(el.dataset.bktotal){const v=Math.min(5000,Math.max(1,parseInt(el.value)||0));if(v)await setBook(el.dataset.bktotal,b=>{b.total=v})}
+  if(el.dataset.bkauthor!==undefined){const v=el.value.trim().slice(0,60);await setBook(el.dataset.bkauthor,b=>{b.author=v})}});
+let team=[],teamEdit="",teamCopyAt={},tmNewOpen=false;
+NI.team='<svg viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19.5c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="16.8" cy="9.5" r="2.4"/><path d="M15.8 14.6c2.4-.2 4.2 1.3 4.7 4.4"/></svg>';
+const personOf=t=>t&&t.assignee?team.find(p=>p.id===t.assignee):null;
+const SHEET_COLS=["Video Name","Client","Video Link","Start Date","Deadline","Task Week","Review Link","Video Length","Final Video","Status Video","Price","Payment","Notes"];
+function sheetRows(p){const m=today().slice(0,8)+"01";
+  const list=tasks.filter(t=>t.assignee===p.id&&!t.parentId&&(t.status!=="done"||(t.doneDate||"")>=m)).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  const wk=d=>{const x=new Date(d+"T12:00");return "W"+Math.ceil(x.getDate()/7)};
+  return list.map(t=>{const start=ymd(new Date(t.createdAt||Date.now()));
+    return [t.title,t.client||"","",start,t.due||"",wk(t.due||start),"","","",t.status==="done"?"Done":"In Progress","","",(t.notes||"").replace(/\s+/g," ").slice(0,200)].map(x=>String(x).replace(/\t/g," ")).join("\t")}).join("\n")}
+async function saveTeam(){try{await db.collection("config").doc("team").set({people:team});toast("اتحفظ ✓")}catch(_){toast("ماتحفظش، جرّب تاني")}}
+function teamCard(p){const m=today().slice(0,8)+"01";
+  const open=sortTasks(tasks.filter(t=>t.assignee===p.id&&isOpen(t))),doneM=tasks.filter(t=>t.assignee===p.id&&t.status==="done"&&(t.doneDate||"")>=m);
+  const ed=teamEdit===p.id;
+  return `<section class="section tm-card"><h2><span class="h-t">${esc(p.name)}</span><small>${open.length} مفتوح · ${doneM.length} خلص الشهر ده</small></h2>
+    ${ed?`<form class="tm-form" data-tmsave="${p.id}"><label>الاسم<input type="text" id="tm-name-${p.id}" maxlength="40" value="${esc(p.name)}" required></label>
+        <label>لينك الشيت<input type="url" id="tm-sheet-${p.id}" maxlength="300" value="${esc(p.sheet||"")}" placeholder="https://docs.google.com/spreadsheets/…" dir="ltr"></label>
+        <div class="tm-acts"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" data-tmedit="">إلغاء</button><span style="flex:1"></span><button class="mini danger" type="button" data-tmdel="${p.id}">شيله من الفريق</button></div></form>`:""}
+    ${open.map(t=>row(t,{timer:true})).join("")||`<div class="empty">مفيش فيديوهات مفتوحة معاه.</div>`}
+    <form class="inline pj-add" data-tmadd="${p.id}"><input type="text" maxlength="160" placeholder="فيديو جديد لـ${esc(p.name)}" aria-label="فيديو جديد لـ${esc(p.name)}"><button class="btn" type="submit">أضف</button></form>
+    <div class="tm-foot">${p.sheet?`<a class="h-link" href="${esc(p.sheet)}" target="_blank" rel="noopener">افتح الشيت ↗</a>`:`<span class="note">مفيش لينك شيت.</span>`}
+      <button type="button" class="h-link" data-tmcopy="${p.id}">${teamCopyAt[p.id]&&Date.now()-teamCopyAt[p.id]<4000?"✓ اتنسخ":"انسخ فيديوهات الشهر للشيت"}</button>
+      ${ed?"":`<button type="button" class="h-link" data-tmedit="${p.id}">تعديل</button>`}</div></section>`}
+function teamView(){
+  return (team.length?team.map(teamCard).join(""):`<div class="empty big-empty">ضيف اللي بيشتغلوا معاك، وبعدين ادّي أي فيديو لحد منهم من نافذة التاسك («مع مين») أو من هنا.</div>`)+
+    (team.length&&!tmNewOpen?`<button type="button" class="btn tm-open" data-tmnew="1">+ حد جديد في الفريق</button>`:
+    `<form class="section tm-new" id="tm-new"><h2><span class="h-t">حد جديد في الفريق</span></h2><div class="tm-form">
+      <label>الاسم<input type="text" id="tm-new-name" maxlength="40" required placeholder="مثلاً: معاذ"></label>
+      <label>لينك الشيت (اختياري)<input type="url" id="tm-new-sheet" maxlength="300" placeholder="https://docs.google.com/spreadsheets/…" dir="ltr"></label>
+      <div class="tm-acts"><button class="btn primary" type="submit">أضف</button></div></div>
+      <p class="note tm-note">«انسخ للشيت» بينسخ فيديوهات الشهر بنفس ترتيب أعمدة الشيت (${SHEET_COLS.length} عمود، من Video Name لحد Notes). افتح تاب الشهر في الشيت، اقف على أول خانة فاضية في Video Name، والزق.</p></form>`)}
+document.addEventListener("click",async e=>{
+  if(e.target.closest("[data-tmnew]")){tmNewOpen=true;render();const n=$("#tm-new-name");if(n)n.focus();return}
+  const ed=e.target.closest("[data-tmedit]");if(ed){teamEdit=ed.dataset.tmedit;render();const f=teamEdit&&document.getElementById("tm-name-"+teamEdit);if(f)f.focus();return}
+  const d=e.target.closest("[data-tmdel]");if(d){if(d.dataset.sure!=="1"){d.dataset.sure="1";d.textContent="متأكد؟ تسكاته هتفضل بس من غير اسم";setTimeout(()=>{d.dataset.sure="";d.textContent="شيله من الفريق"},3000);return}
+    const id=d.dataset.tmdel;team=team.filter(p=>p.id!==id);teamEdit="";await saveTeam();
+    for(const t of tasks.filter(x=>x.assignee===id))await write(t.id,{assignee:""});render();return}
+  const c=e.target.closest("[data-tmcopy]");if(c){const p=team.find(x=>x.id===c.dataset.tmcopy);if(!p)return;const txt=sheetRows(p);
+    if(!txt){toast("مفيش فيديوهات الشهر ده معاه");return}
+    try{await navigator.clipboard.writeText(txt);teamCopyAt[p.id]=Date.now();render();toast(`اتنسخ ${txt.split("\n").length} فيديو. الزقهم في الشيت`)}catch(_){toast("مقدرتش أنسخ، جرّب تاني")}}});
+document.addEventListener("submit",async e=>{const f=e.target;
+  if(f.id==="tm-new"){e.preventDefault();const name=$("#tm-new-name").value.trim().slice(0,40);if(!name)return;
+    if(team.some(p=>p.name===name)){toast("الاسم ده موجود");return}
+    team=[...team,{id:"p"+sid(),name,sheet:$("#tm-new-sheet").value.trim()}];tmNewOpen=false;await saveTeam();render();return}
+  if(f.dataset&&f.dataset.tmsave){e.preventDefault();const id=f.dataset.tmsave,name=$("#tm-name-"+id).value.trim().slice(0,40);if(!name)return;
+    team=team.map(p=>p.id===id?{...p,name,sheet:$("#tm-sheet-"+id).value.trim()}:p);teamEdit="";await saveTeam();render();return}
+  if(f.dataset&&f.dataset.tmadd){e.preventDefault();const inp=f.querySelector("input"),title=inp.value.trim();if(!title)return;const p=team.find(x=>x.id===f.dataset.tmadd);
+    await write("t"+sid(),{title,area:"work",kind:"",pri:"blue",client:findClient(title)||"",stage:"",due:"",notes:"",status:"open",planDate:"",createdAt:Date.now(),doneAt:null,doneDate:null,assignee:f.dataset.tmadd},true);
+    toast(`اتضاف لـ${p?p.name:""}`);const n=document.querySelector(`[data-tmadd="${f.dataset.tmadd}"] input`);if(n)n.focus()}});
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -2429,7 +2634,7 @@ function renderInner(){
       `<form class="proj" id="new-proj"><div class="proj-head"><h3>مشروع جديد</h3></div>
         <div class="inline"><input id="np-name" placeholder="اسم المشروع" maxlength="60" required><select id="np-area" class="btn" style="padding:7px 8px">${areaOpts}</select></div>
         <div class="inline"><input id="np-goal" placeholder="الهدف في سطر (اختياري)" maxlength="160"><button class="btn primary" type="submit">أضف</button></div></form>`;
-  }else if(view==="notes"){v.innerHTML=notesTabs()+(notesMode==="journal"?journalView():notesMode==="files"?filesView():notesView());if(notesMode==="journal")jAfter();
+  }else if(view==="notes"){v.innerHTML=notesTabs()+(notesMode==="journal"?journalView():notesMode==="files"?filesView():notesView2());if(notesMode==="journal")jAfter();
   }else if(view==="notes-old"){
     const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
     const rev=notes.filter(n=>n.review&&!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
@@ -2452,12 +2657,14 @@ function renderInner(){
       `<section class="section"><h2>كل النوتس<small>${rest.length}</small></h2>${rest.length?rest.map(card).join(""):`<div class="empty">لسه مفيش نوتس.</div>`}</section>`;
   }else if(view==="clients"){
     const names=clientNames();
-    v.innerHTML=(names.length?clientsList(names):`<div class="empty" style="padding-top:16px">لسه مفيش عملاء. أي تاسك في «شغل» عليه اسم عميل هيظهر هنا، أو ضيف عميل من تحت.</div>`)+
+    v.innerHTML=(team.length?"":`<div class="hint tm-hint"><span>بتقسّم الشغل على ناس معاك؟</span><button type="button" class="mini" data-nav="team">اعمل الفريق</button></div>`)+(names.length?clientsList(names):`<div class="empty" style="padding-top:16px">لسه مفيش عملاء. أي تاسك في «شغل» عليه اسم عميل هيظهر هنا، أو ضيف عميل من تحت.</div>`)+
       `<form class="proj" id="new-client"><div class="proj-head"><h3>عميل جديد</h3></div>
         <div class="cl-form"><label style="flex:1 1 160px">الاسم<input id="nc-name" maxlength="60" required></label>
         <div class="chips" role="group" aria-label="نوع الشغل"><button type="button" class="chip" data-ncmode="single" aria-pressed="true">بالقطعة</button><button type="button" class="chip" data-ncmode="package" aria-pressed="false">باكدج</button></div>
         <label id="nc-target-wrap" hidden>عدد الفيديوهات<input id="nc-target" type="number" min="1" max="999"></label>
         <button class="btn primary" type="submit">أضف</button></div></form>`;
+  }else if(view==="team"){
+    v.innerHTML=teamView();
   }else if(view==="proj"){
     v.innerHTML=projectsView();
   }else if(view==="project"){
@@ -2890,7 +3097,7 @@ document.addEventListener("click",async e=>{
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="note-form")return;e.preventDefault();
   const text=$("#n-text").value.trim();if(!text)return;
-  const data={text,area:$("#n-area").value,review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()};
+  const data={text,area:$("#n-area").value,labels:[...nNewLabels],review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()};nNewLabels=nFilter&&nFilter!=="__none"?[nFilter]:[];
   $("#n-text").value="";$("#n-text").blur();
   await writeNote("n"+sid(),data,true);toast("النوت اتحفظت");
 });
@@ -3036,6 +3243,8 @@ function openEditor(t){
   $("#f-client").value=t?.client||"";$("#f-course").checked=!!t?.course;$("#f-nopkg").checked=!!t?.noPkg;
   $("#f-stage").value=t?.stage||"";
   $("#f-due").value=t?.due||"";
+  {const w=$("#f-who"),cur=t?.assignee||"";$("#who-field").hidden=!team.length&&!cur;
+   w.innerHTML=`<option value="">أنا</option>`+team.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("")+(cur&&!team.some(p=>p.id===cur)?`<option value="${esc(cur)}">حد اتشال من الفريق</option>`:"");w.value=cur}
   $("#f-notes").value=t?.notes||"";$("#notes-wrap").open=!!(t&&t.notes);
   $("#f-done").value=t?.status==="done"?(t.doneDate||""):"";$("#f-done").max=today();$("#done-field").hidden=!(t&&t.status==="done");$("#done-field").open=false;paintDoneSum();
   $("#f-today").checked=t?!!(t.planDate&&t.planDate<=today()):view==="today";
@@ -3073,7 +3282,7 @@ $("#editor").addEventListener("submit",async e=>{
   const par=parentOf(editing);
   const area=par?par.area:$("#f-area").value;
   const wantToday=$("#f-today").checked;
-  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,...($("#rep-field").hidden?{}:edRep.length?{repeat:{days:edRep.slice().sort()}}:(editing&&editing.repeat?{repeat:null}:{})),...(!$("#course-wrap").hidden&&$("#f-course").checked?{course:(editing&&editing.course)||{chapters:[]}}:(editing&&editing.course&&!courseCount(editing.course)[1]?{course:null}:{})),due:$("#f-due").value,notes:$("#f-notes").value.trim()};
+  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,...($("#rep-field").hidden?{}:edRep.length?{repeat:{days:edRep.slice().sort()}}:(editing&&editing.repeat?{repeat:null}:{})),...(!$("#course-wrap").hidden&&$("#f-course").checked?{course:(editing&&editing.course)||{chapters:[]}}:(editing&&editing.course&&!courseCount(editing.course)[1]?{course:null}:{})),due:$("#f-due").value,notes:$("#f-notes").value.trim(),...(!$("#who-field").hidden?{assignee:$("#f-who").value}:{})};
   let doneOn=$("#f-done").value, needResolve=false;
   if(doneOn&&editing&&!par&&editing.status!=="done"&&subsOf(editing.id).some(s=>s.status!=="done")){doneOn="";needResolve=true}
   if(doneOn){const was=editing&&editing.status==="done"&&editing.doneDate===doneOn;
@@ -3307,6 +3516,7 @@ document.addEventListener("click",e=>{
   libCol.onSnapshot(snap=>{lib=snap.docs.map(d=>({id:d.id,...d.data()}));if(fOpen&&fOpen.src==="lib"){const m=lib.find(x=>x.id===fOpen.id);if(m&&m.sha!==fOpen.sha&&!fEdit){fOpen.sha=m.sha}}
     if(view==="notes"&&notesMode==="files"&&!fEdit&&!(document.activeElement&&document.activeElement.id==="f-q"))render()},()=>{});
   db.doc("config/app").onSnapshot(d=>{appName=d.exists?(d.data().name||""):"";applyAppName()},()=>{});
+  db.doc("config/team").onSnapshot(d=>{const p=d.exists&&d.data().people;team=Array.isArray(p)?p.filter(x=>x&&x.id&&x.name):[];if(!(view==="team"&&document.activeElement&&document.activeElement.closest("form")))render()},()=>{});
   db.doc("config/goals").onSnapshot(d=>{const it=d.exists&&d.data().items;goals=Array.isArray(it)?it.filter(g=>g&&g.on):[];if(!(view==="settings"&&document.activeElement&&document.activeElement.closest("#goals-set")))render()},()=>{});
   db.doc("config/routine").onSnapshot(d=>{const items=d.exists&&d.data().items;if(Array.isArray(items)&&items.length){routineItems=items;render()}},()=>{});
   meetCol=db.collection("meetings");
