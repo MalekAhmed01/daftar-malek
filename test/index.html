@@ -299,8 +299,13 @@ body .bk-days{display:flex;flex-direction:column}
 body .bk-day{display:flex;justify-content:space-between;gap:12px;padding:9px 16px;border-top:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
 body .bk-day span:last-child{color:var(--muted)}
 /* notes like Keep */
-body .kgrid{columns:250px;column-gap:12px;padding:12px 16px 16px}
-body .kcard{break-inside:avoid;display:flex;flex-direction:column;gap:8px;margin:0 0 12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--sheet);transition:box-shadow .15s,border-color .15s}
+body .kgrid{display:flex;gap:12px;padding:12px 16px 16px;align-items:flex-start}
+body .kcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:12px}
+body .k-h{font-size:11.5px;font-weight:600;letter-spacing:.04em;color:var(--muted);padding:12px 16px 0}
+body .kcard[data-kdrag]{cursor:grab;-webkit-touch-callout:none}
+body .kcard.kdragging{position:relative;z-index:30;cursor:grabbing;box-shadow:0 12px 28px color-mix(in srgb,var(--ink) 22%,transparent);border-color:var(--accent);pointer-events:none;transition:none}
+body.kdrag-on,body.kdrag-on *{user-select:none;-webkit-user-select:none;cursor:grabbing}
+body .kcard{display:flex;flex-direction:column;gap:8px;margin:0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--sheet);transition:box-shadow .15s,border-color .15s}
 body .kcard:hover{border-color:color-mix(in srgb,var(--ink) 22%,var(--line));box-shadow:0 2px 10px color-mix(in srgb,var(--ink) 8%,transparent)}
 body .kcard.done .k-text{color:var(--muted)}
 body .k-text{white-space:pre-wrap;line-height:1.6;cursor:text;border-radius:6px}
@@ -308,9 +313,9 @@ body .kcard.done .k-text{cursor:default}
 body .k-text:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 body .k-ed{width:100%;box-sizing:border-box;min-height:80px;resize:vertical;font:inherit;line-height:1.6}
 body .kcard .note-top{font-size:12px}
-body .kcard .note-actions{flex-wrap:wrap;gap:4px;opacity:.55;transition:opacity .15s}
+body .kcard .note-actions{flex-wrap:wrap;gap:4px;transition:opacity .15s}
+@media (hover:hover){body .kcard:not(:hover):not(:focus-within) .note-actions{opacity:0}}
 body .kcard:hover .note-actions,body .kcard:focus-within .note-actions{opacity:1}
-@media (hover:none){body .kcard .note-actions{opacity:1}}
 body .k-labs,body .lab-pick,body .lab-bar{display:flex;flex-wrap:wrap;gap:6px}
 body .lab-bar{padding:4px 0 10px}
 body .lab-pick{align-items:center}
@@ -325,7 +330,7 @@ body .lab-chip:hover{filter:brightness(.97)}
 body .lab-chip:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 body .lab-pick .lab-new{font:inherit;font-size:12.5px;width:9.5em;height:auto!important;min-height:0!important;padding:5px 10px!important;border-radius:99px!important;border:1px dashed var(--line)!important;background:transparent!important;box-shadow:none!important;outline:none;color:var(--ink)}
 body .lab-pick .lab-new:focus{border-style:solid!important;border-color:var(--accent)!important}
-@media (max-width:520px){body .kgrid{columns:1;padding:10px}body .kcard{padding:10px 12px;margin-bottom:8px}}
+@media (max-width:520px){body .kgrid{padding:10px;gap:8px}body .kcol{gap:8px}body .kcard{padding:10px 12px}}
 body .s-box{max-width:620px;gap:10px;max-height:min(80vh,640px)}
 body #s-q{font-size:17px}
 body .s-hint{margin:6px 2px;color:var(--muted);font-size:14px}
@@ -341,6 +346,12 @@ body .s-t{font-size:15px;line-height:1.45}
 body .s-s{font-size:12.5px;color:var(--muted);line-height:1.4}
 body .s-it mark{background:color-mix(in srgb,var(--accent) 22%,transparent);color:inherit;border-radius:3px;padding:0 1px}
 @media (min-width:960px){body header .s-open{display:none!important}}
+body .h-row{display:flex;align-items:center;gap:10px;min-width:0}
+body .s-title{all:unset;cursor:pointer;flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:9px;color:var(--muted);border:1px solid var(--line)}
+body .s-title:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 6%,transparent)}
+body .s-title:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+@media (max-width:959px){body .s-title{display:none}}
+@media (max-width:640px){body header .h-row{display:contents}}
 @media (max-width:640px){body header{grid-template-columns:1fr auto auto auto auto!important}body header .s-open{grid-row:1}}
 @media (min-width:600px){body #search-ov{align-items:flex-start;padding-top:12vh}}
 body .app-home{all:unset;display:flex;align-items:center;gap:inherit;min-width:0;cursor:pointer;border-radius:8px}
@@ -984,7 +995,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
   <div class="maincol">
   <header>
     <div class="h-title">
-      <h1 id="view-title">النهارده</h1>
+      <div class="h-row"><h1 id="view-title">النهارده</h1><button type="button" class="s-title" data-search="1" aria-label="دوّر (Ctrl+K)" title="دوّر (Ctrl+K)"><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
       <div class="h-sub"><div class="date" id="today-label"></div></div>
     </div>
     <div class="counts" id="counts"></div>
@@ -1117,8 +1128,8 @@ const subsOf=id=>tasks.filter(t=>t.parentId===id).sort((a,b)=>(a.createdAt||0)-(
 const parentOf=t=>t&&t.parentId?tasks.find(p=>p.id===t.parentId)||null:null;
 const isTop=t=>!parentOf(t);
 const clip=(s,n=40)=>s.length>n?s.slice(0,n)+"…":s;
-let expanded=new Set();try{expanded=new Set(JSON.parse(LS.getItem("expanded")||"[]"))}catch(_){}
-const saveExpanded=()=>{try{LS.setItem("expanded",JSON.stringify([...expanded]))}catch(_){}};
+let expanded=new Set();try{LS.removeItem("expanded")}catch(_){}
+const saveExpanded=()=>{};
 const sortTasks=a=>a.slice().sort((x,y)=>(PRI_RANK[x.pri]??9)-(PRI_RANK[y.pri]??9)||(x.due||"9999").localeCompare(y.due||"9999")||(x.createdAt||0)-(y.createdAt||0));
 const isOpen=t=>t.status!=="done";
 const DOW=["الحد","الاتنين","التلات","الأربع","الخميس","الجمعة","السبت"];
@@ -1451,7 +1462,8 @@ document.addEventListener("click",async e=>{
     const lt=lessonTask(tid,cid,lid);
     await setCourse(tid,c=>{const x=c.chapters.find(h=>h.id===cid).lessons.find(y=>y.id===lid);x.done=!x.done;x.doneDate=x.done?today():null});
     {const c=tasks.find(x=>x.id===tid);const x=c&&c.course.chapters.find(h=>h.id===cid).lessons.find(y=>y.id===lid);
-     if(lt&&x&&x.done&&lt.status!=="done"){await applyDone(lt,true);render()}}return}
+     if(lt&&x&&x.done&&lt.status!=="done"){await applyDone(lt,true);render()}
+     else if(lt&&x&&!x.done&&lt.status==="done"){await applyDone(lt,false,{closeNote:""});render()}}return}
   const a=e.target.closest("[data-lesadd]");if(a){const [tid,cid]=a.dataset.lesadd.split("|");
     await setCourse(tid,c=>{const h=c.chapters.find(x=>x.id===cid);h.lessons.push({id:"l"+sid(),t:"درس "+(h.lessons.length+1),done:false,doneDate:null})});return}
   const dl=e.target.closest("[data-chdel]");if(dl){if(dl.dataset.sure!=="1"){dl.dataset.sure="1";dl.textContent="متأكد؟";setTimeout(()=>{dl.dataset.sure="";dl.textContent="امسح"},2500);return}
@@ -2173,7 +2185,7 @@ const NI={ // nav icons, 18px strokes
   settings:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5"/></svg>',
   more:'<svg viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg>'};
 function navKey(){if(view==="project")return "proj";if(view==="all")return areaFilter?"area:"+areaFilter:"all";if(view==="notes")return notesMode==="journal"?"journal":notesMode==="files"?"files":"notes";return view}
-function goView(k){if(k==="more"){openSide();return}closeSide();
+function goView(k){if(k==="more"){openSide();return}closeSide();expanded.clear();
   if(k.startsWith("project:")){projId=k.slice(8);k="project"}
   if(k.startsWith("area:")){view="all";areaFilter=k.slice(5)}else if(k==="all"){view="all";areaFilter=""}
   else if(k==="notes"||k==="journal"||k==="files"){view="notes";notesMode=k==="notes"?"notes":k;try{LS.setItem("notesMode",notesMode)}catch(_){}if(k!=="notes")vaultBoot()}
@@ -2198,7 +2210,7 @@ function paintShell(){const box=document.getElementById("side-list");if(!box)ret
   const grp=(key,ic,name,inner,here)=>{if(!desk)return `<div class="nh">${name}</div>${inner}`;
     const open=!rail&&(sideOpenG[key]||here);
     return `<button type="button" class="nv nv-g" data-sidegroup="${key}" aria-expanded="${open}" ${rail?`title="${esc(name)}"`:""}><span class="ni">${NI[ic]}</span><span class="nn">${name}</span><span class="g-arr" aria-hidden="true">${ARR}</span></button>${open?`<div class="ng-in">${inner}</div>`:""}`};
-  box.innerHTML=`<div class="ng"><button type="button" class="nv" data-search="1" ${rail?'title="دوّر"':""}><span class="ni">${NI.search}</span><span class="nn">دوّر</span></button>${it("today","today","النهارده",c.today)}${it("upcoming","upcoming","الجاي",0)}${it("all","all","كل التسكات",0)}</div>
+  box.innerHTML=`<div class="ng">${it("today","today","النهارده",c.today)}${it("upcoming","upcoming","الجاي",0)}${it("all","all","كل التسكات",0)}</div>
     <div class="ng">${grp("areas","area","الأقسام",AREAS.map(([k,n])=>it("area:"+k,"area",n,0)).join(""),cur.startsWith("area:"))}</div>
     <div class="ng">${it("clients","clients","العملاء",0)}${team.length?it("team","team","الفريق",0):""}${(NI.projects?it("proj","projects","المشاريع",0):"")}${it("focus","focus","تركيز",0)}${it("notes","notes","النوتس",0)}</div>
     <div class="ng">${grp("more","more","المزيد",it("week","week","الأسبوع",0)+it("journal","journal","يوميات",0)+it("files","files","ملفات",0),MORE.includes(cur))}</div>
@@ -2354,13 +2366,14 @@ document.addEventListener("click",e=>{
     const nb=document.querySelector(`[data-sidegroup="${k}"]`);if(nb)nb.focus()}});
 addEventListener("resize",()=>{paintRail();try{paintShell()}catch(_){}});
 
-const lessonTask=(tid,cid,lid)=>tasks.find(x=>x.lessonOf===tid&&x.lesson===cid+"|"+lid)||null;
+const lessonTask=(tid,cid,lid)=>{const all=tasks.filter(x=>x.lessonOf===tid&&x.lesson===cid+"|"+lid);return all.find(x=>x.status!=="done")||all[0]||null};
 function lesTodayBtn(t,ch,l){const lt=lessonTask(t.id,ch.id,l.id);const on=!!lt&&lt.status!=="done"&&!!lt.planDate&&lt.planDate<=today();
   return `<button type="button" class="c-today ${on?"on":""}" data-lestoday="${t.id}|${ch.id}|${l.id}" aria-pressed="${on}" aria-label="${esc(l.t)}: ${on?"شيله من النهارده":"حطه النهارده"}">${on?"✓ النهارده":"+ النهارده"}</button>`}
 async function lessonToToday(tid,cid,lid){const c=tasks.find(x=>x.id===tid);if(!c||!c.course)return;
   const ch=c.course.chapters.find(h=>h.id===cid),l=ch&&ch.lessons.find(y=>y.id===lid);if(!l)return;
   const lt=lessonTask(tid,cid,lid);
   if(lt&&lt.status!=="done"){const on=lt.planDate&&lt.planDate<=today();await write(lt.id,{planDate:on?"":today()});render();toast(on?"اتشال من النهارده":"اتحط في النهارده");return}
+  if(lt){await applyDone(lt,false,{closeNote:""});await write(lt.id,{planDate:today()});render();toast("اتحط في النهارده");return}
   await write("t"+sid(),{title:l.t,area:c.area,kind:c.kind||"",pri:c.pri||"blue",client:"",stage:"",due:"",notes:"",status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null,lessonOf:tid,lesson:cid+"|"+lid},true);
   render();toast("اتحط في النهارده")}
 async function lessonSync(t,done){const c=tasks.find(x=>x.id===t.lessonOf);if(!c||!c.course||!t.lesson)return;const [cid,lid]=t.lesson.split("|");
@@ -2455,7 +2468,42 @@ document.addEventListener("keydown",e=>{const open=!$("#search-ov").hidden;
   if(e.key==="Enter"&&e.target.id==="s-q"){e.preventDefault();goSearch(items[0].dataset.sr);return}
   if(e.key==="ArrowDown"){e.preventDefault();items[Math.min(items.length-1,at+1)].focus();return}
   if(e.key==="ArrowUp"){e.preventDefault();if(at<=0)$("#s-q").focus();else items[at-1].focus()}},true);
-let nFilter="",nNewLabels=[],nPick="",nEdit="";
+let nFilter="",nNewLabels=[],nPick="",nEdit="",kd=null,kNoClick=0;
+const kOrd=n=>typeof n.order==="number"?n.order:-(n.createdAt||0);
+// masonry: cards go round the columns in order, so the order reads row by row like Keep
+function kLayout(g){const ids=g._ids||[];const cards={};g.querySelectorAll(".kcard").forEach(c=>cards[c.dataset.nid]=c);
+  const n=Math.max(1,Math.floor((g.clientWidth+12)/252));g.textContent="";const cols=[...Array(n)].map(()=>{const c=document.createElement("div");c.className="kcol";g.appendChild(c);return c});
+  ids.forEach((id,i)=>{if(cards[id])cols[i%n].appendChild(cards[id])})}
+function kAfter(){document.querySelectorAll(".kgrid").forEach(g=>{g._ids=[...g.querySelectorAll(".kcard")].map(c=>c.dataset.nid);kLayout(g)})}
+addEventListener("resize",()=>{if(view==="notes"&&notesMode==="notes"&&!kd)kAfter()});
+function kPlace(x,y){const c=kd.card;c.style.transform="none";const r=c.getBoundingClientRect();c.style.transform=`translate(${x-kd.gx-r.left}px,${y-kd.gy-r.top}px) rotate(1.5deg)`}
+function kStart(){kd.on=true;const r=kd.card.getBoundingClientRect();kd.gx=kd.x0-r.left;kd.gy=kd.y0-r.top;kd.start=[...kd.grid._ids];
+  kd.card.classList.add("kdragging");document.body.classList.add("kdrag-on");try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}kPlace(kd.x,kd.y)}
+function kEnd(save){const k=kd;kd=null;if(!k)return;clearTimeout(k.timer);if(!k.on)return;
+  k.card.classList.remove("kdragging");k.card.style.transform="";document.body.classList.remove("kdrag-on");kNoClick=Date.now();
+  if(!save){k.grid._ids=k.start;kLayout(k.grid);return}
+  const ids=k.grid._ids;if(ids.join()===k.start.join())return;
+  const vals=ids.map(id=>kOrd(notes.find(n=>n.id===id)||{})).sort((a,b)=>a-b);
+  for(let i=1;i<vals.length;i++)if(vals[i]<=vals[i-1])vals[i]=vals[i-1]+1;
+  ids.forEach((id,i)=>{const n=notes.find(x=>x.id===id);if(n&&kOrd(n)!==vals[i]){n.order=vals[i];writeNote(id,{order:vals[i]})}})}
+document.addEventListener("pointerdown",e=>{if(e.button!==0)return;const c=e.target.closest&&e.target.closest(".kcard[data-kdrag]");
+  if(!c||e.target.closest("button,input,textarea,select,a,.lab-pick"))return;const g=c.closest(".kgrid");if(!g||!g._ids)return;
+  kd={id:c.dataset.nid,card:c,grid:g,x0:e.clientX,y0:e.clientY,x:e.clientX,y:e.clientY,on:false,touch:e.pointerType!=="mouse",last:0};
+  if(kd.touch)kd.timer=setTimeout(()=>{if(kd&&!kd.on)kStart()},380)});
+document.addEventListener("pointermove",e=>{if(!kd)return;kd.x=e.clientX;kd.y=e.clientY;const far=Math.hypot(e.clientX-kd.x0,e.clientY-kd.y0);
+  if(!kd.on){if(kd.touch){if(far>8){clearTimeout(kd.timer);kd=null}return}if(far<6)return;kStart()}
+  e.preventDefault();kPlace(e.clientX,e.clientY);
+  if(Date.now()-kd.last<140)return;
+  const t=document.elementFromPoint(e.clientX,e.clientY);const o=t&&t.closest(".kcard");
+  if(o&&o!==kd.card&&o.closest(".kgrid")===kd.grid){const ids=kd.grid._ids,from=ids.indexOf(kd.id),to=ids.indexOf(o.dataset.nid);
+    if(from>-1&&to>-1){ids.splice(from,1);ids.splice(to,0,kd.id);kd.last=Date.now();kLayout(kd.grid);kPlace(e.clientX,e.clientY)}}},{passive:false});
+document.addEventListener("pointerup",()=>kEnd(true));
+document.addEventListener("pointercancel",()=>kEnd(false));
+document.addEventListener("touchmove",e=>{if(kd&&kd.on)e.preventDefault()},{passive:false});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&kd&&kd.on){e.preventDefault();kEnd(false)}},true);
+document.addEventListener("click",e=>{if(Date.now()-kNoClick<350&&e.target.closest(".kgrid")){e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener("click",async e=>{const p=e.target.closest("[data-npin]");if(!p)return;const n=notes.find(x=>x.id===p.dataset.npin);if(!n)return;
+  await writeNote(n.id,{pinned:!n.pinned});toast(n.pinned?"اتشال التثبيت":"اتثبتت فوق")});
 try{nFilter=LS.getItem("noteLabel")||""}catch(_){}
 const nLabelsOf=n=>Array.isArray(n.labels)?n.labels.filter(Boolean):[];
 function allLabels(){const c={};notes.forEach(n=>nLabelsOf(n).forEach(l=>c[l]=(c[l]||0)+1));return Object.keys(c).sort((a,b)=>c[b]-c[a]||a.localeCompare(b,"ar"))}
@@ -2465,21 +2513,20 @@ function labPicker(key,cur){const ls=[...new Set([...allLabels(),...cur])];
   return `<div class="lab-pick" data-labpick="${esc(key)}">${ls.map(l=>labChip(l,`data-labtog="${esc(key)}|${esc(l)}"`,cur.includes(l))).join("")}
     <input class="lab-new" data-labnew="${esc(key)}" maxlength="24" placeholder="+ تصنيف جديد" aria-label="تصنيف جديد"></div>`}
 function noteCard2(n){const ls=nLabelsOf(n),ed=nEdit===n.id;
-  return `<article class="kcard ${n.resolved?"done":""}" data-nid="${n.id}">
+  return `<article class="kcard ${n.resolved?"done":""}" data-nid="${n.id}" ${n.resolved||ed?"":`data-kdrag="1"`}>
     ${ed?`<textarea class="k-ed" data-nedit="${n.id}" maxlength="2000" aria-label="عدّل النوت">${esc(n.text)}</textarea>`
       :`<div class="note-text k-text" ${n.resolved?"":`data-nedit-open="${n.id}" tabindex="0" role="button" aria-label="عدّل النوت"`}>${esc(n.text)}</div>`}
     ${ls.length?`<div class="k-labs">${ls.map(l=>labChip(l,`data-labfilter="${esc(l)}" title="اعرض «${esc(l)}» بس"`)).join("")}</div>`:""}
     <div class="note-top"><span class="by ${n.by==="claude"?"claude":""}">${n.by==="claude"?"كلود":"أنا"}</span><span>${esc(fmtShort(n.d||""))}</span>${n.area?`<span>${esc(AREA[n.area]||"")}</span>`:""}${n.resolved?`<span>${n.taskId||tasks.some(t=>t.noteId===n.id&&t.noteKind==="task")?"اتعملت تاسك":"خلصت"}</span>`:""}</div>
     ${nPick===n.id?labPicker(n.id,ls):""}
     <div class="note-actions">${n.resolved?`<button class="mini" type="button" data-nreopen="${n.id}">رجّعها</button>`
-      :`<button class="mini" type="button" data-npick="${n.id}" aria-expanded="${nPick===n.id}">تصنيف</button><button class="mini" type="button" data-ntask="${n.id}">اعملها تاسك</button><button class="mini" type="button" data-nresolve="${n.id}">خلصت</button>`}
+      :`<button class="mini" type="button" data-npin="${n.id}" aria-pressed="${!!n.pinned}">${n.pinned?"شيل التثبيت":"ثبّت"}</button><button class="mini" type="button" data-npick="${n.id}" aria-expanded="${nPick===n.id}">تصنيف</button><button class="mini" type="button" data-ntask="${n.id}">اعملها تاسك</button><button class="mini" type="button" data-nresolve="${n.id}">خلصت</button>`}
       <button class="mini danger" type="button" data-ndel="${n.id}">امسح</button></div></article>`}
 function notesView2(){
   const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
   const labs=allLabels();if(nFilter&&nFilter!=="__none"&&!labs.includes(nFilter))nFilter="";
   const pass=n=>!nFilter||(nFilter==="__none"?!nLabelsOf(n).length:nLabelsOf(n).includes(nFilter));
-  const by=(a,b)=>(b.createdAt||0)-(a.createdAt||0);
-  const open=notes.filter(n=>!n.resolved&&pass(n)).sort(by), closed=notes.filter(n=>n.resolved&&pass(n)).sort((a,b)=>(b.resolvedAt||b.createdAt||0)-(a.resolvedAt||a.createdAt||0)).slice(0,60);
+  const open=notes.filter(n=>!n.resolved&&pass(n)).sort((a,b)=>kOrd(a)-kOrd(b)),pin=open.filter(n=>n.pinned),rest=open.filter(n=>!n.pinned), closed=notes.filter(n=>n.resolved&&pass(n)).sort((a,b)=>(b.resolvedAt||b.createdAt||0)-(a.resolvedAt||a.createdAt||0)).slice(0,60);
   const cnt=l=>notes.filter(n=>!n.resolved&&(l==="__none"?!nLabelsOf(n).length:nLabelsOf(n).includes(l))).length;
   const bar=labs.length?`<div class="lab-bar" role="group" aria-label="التصنيفات"><button type="button" class="lab-chip all" data-labfilter="" aria-pressed="${!nFilter}">الكل</button>${labs.map(l=>labChip(l,`data-labfilter="${esc(l)}"`,nFilter===l).replace("</button>",`<small>${cnt(l)}</small></button>`)).join("")}<button type="button" class="lab-chip none" data-labfilter="__none" aria-pressed="${nFilter==="__none"}">من غير تصنيف<small>${cnt("__none")}</small></button></div>`:"";
   const shut=!folded.has("notes-done-open");
@@ -2488,7 +2535,7 @@ function notesView2(){
       ${labPicker("new",nNewLabels)}
       <div class="compose-row"><select id="n-area" aria-label="القسم">${areaOpts}</select><span style="flex:1"></span><button class="btn primary" type="submit">احفظ النوت</button></div></form>
     ${bar}
-    <section class="section"><h2>${nFilter==="__none"?"من غير تصنيف":nFilter?esc(nFilter):"النوتس"}<small>${open.length}</small></h2>${open.length?`<div class="kgrid">${open.map(noteCard2).join("")}</div>`:`<div class="empty">${nFilter?"مفيش نوتس مفتوحة في التصنيف ده.":"مفيش نوتس مفتوحة."}</div>`}</section>
+    <section class="section"><h2>${nFilter==="__none"?"من غير تصنيف":nFilter?esc(nFilter):"النوتس"}<small>${open.length}</small></h2>${open.length?(pin.length?`<div class="k-h">مثبتة</div><div class="kgrid" data-kgrid="pin">${pin.map(noteCard2).join("")}</div>${rest.length?`<div class="k-h">التانية</div>`:""}`:"")+(rest.length?`<div class="kgrid" data-kgrid="rest">${rest.map(noteCard2).join("")}</div>`:""):`<div class="empty">${nFilter?"مفيش نوتس مفتوحة في التصنيف ده.":"مفيش نوتس مفتوحة."}</div>`}</section>
     ${closed.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="notes-done-open" aria-expanded="${!shut}">${ARR}خلصت</button><small>${closed.length}</small></h2>${shut?"":`<div class="kgrid">${closed.map(noteCard2).join("")}</div>`}</section>`:""}`}
 function setNFilter(v){nFilter=v;try{LS.setItem("noteLabel",v)}catch(_){}nNewLabels=v&&v!=="__none"?[v]:[];render()}
 async function setNoteLabels(key,ls){if(key==="new"){nNewLabels=ls;const keep=$("#n-text")?$("#n-text").value:"";render();if($("#n-text"))$("#n-text").value=keep;return}
@@ -2634,7 +2681,7 @@ function renderInner(){
       `<form class="proj" id="new-proj"><div class="proj-head"><h3>مشروع جديد</h3></div>
         <div class="inline"><input id="np-name" placeholder="اسم المشروع" maxlength="60" required><select id="np-area" class="btn" style="padding:7px 8px">${areaOpts}</select></div>
         <div class="inline"><input id="np-goal" placeholder="الهدف في سطر (اختياري)" maxlength="160"><button class="btn primary" type="submit">أضف</button></div></form>`;
-  }else if(view==="notes"){v.innerHTML=notesTabs()+(notesMode==="journal"?journalView():notesMode==="files"?filesView():notesView2());if(notesMode==="journal")jAfter();
+  }else if(view==="notes"){v.innerHTML=notesTabs()+(notesMode==="journal"?journalView():notesMode==="files"?filesView():notesView2());if(notesMode==="journal")jAfter();else if(notesMode==="notes")kAfter();
   }else if(view==="notes-old"){
     const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
     const rev=notes.filter(n=>n.review&&!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
@@ -3097,7 +3144,7 @@ document.addEventListener("click",async e=>{
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="note-form")return;e.preventDefault();
   const text=$("#n-text").value.trim();if(!text)return;
-  const data={text,area:$("#n-area").value,labels:[...nNewLabels],review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()};nNewLabels=nFilter&&nFilter!=="__none"?[nFilter]:[];
+  const data={text,area:$("#n-area").value,labels:[...nNewLabels],order:-Date.now(),review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()};nNewLabels=nFilter&&nFilter!=="__none"?[nFilter]:[];
   $("#n-text").value="";$("#n-text").blur();
   await writeNote("n"+sid(),data,true);toast("النوت اتحفظت");
 });
