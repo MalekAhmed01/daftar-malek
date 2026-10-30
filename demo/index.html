@@ -366,7 +366,8 @@ html body .task.is-done .check,html body .sub.is-done .check{background:var(--do
   html body #view .kx,html body #view [data-srtup],html body #view [data-srtdel],html body #view [data-saup],html body #view [data-sadown]{min-width:44px!important;min-height:44px!important}
   html body #view label:has(>input[type=checkbox]){min-height:44px!important}
   html body #view [data-goto-set],html body #view input[type=range]{min-height:44px!important}
-  html body #view .task>.sub-chev{top:-1px!important;height:44px!important;width:26px!important;inset-inline-start:1px!important}
+  html body #view .task{padding-inline-start:44px!important}
+  html body #view .task>.sub-chev{top:-1px!important;height:44px!important;width:44px!important;inset-inline-start:0!important}
   html body #view .task>.sub-chev:hover{background:transparent!important}
 }
 /* identity: paper + three pens + the logo orange */
@@ -430,7 +431,8 @@ html body #rail,html body #dock-empty{display:none}
   html body.dz #side .nh{font-size:12px;font-weight:600;color:var(--muted);padding:12px 10px 4px}
   html body.dz #side .hash{font-weight:400;color:var(--muted);width:18px;text-align:center;display:inline-block}
   html body.dz #side .nc{font-style:normal;font-size:12.5px;color:var(--muted);background:none;margin-inline-start:auto}
-  html body.dz #side .ng{display:flex;flex-direction:column;gap:1px;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  html body.dz #side .ng{display:flex;flex-direction:column;gap:1px;padding-bottom:8px;border-top:0;border-bottom:1px solid var(--line);margin-bottom:6px}
+  html body.dz #side .ng:last-child{border-bottom:0}
   /* the detail panel */
   html body.dz.dock-on #dock-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:fixed;inset:0 auto 0 0;width:400px;color:var(--muted);font-size:14.5px;background:var(--paper);border-inline-start:1px solid var(--line);z-index:5;text-align:center;padding:24px;box-sizing:border-box}
   html body.dz.dock-on #dock-empty svg{opacity:.45}
@@ -3311,6 +3313,8 @@ addEventListener("popstate",()=>{if(ovIgnore){ovIgnore--;return}
 document.body.classList.add("v-enter");setTimeout(()=>document.body.classList.remove("v-enter"),900);
 document.addEventListener("click",e=>{const b=e.target.closest("[data-sidewide]");if(!b)return;setWide(!sideWide);const n=document.querySelector("[data-sidewide]");if(n){n.setAttribute("aria-expanded",String(sideWide));n.focus()}});
 const TASKV=k=>["today","upcoming","all","clients","team","proj"].includes(k)||String(k).startsWith("area:");
+// 30 Oct: the lists stay on every page and hold everything the old side list had (Malek compared it with the old one)
+const LISTV=k=>["focus","notes","journal","files","week","proj"].includes(k);
 let listsHidden=false;try{listsHidden=LS.getItem("listsHidden")==="1"}catch(_){}
 const SPARK='<svg viewBox="0 0 24 24"><path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z" fill="currentColor" stroke="none"/></svg>';
 function paintRail2(){const r=document.getElementById("rail");if(!r)return;const cur=navKey();
@@ -3325,16 +3329,17 @@ function paintLists(){const box=document.getElementById("side-list");if(!box)ret
   const it=(k,ic,name,n)=>`<button type="button" class="nv" data-nav="${k}" ${cur===k?'aria-current="page"':""}><span class="ni">${ic}</span><span class="nn">${esc(name)}</span>${n?`<i class="nc">${n}</i>`:""}</button>`;
   box.innerHTML=`<div class="ng">${it("today",NI.today,"النهارده",c.today)}${it("upcoming",NI.upcoming,"الجاي",c.upcoming||0)}${it("all",NI.all,"كل التسكات",c.all)}</div>
     <div class="nh">الأقسام</div><div class="ng">${AREAS.map(([k,n])=>it("area:"+k,'<b class="hash">#</b>',n,c.areas[k]||0)).join("")}</div>
-    <div class="ng">${it("proj",NI.projects||NI.all,"المشاريع",0)}${it("clients",NI.clients,"العملاء",0)}${team.length?it("team",NI.team,"الفريق",0):""}</div>`}
+    <div class="ng">${it("clients",NI.clients,"العملاء",0)}${team.length?it("team",NI.team,"الفريق",0):""}${it("proj",NI.projects||NI.all,"المشاريع",0)}${it("focus",NI.focus,"تركيز",0)}${it("notes",NI.notes,"النوتس",0)}</div>
+    <div class="nh">المزيد</div><div class="ng">${it("week",NI.week,"الأسبوع",0)}${it("journal",NI.journal,"يوميات",0)}${it("files",NI.files,"ملفات",0)}</div>`}
 function paintShell2(){const desk=isDesk();const cur=navKey();
   document.body.classList.toggle("dz",desk);
   if(!desk){document.body.classList.remove("lists-on","dock-on");return}
   document.body.classList.remove("side-rail");
   paintRail2();
   const task=TASKV(cur)&&view!=="project";
-  document.body.classList.toggle("lists-on",task&&!listsHidden);
+  document.body.classList.toggle("lists-on",(task||LISTV(cur))&&!listsHidden);
   document.body.classList.toggle("dock-on",task&&matchMedia("(min-width:1280px)").matches);
-  if(task)paintLists()}
+  if(task||LISTV(cur))paintLists()}
 {const _p=paintShell;paintShell=function(){_p();paintShell2()}}
 addEventListener("resize",()=>{try{paintShell2()}catch(_){}});
 document.addEventListener("click",e=>{
