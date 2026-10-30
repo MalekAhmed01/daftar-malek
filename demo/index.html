@@ -278,6 +278,93 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+/* the task details (30 Oct, canvas Main + Phone-Task) */
+html body #editor{display:flex;flex-direction:column;gap:12px}
+html body #editor .ed-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:2px}
+html body #editor .ed-grow{flex:1}
+html body #editor .ed-ic{all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:var(--muted);flex:none}
+html body #editor .ed-ic:hover{background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink)}
+html body #editor .ed-ic:focus-visible,html body #editor .ed-chip:focus-visible,html body #editor .ed-chip button:focus-visible,html body #editor .ed-check:focus-visible,html body #editor .ed-st:focus-visible{box-shadow:0 0 0 2px var(--accent);outline:none}
+html body #editor .ed-flag.p-red{color:var(--red)}html body #editor .ed-flag.p-blue{color:var(--blue)}html body #editor .ed-flag.p-black{color:var(--black)}
+html body #editor .ed-check{all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:20px;height:20px;border-radius:5px;border:2px solid var(--blue);display:grid;place-items:center;font-size:12px;font-weight:700;line-height:1;position:relative}
+html body #editor .ed-check::before{content:"";position:absolute;inset:-10px}
+html body #editor .ed-check.p-red{border-color:var(--red);background:color-mix(in srgb,var(--red) 12%,transparent)}
+html body #editor .ed-check.p-black{border-color:var(--black);border-style:dashed}
+html body #editor .ed-check.is-done{background:var(--muted);border:2px solid var(--muted);color:var(--paper)}
+html body #editor .ed-check.sm{width:17px;height:17px;border-radius:4px;font-size:11px}
+html body #editor #ed-title{margin:0;font-size:14px;font-weight:600}
+html body #editor:not(.ed-new) #ed-title{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+html body #editor.ed-new .ed-chip,html body #editor.ed-new #ed-close{display:none}
+html body #editor .ed-chip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:color-mix(in srgb,var(--ink) 6%,transparent);font-size:13px;color:var(--muted);position:relative;white-space:nowrap}
+html body #editor .ed-chip[aria-pressed="true"]{color:var(--accent);background:var(--accent-soft)}
+html body #editor .ed-chip[hidden]{display:none}
+html body #editor .ed-due{padding:0}
+html body #editor .ed-due>button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px}
+html body #editor .ed-due.on{color:var(--ink)}html body #editor .ed-due.late{color:var(--red)}
+html body #editor .ed-due .ed-x{all:unset;cursor:pointer;width:26px;height:26px;margin-inline-start:-8px;margin-inline-end:4px;border-radius:50%;display:grid;place-items:center;font-size:16px}
+html body #editor .ed-due .ed-x[hidden]{display:none}
+html body #editor .ed-due input{position:absolute;inset:0;opacity:0;pointer-events:none;width:100%;height:100%;border:0;padding:0;margin:0;min-height:0}
+html body #editor .ed-pop{position:absolute;top:calc(100% - 4px);inset-inline-end:0;width:180px;padding:6px;border-radius:10px;background:var(--sheet);border:1px solid var(--line);box-shadow:0 10px 28px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:2px;z-index:3}
+html body #editor .ed-pop[hidden]{display:none}
+html body #editor .ed-pop button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:36px;padding:0 10px;border-radius:7px;font-size:13.5px;color:var(--ink)}
+html body #editor .ed-pop button:hover,html body #editor .ed-pop button:focus-visible{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+html body #editor .ed-pop button span{flex:1}
+html body #editor .ed-pop .p-red svg{color:var(--red)}html body #editor .ed-pop .p-blue svg{color:var(--blue)}html body #editor .ed-pop .p-black svg{color:var(--black)}
+html body #editor .ed-crumb{font-size:12.5px;color:var(--muted)}
+html body #editor .ed-crumb:empty{display:none}
+html body #editor:not(.ed-new) .ed-tf label,html body #editor .ed-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+html body #editor:not(.ed-new) #f-title{border:0;background:transparent;padding:2px 0;font-size:21px;font-weight:700;line-height:1.4;box-shadow:none;border-radius:4px}
+html body #editor .ed-nf textarea{border:0;background:transparent;padding:2px 0;font-size:15px;line-height:1.8;resize:none;min-height:30px;box-shadow:none;overflow:hidden}
+html body #editor:not(.ed-new) #f-title:focus-visible,html body #editor .ed-nf textarea:focus-visible{outline:none;box-shadow:0 2px 0 var(--accent)}
+html body #editor.ed-new .ed-nf{display:none}
+html body #editor .ed-subs[hidden],html body #editor .ed-more[hidden],html body #editor .ed-hide{display:none!important}
+html body #editor .ed-subs{display:flex;flex-direction:column}
+html body #editor .ed-sh{display:flex;align-items:center;gap:8px;height:30px;font-size:13px;color:var(--muted)}
+html body #editor .ed-sh b{color:var(--ink);font-size:13.5px}
+html body #editor .ed-sub,html body #editor .ed-sadd{display:flex;align-items:center;gap:10px;min-height:38px;border-bottom:1px solid var(--hair);font-size:14.5px}
+html body #editor .ed-st{all:unset;cursor:pointer;flex:1;min-width:0;padding:6px 0;border-radius:4px}
+html body #editor .ed-sub.is-done .ed-st{color:var(--muted);text-decoration:line-through}
+html body #editor .ed-sadd{border-bottom:0;color:var(--muted)}
+html body #editor .ed-sadd span{width:17px;text-align:center;font-size:18px}
+html body #editor .ed-sadd input{flex:1;border:0;background:transparent;padding:6px 0;min-height:0;box-shadow:none;font-size:14.5px}
+html body #editor .ed-sadd input:focus-visible{outline:none;box-shadow:0 2px 0 var(--accent)}
+html body #editor .ed-more{display:flex;flex-direction:column;gap:12px;padding-top:12px;border-top:1px solid var(--line)}
+html body #editor.ed-new .ed-more{border-top:0;padding-top:0}
+html body #editor .ed-prif,html body #editor .ed-par{order:0}
+html body #editor:not(.ed-new) .ed-more .ed-prif{display:none}
+html body #editor .actions{align-items:center;margin-top:auto}
+html body #editor:not(.ed-new) .actions [type="submit"],html body #editor:not(.ed-new) #ed-cancel,html body #editor:not(.ed-new) #ed-subs{display:none!important}
+html body #editor #ed-pomo{display:inline-flex;align-items:center;gap:6px}
+html body #editor #ed-pomo[hidden]{display:none}
+html body #editor .ed-made{font-size:13px;color:var(--muted);margin-inline-start:auto}
+html body #editor .ed-made:empty{display:none}
+html body #editor .ed-ic[hidden]{display:none}
+html body #editor #ed-delete{order:9}
+html body #editor:not(.ed-new):not(.more-open) .actions #ed-delete,html body #editor:not(.ed-new):not(.more-open) .actions #ed-ai{display:none!important}
+@media (pointer:coarse){
+  html body #editor .ed-ic{width:44px;height:44px}
+  html body #editor .ed-chip,html body #editor .ed-due>button{height:40px}
+  html body #editor .ed-check::before{inset:-12px}
+  html body #editor .ed-sub,html body #editor .ed-sadd{min-height:48px;font-size:16px}
+  html body #editor .ed-sadd input{font-size:16px}
+  html body #editor .ed-pop button{min-height:44px}
+  html body #editor:not(.ed-new) #f-title{font-size:22px}
+  html body #editor .ed-nf textarea{font-size:16px}
+}
+@media (max-width:959px){html body #editor .ed-bar{position:sticky;top:calc(-16px - env(safe-area-inset-top,0px));background:var(--sheet);z-index:2;padding-top:4px}}
+/* 3. small taps (!important: the parts before this one come later in the CSS) */
+html body #view .kx,html body #view [data-srtup],html body #view [data-srtdel],html body #view [data-saup],html body #view [data-sadown]{min-width:24px!important;min-height:24px!important}
+html body #view label:has(>input[type=checkbox]){min-height:24px!important;align-items:center}
+html body #view input[type=range]{min-height:24px!important}
+html body .sub-chev{width:24px!important;height:24px!important;margin:-1px!important;margin-inline-end:-5px!important}
+/* a finished red task kept its pink fill, so the white tick on it was invisible (week «اللي خلص», «خلص النهارده») */
+html body .task.is-done .check,html body .sub.is-done .check{background:var(--done)!important;border-color:var(--done)!important}
+@media (pointer:coarse){
+  html body #view .kx,html body #view [data-srtup],html body #view [data-srtdel],html body #view [data-saup],html body #view [data-sadown]{min-width:44px!important;min-height:44px!important}
+  html body #view label:has(>input[type=checkbox]){min-height:44px!important}
+  html body #view [data-goto-set],html body #view input[type=range]{min-height:44px!important}
+  html body .sub-chev{width:40px!important;height:40px!important;margin:-9px!important;margin-inline-end:-13px!important}
+}
 /* identity: paper + three pens + the logo orange */
 :root:root{--paper:#FBF8F1;--sheet:#FFFDF8;--grid:#ECE5D7;--ink:#24201B;--muted:#6E665A;--line:#E3DCCD;--accent:#2557B8;--accent-soft:#E3EAF7;--brand:#2557B8;--brand-ink:#FFFFFF;--logo:#D9691F;
   --red:#C8382B;--blue:#2557B8;--black:#2B2824;--side:#F4EFE5;--rail:#ECE6D9;--dot:rgba(60,40,10,.075);--hair:#EDE7DB}
@@ -1371,9 +1458,22 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 <aside id="dock-empty" aria-hidden="true"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h9l3 3v14H6z"/><path d="M15 3.5v3h3M9 11h6M9 14h6M9 17h3"/></svg><p>دوس على أي تاسك عشان تشوف تفاصيله هنا</p></aside>
 <div class="overlay" id="overlay" hidden>
   <form class="editor" id="editor" autocomplete="off">
-    <h3 id="ed-title">تاسك جديد</h3>
+    <div class="ed-bar">
+      <button type="button" class="ed-ic" id="ed-close" aria-label="قفل"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+      <button type="button" class="ed-check" id="ed-done" aria-label="خلص"></button>
+      <h3 id="ed-title">تاسك جديد</h3>
+      <span class="ed-chip ed-due" id="ed-due"><button type="button" id="ed-due-b"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span id="ed-due-t">ديدلاين</span></button><button type="button" class="ed-x" id="ed-due-x" aria-label="شيل الديدلاين" hidden>×</button><input id="f-due" type="date" tabindex="-1" aria-label="الديدلاين"></span>
+      <button type="button" class="ed-chip" id="ed-today" aria-pressed="false">النهارده</button>
+      <span class="ed-grow"></span>
+      <button type="button" class="ed-ic ed-flag" id="ed-flag" aria-label="الأولوية" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M5 21V4h11l-1.5 4L16 12H7v9z"/></svg></button>
+      <div class="ed-pop" id="ed-pripop" hidden></div>
+    </div>
+    <span class="ed-crumb" id="ed-crumb"></span>
     <div class="ed-par" id="ed-par-row" hidden><div class="note parent-of" id="ed-parent" hidden></div><button class="mini" type="button" id="ed-promote">خليه تاسك أساسي</button></div>
-    <div class="field"><label for="f-title">التاسك</label><input id="f-title" required maxlength="160" placeholder="مثلاً: تسليم فيديو الطعمية"></div>
+    <div class="field ed-tf"><label for="f-title">التاسك</label><input id="f-title" required maxlength="160" placeholder="مثلاً: تسليم فيديو الطعمية"></div>
+    <div class="field ed-nf" id="notes-wrap"><label for="f-notes" class="ed-sr">ملاحظات</label><textarea id="f-notes" maxlength="1000" rows="1" placeholder="ملاحظات"></textarea></div>
+    <div class="ed-subs" id="ed-sublist"></div>
+    <div class="ed-more" id="ed-more">
     <div class="row2" id="area-row">
       <div class="field"><label for="f-area">القسم</label><select id="f-area"></select></div>
       <div class="field" id="kind-field"><label for="f-kind">النوع</label><select id="f-kind"></select></div>
@@ -1381,19 +1481,18 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
     <label class="note" id="course-wrap" hidden style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="f-course" style="width:auto"> ده كورس (فصول ودروس)</label>
     <div class="field" id="who-field" hidden><label for="f-who">مع مين</label><select id="f-who"></select></div>
     <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span><label class="note" id="nopkg-wrap" hidden style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-nopkg" style="width:auto"> مش محسوب من الباكدج (ميتنج، مراجعة…)</label></div>
-    <div class="field"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
+    <div class="field ed-prif"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
     <div class="field" id="rep-field"><span class="lab">بيتكرر</span><div class="chips rep-chips" id="f-rep" role="group" aria-label="بيتكرر"></div></div>
-    <div class="row2">
-      <div class="field"><label for="f-due">الديدلاين</label><input id="f-due" type="date"></div>
-      <label class="note" style="display:flex;gap:8px;align-items:center;align-self:end;min-height:42px"><input type="checkbox" id="f-today" style="width:auto"> حطه في خطة النهارده</label>
-    </div>
+    <label class="note ed-hide" style="display:flex;gap:8px;align-items:center;min-height:42px"><input type="checkbox" id="f-today" style="width:auto"> حطه في خطة النهارده</label>
     <div hidden>
       <div id="stage-wrap"><select id="f-stage"><option value="">—</option><option value="draft">درافت</option><option value="edits">تعديلات</option><option value="delivery">تسليم</option></select></div>
     </div>
     <details class="field" id="done-field" hidden><summary class="lab" style="cursor:pointer">خلص يوم: <span id="done-sum"></span></summary><input id="f-done" type="date" aria-label="خلص يوم"></details>
-    <details class="field" id="notes-wrap"><summary class="lab" style="cursor:pointer">ملاحظات</summary><textarea id="f-notes" maxlength="1000"></textarea></details>
+    </div>
     <div class="actions">
-      <div class="grow"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" id="ed-cancel">إلغاء</button><button class="btn" type="button" id="ed-subs" hidden>+ تسكات فرعية</button><button class="btn" type="button" id="ed-ai" hidden>✦ قسّمه</button><button class="btn" type="button" id="ed-pomo" hidden>▶ بومودورو</button></div>
+      <div class="grow"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" id="ed-cancel">إلغاء</button><button class="btn" type="button" id="ed-subs" hidden>+ تسكات فرعية</button><button class="btn" type="button" id="ed-ai" hidden>✦ قسّمه</button><button class="btn" type="button" id="ed-pomo" hidden><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span id="ed-pomo-t">ابدأ التايمر</span></button></div>
+      <span class="ed-made" id="ed-made"></span>
+      <button type="button" class="ed-ic" id="ed-more-b" aria-label="حاجات تانية" aria-expanded="false" aria-controls="ed-more"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="5.5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.5" cy="12" r="1.7"/></svg></button>
       <button class="btn danger" type="button" id="ed-delete" hidden>امسح</button>
     </div>
   </form>
@@ -3247,6 +3346,65 @@ document.addEventListener("submit",e=>{if(e.target.id==="editor")edDirty=false},
     const f=$("#editor");edDirty=false;try{f.requestSubmit()}catch(_){}
     setTimeout(()=>{_o(t);edDirty=false},60);return}
   _o(t);edDirty=false}}
+const inPick=t=>inToday(t)||tasks.some(s=>s.parentId===t.id&&s.status!=="done"&&inToday(s));
+let edQuiet=false,edT=null;
+function edSave(now){clearTimeout(edT);edT=null;if(!editing||!$("#f-title").value.trim())return;
+  const id=editing.id,go=()=>{edT=null;if(!editing||editing.id!==id||$("#overlay").hidden)return;edQuiet=true;try{$("#editor").requestSubmit()}catch(_){edQuiet=false}};
+  if(now)go();else edT=setTimeout(go,600)}
+function edFlush(){if(edT){clearTimeout(edT);edT=null;if(editing&&!$("#overlay").hidden&&$("#f-title").value.trim()){edQuiet=true;try{$("#editor").requestSubmit()}catch(_){edQuiet=false}}}}
+const edDay=d=>{try{return new Date(d+"T12:00").toLocaleDateString("ar-u-nu-latn",{weekday:"long",day:"numeric",month:"long"})}catch(_){return d}};
+function edGrow(){const a=$("#f-notes");if(!a)return;a.style.height="auto";a.style.height=Math.min(a.scrollHeight+2,420)+"px"}
+function paintEd(sync){const t=editing&&tasks.find(x=>x.id===editing.id);const ed=$("#editor");if(!ed)return;
+  ed.classList.toggle("ed-new",!t);
+  const par=t&&parentOf(t),done=!!t&&t.status==="done";
+  const pk=edPri==="red"?"red":edPri==="black"?"black":"blue";
+  const b=$("#ed-done");b.hidden=!t;
+  if(t){b.dataset.toggle=t.id;b.className="ed-check p-"+pk+(done?" is-done":"");b.textContent=done?"✓":"";b.setAttribute("aria-label",(done?"رجّعه مفتوح":"خلص")+": "+t.title)}
+  $("#ed-flag").className="ed-ic ed-flag p-"+pk;$("#ed-flag").setAttribute("aria-label","الأولوية: "+PRI_N[pk]);
+  $("#ed-pripop").innerHTML=PRI.map(([k,n])=>`<button type="button" data-edpri="${k}" aria-pressed="${k===pk}" class="p-${k}">${'<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"currentColor\"><path d=\"M5 21V4h11l-1.5 4L16 12H7v9z\"/></svg>'}<span>${n}</span>${k===pk?"✓":""}</button>`).join("");
+  const due=$("#f-due").value;$("#ed-due-t").textContent=due?"ديدلاين "+edDay(due):"ديدلاين";$("#ed-due").classList.toggle("on",!!due);
+  $("#ed-due").classList.toggle("late",!!due&&!done&&due<today());$("#ed-due-x").hidden=!due;
+  if(sync&&!edT&&t){$("#f-today").checked=!!(t.planDate&&t.planDate<=today());$("#f-done").value=done?(t.doneDate||""):"";$("#done-field").hidden=!done;paintDoneSum()}
+  const on=$("#f-today").checked;$("#ed-today").setAttribute("aria-pressed",on);$("#ed-today").textContent=on?"✓ النهارده":"النهارده";$("#ed-today").hidden=done;
+  const an=(AREAS.find(a=>a[0]===(t?t.area:$("#f-area").value))||[])[1]||"";
+  $("#ed-crumb").textContent=t?(par?"↳ "+par.title:[an,t.client].filter(Boolean).join(" › ")):"";
+  const subs=t&&!par?subsOf(t.id):[];const box=$("#ed-sublist");
+  if(!t||par||t.repeat||t.repeatOf){box.hidden=true;box.innerHTML=""}else{box.hidden=false;const nd=subs.filter(s=>s.status==="done").length;
+    const keep=document.activeElement&&document.activeElement.id==="ed-subin",kv=keep?$("#ed-subin").value:"";
+    box.innerHTML=(subs.length?`<div class="ed-sh"><b>التسكات الفرعية</b><span>${nd}/${subs.length}</span></div>`:"")+
+      subs.map(s=>{const sd=s.status==="done",sk=PRI_KEY(s);return `<div class="ed-sub ${sd?"is-done":""}"><button type="button" class="ed-check sm p-${sk} ${sd?"is-done":""}" data-toggle="${s.id}" aria-label="${sd?"رجّعه مفتوح":"خلص"}: ${esc(s.title)}">${sd?"✓":""}</button><button type="button" class="ed-st" data-edopen="${s.id}">${esc(s.title)}</button></div>`}).join("")+
+      `<div class="ed-sadd"><span aria-hidden="true">+</span><input id="ed-subin" maxlength="160" placeholder="تاسك فرعي" aria-label="تاسك فرعي جديد" enterkeyhint="done"></div>`;
+    if(keep){const i=$("#ed-subin");i.value=kv;i.focus()}}
+  const m=t?focusOf(t):0;$("#ed-pomo-t").textContent="ابدأ التايمر"+(m?" · "+fmtMin(m)+" اتسجلت":"");
+  $("#ed-made").textContent=t&&t.createdAt?"اتعمل "+new Date(t.createdAt).toLocaleDateString("ar-u-nu-latn",{weekday:"long"}):"";
+  const more=!t||edMoreOpen;$("#ed-more").hidden=!more;ed.classList.toggle("more-open",!!t&&more);$("#ed-more-b").setAttribute("aria-expanded",more);$("#ed-more-b").hidden=!t;
+  edGrow()}
+let edMoreOpen=false;
+{const _o=openEditor;openEditor=function(t){clearTimeout(edT);edT=null;edMoreOpen=false;$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");_o(t);paintEd();
+  if(t){setTimeout(()=>{const a=document.activeElement;if(a&&a.id==="f-title")a.blur()},40)}}}
+{const _c=closeEditor;closeEditor=function(){edFlush();_c()}}
+{const _r=render;render=function(){_r.apply(this,arguments);if(editing&&!$("#overlay").hidden)try{paintEd(true)}catch(_){}}}
+async function edAddSub(title){const p=editing&&tasks.find(x=>x.id===editing.id);if(!p||!title)return;
+  await write("t"+sid(),{title,area:p.area,kind:p.kind||"",pri:p.pri||"blue",client:p.client||"",stage:"",due:"",notes:"",status:"open",planDate:"",createdAt:Date.now(),doneAt:null,doneDate:null,parentId:p.id},true);
+  if(p.status==="done"){await applyDone(p,false);toast("التاسك الأساسي رجع مفتوح")}
+  render()}
+document.addEventListener("input",e=>{if(!e.target.closest||!e.target.closest("#editor")||e.target.id==="ed-subin")return;if(e.target.id==="f-notes")edGrow();if(editing)edSave(false)});
+document.addEventListener("change",e=>{if(!e.target.closest||!e.target.closest("#editor")||e.target.id==="ed-subin")return;if(e.target.id==="f-due")paintEd();if(editing)edSave(e.target.tagName!=="INPUT"||e.target.type!=="text")});
+document.addEventListener("keydown",e=>{if(e.target.id==="ed-subin"&&e.key==="Enter"){e.preventDefault();const v=e.target.value.trim();if(!v)return;e.target.value="";edAddSub(v)}
+  else if(e.target.id==="f-title"&&e.key==="Enter"&&editing){e.preventDefault();edSave(true);e.target.blur()}});
+document.addEventListener("click",e=>{
+  if(e.target.closest("#ed-close")){closeEditor();return}
+  if(e.target.closest("#ed-due-b")){const i=$("#f-due");try{i.showPicker()}catch(_){i.focus()}return}
+  if(e.target.closest("#ed-due-x")){$("#f-due").value="";paintEd();if(editing)edSave(true);return}
+  if(e.target.closest("#ed-today")){const c=$("#f-today");c.checked=!c.checked;paintEd();if(editing)edSave(true);return}
+  const fl=e.target.closest("#ed-flag");if(fl){const p=$("#ed-pripop");p.hidden=!p.hidden;fl.setAttribute("aria-expanded",!p.hidden);if(!p.hidden){const s=p.querySelector('[aria-pressed="true"]');if(s)s.focus()}return}
+  const pr=e.target.closest("[data-edpri]");if(pr){edPri=pr.dataset.edpri;paintPri();$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");paintEd();if(editing)edSave(true);return}
+  if(!e.target.closest("#ed-pripop")&&!$("#ed-pripop").hidden){$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false")}
+  if(e.target.closest("#ed-more-b")){edMoreOpen=!edMoreOpen;paintEd();return}
+  const so=e.target.closest("[data-edopen]");if(so){const s=tasks.find(x=>x.id===so.dataset.edopen);if(s){edFlush();openEditor(s)}return}
+  if(e.target.closest("#f-pri [data-p]")||e.target.closest("#f-rep button")){setTimeout(()=>{paintEd();if(editing)edSave(true)},0)}
+  if(e.target.closest("#ed-delete")){clearTimeout(edT);edT=null}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#ed-pripop").hidden){e.stopImmediatePropagation();$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");$("#ed-flag").focus()}},true);
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -3532,13 +3690,14 @@ function taskOptions(sel){
   const planned=sortTasks(open.filter(inToday));
   const label=t=>{const p=parentOf(t);return esc(p?`${t.title} ← ${p.title}`:t.title)};
   const opt=t=>`<option value="${t.id}" ${t.id===sel?"selected":""}>${label(t)}</option>`;
-  return planned.map(opt).join("");
+  const out=[];planned.forEach(t=>{const p=parentOf(t);if(p&&p.status!=="done"&&!out.includes(p))out.push(p);if(!out.includes(t))out.push(t)});
+  return out.map(opt).join("");
 }
 function focusView(){
   let card;
   if(!pomo){
     const first=sortTasks(tasks.filter(t=>t.status!=="done"&&inToday(t)))[0];
-    if(!fsTask||!tasks.some(t=>t.id===fsTask&&t.status!=="done"&&inToday(t)))fsTask=first?first.id:"";
+    if(!fsTask||!tasks.some(t=>t.id===fsTask&&t.status!=="done"&&inPick(t)))fsTask=first?first.id:"";
     const len=fmode==="focus"?pset.focus:fmode==="long"?pset.long:pset.brk;
     card=`<div class="chips" role="group" aria-label="الوضع">${[["focus","تركيز"],["short","استراحة قصيرة"],["long","استراحة طويلة"]].map(([k,n])=>`<button type="button" class="chip" data-fmode="${k}" aria-pressed="${fmode===k}">${n}</button>`).join("")}</div>
       <div class="fbig">${clock(len*60000)}</div><div class="fstatus">${fmode==="focus"?"اختار التاسك ودوس ابدأ":"وقت الاستراحة"}</div>
@@ -3583,7 +3742,7 @@ function focusView(){
     <label>صوت المنبّه ${pset.vol??80}%<input id="ps-vol" type="range" min="0" max="100" step="10" value="${pset.vol??80}"></label>
     <button class="mini" type="button" data-ptest="1">جرّب الصوت</button></div></details>`;
   const td=sessions.filter(s=>s.date===today()).sort((a,b)=>(b.at||0)-(a.at||0));
-  if(!maTask||!tasks.some(t=>t.id===maTask&&t.status!=="done"&&inToday(t)))maTask=fsTask||"";
+  if(!maTask||!tasks.some(t=>t.id===maTask&&t.status!=="done"&&inPick(t)))maTask=fsTask||"";
   const todayBox=`<section class="section"><h2>النهارده<small>${fmtMin(sumMin(td))}</small></h2>
     ${td.length?td.map(s=>`<div class="ses"><time>${new Date(s.at||Date.now()).toLocaleTimeString("ar-u-nu-latn",{hour:"numeric",minute:"2-digit"})}</time><span class="st" title="${esc(s.title)}">${esc(s.title||"تاسك اتمسح")}</span>
       <input id="ses-${s.id}" type="number" min="1" max="600" value="${s.min}" aria-label="الدقايق" data-sesmin="${s.id}"><button class="x" type="button" data-sesdel="${s.id}" aria-label="امسح الجلسة">×</button></div>`).join("")
@@ -3929,7 +4088,7 @@ $("#ed-delete").addEventListener("click",async()=>{
   try{for(const s of subs)await col.doc(s.id).delete();await col.doc(id).delete();tasks=tasks.filter(x=>x.id!==id&&x.parentId!==id);toast("اتمسح",()=>{const tr=trash.filter(x=>x.kind==="task"&&x.oid===id).sort((a,b)=>b.deletedAt-a.deletedAt)[0];if(tr)restoreTrash(tr.id)});if(pid)await syncParent(pid);else render()}catch(e){toast("ماتمسحش، جرّب تاني")}
 });
 $("#editor").addEventListener("submit",async e=>{
-  e.preventDefault();
+  e.preventDefault();const quiet=edQuiet;edQuiet=false;
   const title=$("#f-title").value.trim();if(!title)return;
   const par=parentOf(editing);
   const area=par?par.area:$("#f-area").value;
@@ -3943,11 +4102,11 @@ $("#editor").addEventListener("submit",async e=>{
   if(editing){
     const was=!!(editing.planDate&&editing.planDate<=today());
     if(wantToday!==was)data.planDate=wantToday?today():"";
-    const id=editing.id, subs=par?[]:subsOf(id);closeEditor();
+    const id=editing.id, subs=par?[]:subsOf(id);if(!quiet)closeEditor();
     if(await write(id,data,false)){
       for(const s of subs)if(s.area!==data.area||(s.client||"")!==data.client||(s.kind||"")!==data.kind)await write(s.id,{area:data.area,client:data.client,kind:data.kind});
       if(par)await syncParent(par.id);
-      if(needResolve)openResolve(id);else toast("اتحفظ")}
+      if(needResolve)openResolve(id);else if(!quiet)toast("اتحفظ");else render()}
   }else{
     Object.assign(data,doneOn?{planDate:"",createdAt:Date.now()}:{status:"open",planDate:wantToday?today():"",createdAt:Date.now(),doneAt:null,doneDate:null});
     const id="t"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
