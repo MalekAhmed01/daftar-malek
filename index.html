@@ -267,6 +267,516 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+/* the task details (30 Oct, canvas Main + Phone-Task) */
+html body #editor{display:flex;flex-direction:column;gap:12px}
+html body #editor .ed-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:2px}
+html body #editor .ed-grow{flex:1}
+html body #editor .ed-ic{all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:var(--muted);flex:none}
+html body #editor .ed-ic:hover{background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink)}
+html body #editor .ed-ic:focus-visible,html body #editor .ed-chip:focus-visible,html body #editor .ed-chip button:focus-visible,html body #editor .ed-check:focus-visible,html body #editor .ed-st:focus-visible{box-shadow:0 0 0 2px var(--accent);outline:none}
+html body #editor .ed-flag.p-red{color:var(--red)}html body #editor .ed-flag.p-blue{color:var(--blue)}html body #editor .ed-flag.p-black{color:var(--black)}
+html body #editor .ed-check{all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:20px;height:20px;border-radius:5px;border:2px solid var(--blue);display:grid;place-items:center;font-size:12px;font-weight:700;line-height:1;position:relative}
+html body #editor .ed-check::before{content:"";position:absolute;inset:-10px}
+html body #editor .ed-check.p-red{border-color:var(--red);background:color-mix(in srgb,var(--red) 12%,transparent)}
+html body #editor .ed-check.p-black{border-color:var(--black);border-style:dashed}
+html body #editor .ed-check.is-done{background:var(--muted);border:2px solid var(--muted);color:var(--paper)}
+html body #editor .ed-check.sm{width:17px;height:17px;border-radius:4px;font-size:11px}
+html body #editor #ed-title{margin:0;font-size:14px;font-weight:600}
+html body #editor:not(.ed-new) #ed-title{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+html body #editor.ed-new .ed-chip,html body #editor.ed-new #ed-close{display:none}
+html body #editor .ed-chip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:color-mix(in srgb,var(--ink) 6%,transparent);font-size:13px;color:var(--muted);position:relative;white-space:nowrap}
+html body #editor .ed-chip[aria-pressed="true"]{color:var(--accent);background:var(--accent-soft)}
+html body #editor .ed-chip[hidden]{display:none}
+html body #editor .ed-due{padding:0}
+html body #editor .ed-due>button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px}
+html body #editor .ed-due.on{color:var(--ink)}html body #editor .ed-due.late{color:var(--red)}
+html body #editor .ed-due .ed-x{all:unset;cursor:pointer;width:26px;height:26px;margin-inline-start:-8px;margin-inline-end:4px;border-radius:50%;display:grid;place-items:center;font-size:16px}
+html body #editor .ed-due .ed-x[hidden]{display:none}
+html body #editor .ed-due input{position:absolute;inset:0;opacity:0;pointer-events:none;width:100%;height:100%;border:0;padding:0;margin:0;min-height:0}
+html body #editor .ed-pop{position:absolute;top:calc(100% - 4px);inset-inline-end:0;width:180px;padding:6px;border-radius:10px;background:var(--sheet);border:1px solid var(--line);box-shadow:0 10px 28px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:2px;z-index:3}
+html body #editor .ed-pop[hidden]{display:none}
+html body #editor .ed-pop button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:36px;padding:0 10px;border-radius:7px;font-size:13.5px;color:var(--ink)}
+html body #editor .ed-pop button:hover,html body #editor .ed-pop button:focus-visible{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+html body #editor .ed-pop button span{flex:1}
+html body #editor .ed-pop .p-red svg{color:var(--red)}html body #editor .ed-pop .p-blue svg{color:var(--blue)}html body #editor .ed-pop .p-black svg{color:var(--black)}
+html body #editor .ed-crumb{font-size:12.5px;color:var(--muted)}
+html body #editor .ed-crumb:empty{display:none}
+html body #editor:not(.ed-new) .ed-tf label,html body #editor .ed-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+html body #editor:not(.ed-new) #f-title{border:0;background:transparent;padding:2px 0;font-size:21px;font-weight:700;line-height:1.4;box-shadow:none;border-radius:4px}
+html body #editor .ed-nf textarea{border:0;background:transparent;padding:2px 0;font-size:15px;line-height:1.8;resize:none;min-height:30px;box-shadow:none;overflow:hidden}
+html body #editor:not(.ed-new) #f-title:focus-visible,html body #editor .ed-nf textarea:focus-visible{outline:none;box-shadow:0 2px 0 var(--accent)}
+html body #editor.ed-new .ed-nf{display:none}
+html body #editor .ed-subs[hidden],html body #editor .ed-more[hidden],html body #editor .ed-hide{display:none!important}
+html body #editor .ed-subs{display:flex;flex-direction:column}
+html body #editor .ed-sh{display:flex;align-items:center;gap:8px;height:30px;font-size:13px;color:var(--muted)}
+html body #editor .ed-sh b{color:var(--ink);font-size:13.5px}
+html body #editor .ed-sub,html body #editor .ed-sadd{display:flex;align-items:center;gap:10px;min-height:38px;border-bottom:1px solid var(--hair);font-size:14.5px}
+html body #editor .ed-st{all:unset;cursor:pointer;flex:1;min-width:0;padding:6px 0;border-radius:4px}
+html body #editor .ed-sub.is-done .ed-st{color:var(--muted);text-decoration:line-through}
+html body #editor .ed-sadd{border-bottom:0;color:var(--muted)}
+html body #editor .ed-sadd span{width:17px;text-align:center;font-size:18px}
+html body #editor .ed-sadd input{flex:1;border:0;background:transparent;padding:6px 0;min-height:0;box-shadow:none;font-size:14.5px}
+html body #editor .ed-sadd input:focus-visible{outline:none;box-shadow:0 2px 0 var(--accent)}
+html body #editor .ed-more{display:flex;flex-direction:column;gap:12px;padding-top:12px;border-top:1px solid var(--line)}
+html body #editor.ed-new .ed-more{border-top:0;padding-top:0}
+html body #editor .ed-prif,html body #editor .ed-par{order:0}
+html body #editor:not(.ed-new) .ed-more .ed-prif{display:none}
+html body #editor .actions{align-items:center;margin-top:auto}
+html body #editor:not(.ed-new) .actions [type="submit"],html body #editor:not(.ed-new) #ed-cancel,html body #editor:not(.ed-new) #ed-subs{display:none!important}
+html body #editor #ed-pomo{display:inline-flex;align-items:center;gap:6px}
+html body #editor #ed-pomo[hidden]{display:none}
+html body #editor .ed-made{font-size:13px;color:var(--muted);margin-inline-start:auto}
+html body #editor .ed-made:empty{display:none}
+html body #editor .ed-ic[hidden]{display:none}
+html body #editor #ed-delete{order:9}
+html body #editor:not(.ed-new):not(.more-open) .actions #ed-delete,html body #editor:not(.ed-new):not(.more-open) .actions #ed-ai{display:none!important}
+@media (pointer:coarse){
+  html body #editor .ed-ic{width:44px;height:44px}
+  html body #editor .ed-chip,html body #editor .ed-due>button{height:40px}
+  html body #editor .ed-check::before{inset:-12px}
+  html body #editor .ed-sub,html body #editor .ed-sadd{min-height:48px;font-size:16px}
+  html body #editor .ed-sadd input{font-size:16px}
+  html body #editor .ed-pop button{min-height:44px}
+  html body #editor:not(.ed-new) #f-title{font-size:22px}
+  html body #editor .ed-nf textarea{font-size:16px}
+}
+@media (max-width:959px){html body #editor .ed-bar{position:sticky;top:calc(-16px - env(safe-area-inset-top,0px));background:var(--sheet);z-index:2;padding-top:4px}}
+/* 3. small taps (!important: the parts before this one come later in the CSS) */
+html body #view .kx,html body #view [data-srtup],html body #view [data-srtdel],html body #view [data-saup],html body #view [data-sadown]{min-width:24px!important;min-height:24px!important}
+html body #view label:has(>input[type=checkbox]){min-height:24px!important;align-items:center}
+html body #view input[type=range]{min-height:24px!important}
+/* the arrow of a task with steps has its own slot in the row's start margin, so every tick box lines up, steps or not (Malek 30 Oct: «فين السميترية اللي في التصميم») */
+html body #view .task{position:relative;padding-inline-start:28px!important}
+html body #view .task:has(>.sub-chev){grid-template-columns:auto 1fr auto!important}
+html body #view .task>.sub-chev{position:absolute!important;inset-inline-start:2px!important;top:9px!important;width:24px!important;height:24px!important;margin:0!important}
+/* a finished red task kept its pink fill, so the white tick on it was invisible (week «اللي خلص», «خلص النهارده») */
+html body .task.is-done .check,html body .sub.is-done .check{background:var(--done)!important;border-color:var(--done)!important}
+@media (pointer:coarse){
+  html body #view .kx,html body #view [data-srtup],html body #view [data-srtdel],html body #view [data-saup],html body #view [data-sadown]{min-width:44px!important;min-height:44px!important}
+  html body #view label:has(>input[type=checkbox]){min-height:44px!important}
+  html body #view [data-goto-set],html body #view input[type=range]{min-height:44px!important}
+  html body #view .task{padding-inline-start:44px!important}
+  html body #view .task>.sub-chev{top:-1px!important;height:44px!important;width:44px!important;inset-inline-start:0!important}
+  html body #view .task>.sub-chev:hover{background:transparent!important}
+}
+/* identity: paper + three pens + the logo orange */
+:root:root{--paper:#FBF8F1;--sheet:#FFFDF8;--grid:#ECE5D7;--ink:#24201B;--muted:#6E665A;--line:#E3DCCD;--accent:#2557B8;--accent-soft:#E3EAF7;--brand:#2557B8;--brand-ink:#FFFFFF;--logo:#D9691F;
+  --red:#C8382B;--blue:#2557B8;--black:#2B2824;--side:#F4EFE5;--rail:#ECE6D9;--dot:rgba(60,40,10,.075);--hair:#EDE7DB}
+@media (prefers-color-scheme:dark){:root:root:not([data-theme="light"]){--paper:#17181A;--sheet:#1E1F22;--grid:#26282C;--ink:#F5F6F8;--muted:#B3B7BE;--line:#30333A;
+  --accent:#8DB6F7;--accent-soft:#1F2A3D;--brand:#8DB6F7;--brand-ink:#101114;--logo:#F28A3A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#131416;--rail:#101113;--dot:rgba(255,255,255,.045);--hair:#26282C}}
+:root:root[data-theme="dark"]{--paper:#17181A;--sheet:#1E1F22;--grid:#26282C;--ink:#F5F6F8;--muted:#B3B7BE;--line:#30333A;
+  --accent:#8DB6F7;--accent-soft:#1F2A3D;--brand:#8DB6F7;--brand-ink:#101114;--logo:#F28A3A;--red:#EF5E50;--blue:#6FA3F2;--black:#B4B4B4;--side:#131416;--rail:#101113;--dot:rgba(255,255,255,.045);--hair:#26282C}
+/* «ج الحبر الأزرق» (Malek, 25 Oct, after «ب» still looked faded): the blue of his pen is the interface colour
+   (selected, links, the main button); the orange is only the logo and the assistant's star. */
+html body .btn.primary,html body button.btn.primary{background:var(--brand)!important;border-color:var(--brand)!important;color:var(--brand-ink)!important}
+html body header #ai-fab{background:var(--sheet)!important;color:var(--logo)!important;border-color:var(--line)!important}
+html body #view [aria-current="page"],html body #side .nv[aria-current="page"],html body .rl[aria-current="page"]{font-weight:600}
+/* Readex Pro at 400 is thin in Arabic: base weight 500, titles 600, whiter text, lighter gray. (The dots stay: Malek likes them.) */
+html body{font-weight:500}
+html body #view .task .body .title,html body #side .nv,html body #view .section>h2,html body .rl{font-weight:600}
+html body #view .task .meta{opacity:1!important}
+html body .maincol{background-image:radial-gradient(var(--dot) 1.1px,transparent 1.4px);background-size:22px 22px}
+/* steps under their task */
+html body .sub-chev{all:unset;cursor:pointer;flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:6px;color:var(--muted);margin-inline-end:-4px}
+html body .sub-chev:hover{background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink)}
+html body .sub-chev:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+html body .sub-chev[aria-expanded="false"] .arr{transform:rotate(90deg)}
+html body .task:has(.sub-chev){grid-template-columns:22px 24px minmax(0,1fr) auto}
+html body .task .subs{grid-column:1/-1;margin-inline-start:34px;border:0;background:transparent;padding:0}
+html body .task .subs .sub{border-bottom:1px solid var(--hair)}
+html body #rail,html body #dock-empty{display:none}
+/* phone: the task opens as a full page */
+@media (max-width:959px){
+  html body #overlay{align-items:stretch!important;padding:0!important}
+  html body #overlay .editor{max-width:none!important;height:100%;max-height:none!important;border-radius:0!important;padding-top:max(16px,env(safe-area-inset-top,0px))}
+  html body #overlay .editor .actions{flex-wrap:wrap;gap:8px;position:sticky;bottom:calc(-18px - env(safe-area-inset-bottom,0px));background:var(--sheet);padding:10px 0 4px;border-top:1px solid var(--line)}
+  html body #overlay .editor .actions .grow{display:flex;flex-wrap:wrap;gap:6px}
+  html body #overlay .editor .actions .btn{white-space:nowrap;flex:none;padding:8px 14px}
+}
+@media (min-width:960px){
+  html body{padding:0!important}
+  html body.dz .wrap{display:grid!important;grid-template-columns:56px var(--lists,0px) minmax(0,1fr) var(--dock,0px)!important;max-width:none!important;margin:0!important;padding:0!important;gap:0!important;min-height:100vh}
+  html body.dz.lists-on .wrap{--lists:200px}
+  html body.dz.dock-on .wrap{--dock:400px}
+  html body.dz #rail{grid-column:1;display:flex;flex-direction:column;align-items:center;gap:4px;position:sticky;top:0;height:100vh;box-sizing:border-box;padding:12px 0;background:var(--rail)}
+  html body.dz #side{grid-column:2!important;display:none!important}
+  html body.dz.lists-on #side{display:flex!important;flex-direction:column;justify-self:stretch!important;position:sticky;top:0;height:100vh;max-height:none!important;width:auto!important;margin:0!important;box-sizing:border-box;padding:14px 8px!important;overflow-y:auto;background:var(--side);border-radius:0}
+  html body.dz #side .side-top,html body.dz #side .ng-foot{display:none!important}
+  html body.dz .wrap>.maincol{grid-column:3!important;max-width:none!important;width:100%;box-sizing:border-box;padding:16px 32px 60px;min-height:100vh}
+  html body.dz:not(.dock-on) .wrap>.maincol>*:not(.tabs){max-width:980px;width:100%;margin-inline:auto}
+  html body.dz.v-keep .wrap>.maincol>*{max-width:1400px!important}
+  /* rail */
+  html body .rl{all:unset;box-sizing:border-box;cursor:pointer;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:var(--muted)}
+  html body .rl svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  html body .rl:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 7%,transparent)}
+  html body .rl[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+  html body .rl:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+  html body .rl-home{margin-bottom:10px}
+  html body .rl-home .logo{width:28px;height:28px}
+  html body .rl-gap{flex:1}
+  /* lists */
+  html body.dz #side .nv{min-height:34px;font-size:14px;border-radius:7px;padding-inline:10px;gap:10px}
+  html body.dz #side .nv[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  html body.dz #side .nh{font-size:12px;font-weight:600;color:var(--muted);padding:12px 10px 4px}
+  html body.dz #side .hash{font-weight:400;color:var(--muted);width:18px;text-align:center;display:inline-block}
+  html body.dz #side .nc{font-style:normal;font-size:12.5px;color:var(--muted);background:none;margin-inline-start:auto}
+  html body.dz #side .ng{display:flex;flex-direction:column;gap:1px;padding-bottom:8px;border-top:0;border-bottom:1px solid var(--line);margin-bottom:6px}
+  html body.dz #side .ng:last-child{border-bottom:0}
+  /* the detail panel */
+  html body.dz.dock-on #dock-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:fixed;inset:0 auto 0 0;width:400px;color:var(--muted);font-size:14.5px;background:var(--paper);border-inline-start:1px solid var(--line);z-index:5;text-align:center;padding:24px;box-sizing:border-box}
+  html body.dz.dock-on #dock-empty svg{opacity:.45}
+  html body.dz.dock-on #overlay{position:fixed!important;inset:0 auto 0 0!important;width:400px;background:transparent!important;padding:0!important;display:block;z-index:30!important}
+  html body.dz.dock-on #overlay[hidden]{display:none!important}
+  html body.dz.dock-on #overlay .editor{max-width:none!important;width:400px;height:100vh;max-height:none!important;border-radius:0!important;box-shadow:none!important;background:var(--paper);border-inline-start:1px solid var(--line);overflow-y:auto;padding:16px 20px 24px;animation:none!important}
+  html body.dz.dock-on #overlay .editor h3{font-size:13px;font-weight:500;color:var(--muted)}
+  html body.dz.dock-on #overlay .editor .actions{flex-wrap:wrap;gap:8px;position:sticky;bottom:-24px;background:var(--paper);padding:12px 0 6px;margin-top:4px;border-top:1px solid var(--line)}
+  html body.dz.dock-on #overlay .editor .actions .grow{display:flex;flex-wrap:wrap;gap:6px}
+  html body.dz.dock-on #overlay .editor .actions .btn{min-height:36px;padding:6px 12px;font-size:13.5px;white-space:nowrap;flex:none}
+  html body.dz.dock-on header #ai-fab{inset-inline-end:422px}
+  html body.dz.dock-on .ai-ov .ai-panel{margin-inline-end:422px}
+}
+@media (min-width:1440px){
+  html body.dz.dock-on .wrap{--dock:440px}
+  html body.dz.dock-on #dock-empty,html body.dz.dock-on #overlay,html body.dz.dock-on #overlay .editor{width:440px}
+  html body.dz.dock-on header #ai-fab{inset-inline-end:462px}
+}
+@media (max-width:959px){
+  html body #view .section{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0 0 4px!important}
+  html body #view .section>h2{padding:12px 2px 6px}
+  html body #view .task{padding-inline:2px;border-top:0;border-bottom:1px solid color-mix(in srgb,var(--line) 75%,transparent);background:transparent}
+  html body #view .task .body .title{font-size:16px;line-height:1.45}
+  /* on the phone a row shows only «⋯» (its menu has the timer, «النهارده» and «بكره»); a running timer stays visible */
+  html body #view .task>.tools>.mini:not(.row-more):not(.pomo-go.live){display:none!important}
+  html body #view .pj-blk .pj-bh,html body #view .pj-blk>.pj-bar,html body #view .pj-les,html body #view .pj-blk .pj-add{padding-inline:2px;margin-inline:0}
+}
+html body .s-menu{all:unset;cursor:pointer;display:none;width:34px;height:34px;place-items:center;border-radius:8px;color:var(--muted);flex:none}
+html body .s-menu:hover{background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink)}
+html body .s-menu:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+@media (min-width:960px){html body .s-menu{display:grid}html body #side .side-tg{display:none!important}}
+@media (min-width:1300px){
+  html body #view .pj-sec .pj-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));column-gap:32px;align-items:start}
+  html body #view .pj-sec .pj-list>.empty{grid-column:1/-1}
+}
+body:not(.v-enter) #view>*{animation:none!important}
+/* the last small targets the audit found */
+@media (pointer:coarse){html body header .h-sub .ts-act button{min-height:40px!important}html body #view .ar-btns .x{width:40px!important;height:40px!important}
+  html body #view summary{display:flex;align-items:center}html body .k-ic{width:42px;height:42px}}
+@media (min-width:960px){html body #view .fold{min-height:26px}}
+/* the assistant, TickTick style */
+html body .ai-ov{background:transparent!important;pointer-events:none;display:flex;align-items:flex-end;justify-content:flex-end;padding:0 0 calc(76px + env(safe-area-inset-bottom,0px));box-sizing:border-box}
+html body .ai-ov .ai-panel{pointer-events:auto;width:min(380px,calc(100vw - 24px));height:min(600px,calc(100vh - 110px));margin:0 12px;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.28);overflow:hidden}
+html body .ai-hello{display:flex;flex-direction:column;gap:6px;padding:14px 4px 10px}
+html body .ai-hello b{font-size:20px;line-height:1.3}
+html body .ai-hello span:last-child{color:var(--muted);font-size:14.5px}
+html body .ai-spark svg{width:30px;height:30px;fill:var(--accent)}
+html body .ai-chips.big{display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:0 6px 8px}
+html body .ai-chips.big .chip{all:unset;box-sizing:border-box;cursor:pointer;padding:9px 10px;border-radius:9px;font-size:14px;color:var(--ink)}
+html body .ai-chips.big .chip:hover,html body .ai-chips.big .chip:focus-visible{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+html body .ai-chips.big .chip::before{content:"›";color:var(--accent);margin-inline-end:8px;font-weight:700}
+html body .ai-in textarea{border-radius:12px}
+@media (min-width:960px){
+  /* the layout itself (rail, lists, page, detail panel) lives in zzzzzz_design.py */
+  html body #view .task,html body #view .task.is-done{background:transparent}
+  /* flat lists */
+  html body #view .section{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0 0 6px!important}
+  html body #view .section>h2{font-size:14px;padding:10px 4px 6px;border:0}
+  html body #view .section>h2 small{font-weight:500}
+  html body #view .task{padding-top:7px;padding-bottom:7px;border-top:0;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+  html body #view .task:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+  html body #view .task .body{display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap}
+  html body #view .task .title{flex:1 1 220px;min-width:0;font-size:15px}
+  html body #view .task .meta{margin:0;margin-inline-start:auto;font-size:12.5px;opacity:.9}
+  html body #view .pj-blk,html body #view .pj-head{border-top-color:color-mix(in srgb,var(--line) 70%,transparent)}
+  /* the quick add: a quiet filled bar */
+  html body #view .qa2,html body #view .quick2{background:color-mix(in srgb,var(--ink) 4%,var(--paper))!important;border-color:transparent!important;box-shadow:none!important}
+  /* the assistant button floats in the corner */
+  html body header #ai-fab{position:fixed;inset-inline-end:22px;bottom:22px;width:48px!important;height:48px!important;z-index:45;box-shadow:0 6px 18px rgba(0,0,0,.25);background:var(--sheet);font-size:20px}
+  html body .ai-ov{padding-bottom:84px}
+  html body .ai-ov .ai-panel{margin-inline-end:22px}
+}
+/* nothing can push the page sideways (an iPhone then shows it cut on one side) */
+html,body{overflow-x:clip}
+/* 12px is the smallest text */
+body .tb b,body .tb-days span,body .rt .box,body .k-h,body .lab-chip small,body .fbadge,body .wrap .dnav .car{font-size:12px}
+body .rd-t .fbadge{font-size:11px}
+/* finger screens: 44px to tap */
+@media (pointer:coarse){
+  body .check{position:relative}
+  body .check::before{content:"";position:absolute;inset:-11px;border-radius:12px}
+  body .row-more{width:44px!important;height:44px!important}
+  body header .gear,body header .ai-fab,body header .s-open{width:42px!important;height:42px!important}
+  body .chip,body .lab-chip,body .kb-chip,body .hint-chip,body .h-link,body .mini,body .c-today,body .late-all,body .rt-done,body .sub-tg,body .qa-t{min-height:40px;box-sizing:border-box}
+  body .lab-chip,body .h-link,body .mini,body .c-today{display:inline-flex;align-items:center}
+  body #view input:not([type=checkbox]):not([type=radio]):not([type=range]),body #view select,body .editor input:not([type=checkbox]),body .editor select,body .btn{min-height:44px;box-sizing:border-box}
+  body .k-ic{width:42px;height:42px}
+  body .tabs button{min-height:52px}
+  body header .ts-act button,body .rt,body .late-all,body .fold,body .dnav button,body .kb-chip,body .kc.add,body #view summary,body .sw{min-height:40px!important;box-sizing:border-box}
+  body .dnav button{min-width:44px!important}
+  body .qa-more,body .k-viewrow .k-ic{min-width:44px!important;min-height:44px!important}
+  body .ar-btns .x{width:40px!important;height:40px!important}
+  body .kx{min-width:32px!important;min-height:32px!important;position:relative}
+  body .subprog::before{content:"";position:absolute;inset:-8px}
+  body .subprog{position:relative}
+  /* an iPhone zooms in on any box with text under 16px and stays zoomed, cutting the page: 16px everywhere on a finger screen */
+  body input:not([type=checkbox]):not([type=radio]):not([type=range]),body textarea,body select{font-size:16px!important}
+}
+@media (min-width:2400px){html{zoom:1.15}}
+@media (max-width:600px){body .kcard .k-tools{display:none}body .kcard .k-pin:not([aria-pressed="true"]){display:none}body .kcard{padding-bottom:10px}}
+@media (max-width:360px){body header{column-gap:4px!important}body header #sync-t{display:none}body header .h-sub{min-width:0}}
+body .set-nav,body .rt-strip{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 32px);mask-image:linear-gradient(to left,transparent 0,#000 32px)}
+/* projects page: what's inside each one, right there */
+body .pj-blk{border-top:1px solid var(--line);padding:10px 0 4px}
+body .pj-blk.shut{padding-bottom:10px}
+body .pj-bh{display:flex;align-items:center;gap:10px;padding:0 16px}
+body .pj-bh .fold{flex:1;min-width:0;display:flex;align-items:center;gap:6px;font-size:15.5px;font-weight:600}
+body .pj-bh .pj-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body .pj-go{flex:none;font-size:13.5px}
+body .pj-blk>.pj-bar{margin:8px 16px 4px}
+body .pj-blk .task{border-top:0}
+body .pj-blk .pj-add{border-top:0;padding:4px 16px 8px}
+body .pj-blk .pj-add input{font-size:14px}
+body .pj-in.bk-log{padding:6px 16px 10px}
+body .pj-in.bk-log input{font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:7px 10px}
+body .pj-les{padding:2px 16px 4px}
+body .pj-more{display:inline-block;margin:0 16px 6px;font-size:13.5px}
+body .pj-blk>.empty{padding:6px 16px 8px}
+/* Keep round two */
+body .kcard:not([data-c]),body .kcard[data-c=""]{background:var(--paper)}
+body .kwrap{display:block}
+body .knav{display:none}
+body .k-viewrow{display:flex;justify-content:flex-end;margin:-6px 0 -18px}
+body .kgrid.klist{max-width:600px;margin:0 auto;width:100%}
+body .k-trash-h{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;font-style:italic;color:var(--muted);font-size:14.5px;padding:10px 0 18px}
+body .k-trash-h .k-close{font-style:normal;color:var(--accent)}
+body .k-ic.sure{color:var(--red,#c5221f);background:color-mix(in srgb,var(--red,#c5221f) 12%,transparent)}
+body .ktr .k-tools{opacity:1}
+body #klab{align-items:flex-start;padding-top:16vh}
+body .kmod.klab{width:min(300px,92vw);gap:2px;padding:14px 12px 6px}
+body .klab-h{font-size:16px;padding:2px 4px 8px}
+body .klab-row{display:flex;align-items:center;gap:6px;padding:2px 0}
+body .klab-row>svg{width:18px;height:18px;flex:none;margin:0 8px;fill:none;stroke:currentColor;stroke-width:1.7;color:var(--muted)}
+body .klab-row input{all:unset;flex:1;min-width:0;font:inherit;font-size:14.5px;padding:6px 2px;border-bottom:1px solid transparent}
+body .klab-row input:focus{border-bottom-color:var(--line)}
+body .klab-n{font-size:12px;color:var(--muted);min-width:1.5em;text-align:center}
+@media (min-width:960px){
+  body.v-keep .maincol{max-width:1180px}
+  body.v-keep .wrap{grid-template-columns:minmax(284px,.55fr) minmax(0,1180px) minmax(0,.45fr)!important}
+  body.v-keep.side-rail .wrap{grid-template-columns:minmax(100px,.55fr) minmax(0,1180px) minmax(0,.45fr)!important}
+  body .kwrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:20px;align-items:start}
+  body .knav{display:flex;flex-direction:column;position:sticky;top:12px;padding:4px 0}
+  body .kpage>.kbar{display:none}
+  body .kn-it{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:20px;height:48px;padding:0 22px 0 12px;border-radius:25px 0 0 25px;font-size:14.5px;font-weight:600;color:var(--ink);margin-inline-start:-8px}
+  body .kn-it svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;color:color-mix(in srgb,var(--ink) 70%,transparent)}
+  body .kn-it span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  body .kn-it:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+  body .kn-it[aria-current="page"]{background:#feefc3}
+  body .kn-it:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+}
+@media (min-width:960px) and (prefers-color-scheme:dark){:root:not([data-theme="light"]) body .kn-it[aria-current="page"]{background:#41331c}}
+@media (min-width:960px){:root[data-theme="dark"] body .kn-it[aria-current="page"]{background:#41331c}}
+/* notes: Google Keep */
+:root{--kc-coral:#faafa8;--kc-peach:#f39f76;--kc-sand:#fff8b8;--kc-mint:#e2f6d3;--kc-sage:#b4ddd3;--kc-fog:#d4e4ed;--kc-storm:#aeccdc;--kc-dusk:#d3bfdb;--kc-blossom:#f6e2dd;--kc-clay:#e9e3d4;--kc-chalk:#efeff1;
+  --k-shadow:0 1px 2px 0 rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);--k-ink:#202124}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--kc-coral:#77172e;--kc-peach:#692b17;--kc-sand:#7c4a03;--kc-mint:#264d3b;--kc-sage:#0c625d;--kc-fog:#256377;--kc-storm:#284255;--kc-dusk:#472e5b;--kc-blossom:#6c394f;--kc-clay:#4b443a;--kc-chalk:#232427;--k-shadow:0 1px 2px 0 rgba(0,0,0,.6),0 2px 6px 2px rgba(0,0,0,.3);--k-ink:var(--ink)}}
+:root[data-theme="dark"]{--kc-coral:#77172e;--kc-peach:#692b17;--kc-sand:#7c4a03;--kc-mint:#264d3b;--kc-sage:#0c625d;--kc-fog:#256377;--kc-storm:#284255;--kc-dusk:#472e5b;--kc-blossom:#6c394f;--kc-clay:#4b443a;--kc-chalk:#232427;--k-shadow:0 1px 2px 0 rgba(0,0,0,.6),0 2px 6px 2px rgba(0,0,0,.3);--k-ink:var(--ink)}
+body .kpage{display:flex;flex-direction:column;gap:14px}
+body .kbar{display:flex;flex-wrap:wrap;gap:6px}
+body .kb-chip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px 0 12px;border-radius:99px;font-size:14px;color:var(--ink);border:1px solid var(--line)}
+body .kb-chip svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+body .kb-chip small{font-size:12px;color:var(--muted)}
+body .kb-chip:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+body .kb-chip[aria-pressed="true"]{background:color-mix(in srgb,#feefc3 70%,var(--sheet));border-color:transparent;font-weight:600}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body .kb-chip[aria-pressed="true"]{background:#41331c}}
+:root[data-theme="dark"] body .kb-chip[aria-pressed="true"]{background:#41331c}
+body .kb-chip:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+/* «اكتب نوت…» */
+body .kcomp{width:100%;max-width:600px;margin:6px auto 10px;box-sizing:border-box;background:var(--sheet);border-radius:8px;box-shadow:var(--k-shadow);display:flex;align-items:center;padding:4px 8px 4px 16px;border:1px solid transparent}
+body .kc-open{all:unset;flex:1;cursor:text;padding:10px 0;font-size:15.5px;font-weight:500;color:var(--muted)}
+body .kcomp.on{flex-direction:column;align-items:stretch;padding:10px 16px 6px;gap:6px}
+body .kcomp[data-c]:not([data-c=""]),body .kcard[data-c]:not([data-c=""]),body .kmod[data-c]:not([data-c=""]){border-color:transparent}
+body .k-top{display:flex;align-items:center;gap:6px}
+body .k-title-in{all:unset;flex:1;min-width:0;font:inherit;font-size:16.5px;font-weight:600;color:var(--k-ink);padding:6px 0}
+body .k-title-in::placeholder,body .k-body-in::placeholder,body .kl-in::placeholder{color:var(--muted);font-weight:500}
+body .k-body-in{all:unset;display:block;width:100%;box-sizing:border-box;font:inherit;font-size:15px;line-height:1.6;color:var(--k-ink);min-height:44px;white-space:pre-wrap;overflow-y:auto;resize:none}
+body .k-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px -8px 0}
+body .k-close{all:unset;cursor:pointer;font-size:14px;font-weight:600;padding:8px 22px;border-radius:6px;color:var(--k-ink)}
+body .k-close:hover{background:color-mix(in srgb,var(--ink) 8%,transparent)}
+body .k-close:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+/* icon buttons */
+body .k-ic{all:unset;box-sizing:border-box;cursor:pointer;width:34px;height:34px;border-radius:50%;display:inline-grid;place-items:center;color:color-mix(in srgb,var(--k-ink) 72%,transparent);flex:none}
+body .k-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+body .k-ic:hover{background:color-mix(in srgb,var(--k-ink) 9%,transparent);color:var(--k-ink)}
+body .k-ic:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+body .k-ic[aria-pressed="true"]{color:var(--k-ink)}
+body .k-tools{display:flex;align-items:center;gap:2px}
+/* cards */
+body .kgrid{display:flex;gap:16px;padding:0;align-items:flex-start}
+body .kcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:16px}
+body .kcard{position:relative;display:flex;flex-direction:column;gap:6px;margin:0;padding:12px 16px 4px;border:1px solid var(--line);border-radius:8px;background:var(--sheet);color:var(--k-ink);cursor:default;transition:box-shadow .15s}
+body .kcard:hover,body .kcard:focus-within,body .kcard.menu-on{box-shadow:var(--k-shadow)}
+body .kcard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+body .kcard[data-kdrag]{cursor:default}
+body .k-title{font-size:16px;font-weight:600;line-height:1.45;padding-inline-end:26px;word-break:break-word}
+body .k-text{font-size:14.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:16;-webkit-box-orient:vertical;overflow:hidden}
+body .kcard:not(:has(.k-title)) .k-text{padding-inline-end:22px}
+body .k-empty{color:var(--muted)}
+body .k-pin{position:absolute;top:6px;inset-inline-end:6px;opacity:0;transition:opacity .15s}
+body .kcard:hover .k-pin,body .kcard:focus-within .k-pin,body .k-pin[aria-pressed="true"]{opacity:1}
+body .kcard .k-tools{margin:0 -10px;opacity:0;transition:opacity .15s}
+body .kcard:hover .k-tools,body .kcard:focus-within .k-tools,body .kcard.menu-on .k-tools{opacity:1}
+@media (hover:none){body .kcard .k-tools{display:none}body .kcard .k-pin:not([aria-pressed="true"]){display:none}body .kcard{padding-bottom:12px}}
+body .k-labs{display:flex;flex-wrap:wrap;gap:6px;padding:2px 0}
+body .k-by{font-size:12px;padding:3px 9px;border-radius:99px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);font-weight:600}
+body .kcomp[data-c="coral"],body .kcard[data-c="coral"],body .kmod[data-c="coral"],body .k-sw[data-c="coral"]{background:var(--kc-coral)}
+body .kcomp[data-c="peach"],body .kcard[data-c="peach"],body .kmod[data-c="peach"],body .k-sw[data-c="peach"]{background:var(--kc-peach)}
+body .kcomp[data-c="sand"],body .kcard[data-c="sand"],body .kmod[data-c="sand"],body .k-sw[data-c="sand"]{background:var(--kc-sand)}
+body .kcomp[data-c="mint"],body .kcard[data-c="mint"],body .kmod[data-c="mint"],body .k-sw[data-c="mint"]{background:var(--kc-mint)}
+body .kcomp[data-c="sage"],body .kcard[data-c="sage"],body .kmod[data-c="sage"],body .k-sw[data-c="sage"]{background:var(--kc-sage)}
+body .kcomp[data-c="fog"],body .kcard[data-c="fog"],body .kmod[data-c="fog"],body .k-sw[data-c="fog"]{background:var(--kc-fog)}
+body .kcomp[data-c="storm"],body .kcard[data-c="storm"],body .kmod[data-c="storm"],body .k-sw[data-c="storm"]{background:var(--kc-storm)}
+body .kcomp[data-c="dusk"],body .kcard[data-c="dusk"],body .kmod[data-c="dusk"],body .k-sw[data-c="dusk"]{background:var(--kc-dusk)}
+body .kcomp[data-c="blossom"],body .kcard[data-c="blossom"],body .kmod[data-c="blossom"],body .k-sw[data-c="blossom"]{background:var(--kc-blossom)}
+body .kcomp[data-c="clay"],body .kcard[data-c="clay"],body .kmod[data-c="clay"],body .k-sw[data-c="clay"]{background:var(--kc-clay)}
+body .kcomp[data-c="chalk"],body .kcard[data-c="chalk"],body .kmod[data-c="chalk"],body .k-sw[data-c="chalk"]{background:var(--kc-chalk)}
+/* checklists */
+body .k-cl{display:flex;flex-direction:column;gap:2px}
+body .k-it{display:flex;align-items:flex-start;gap:8px;font-size:14.5px;line-height:1.5}
+body .k-cb{all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:17px;height:17px;margin-top:3px;border:2px solid color-mix(in srgb,var(--k-ink) 55%,transparent);border-radius:3px;display:grid;place-items:center}
+body .k-cb svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+body .k-cb:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+body .k-more{font-size:13px;color:var(--muted);padding:2px 25px 0 0}
+body .k-list{display:flex;flex-direction:column}
+body .kl-row{display:flex;align-items:center;gap:8px;min-height:34px;border-top:1px solid transparent;border-bottom:1px solid transparent}
+body .kl-row:focus-within{border-color:color-mix(in srgb,var(--k-ink) 18%,transparent)}
+body .kl-row .k-cb{margin-top:0}
+body .kl-in{all:unset;flex:1;min-width:0;font:inherit;font-size:15px;color:var(--k-ink);padding:5px 0}
+body .kl-row.on .kl-in{text-decoration:line-through;color:var(--muted)}
+body .kl-x{all:unset;cursor:pointer;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:var(--muted);opacity:0}
+body .kl-row:hover .kl-x,body .kl-row:focus-within .kl-x{opacity:1}
+body .kl-x:hover{background:color-mix(in srgb,var(--k-ink) 9%,transparent)}
+body .kl-plus{width:17px;text-align:center;color:var(--muted);font-size:20px;line-height:1}
+body .kl-done-h{font-size:13px;color:var(--muted);padding:10px 0 4px;border-top:1px solid color-mix(in srgb,var(--k-ink) 14%,transparent);margin-top:6px}
+/* popovers */
+body .k-pop{position:absolute;z-index:60;bottom:auto;margin-top:2px;inset-inline-start:8px;background:var(--sheet);color:var(--ink);border-radius:8px;box-shadow:0 1px 3px 0 rgba(60,64,67,.3),0 4px 8px 3px rgba(60,64,67,.15);padding:8px}
+body .kcard .k-pop{top:100%}
+body .kcomp,body .kmod{position:relative}
+body .kcomp .k-pop,body .kmod .k-pop{top:auto;bottom:52px}
+body .k-colors{display:grid;grid-template-columns:repeat(6,32px);gap:6px;padding:10px}
+body .k-sw{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;box-sizing:border-box;border:2px solid transparent;display:grid;place-items:center;color:var(--k-ink)}
+body .k-sw[data-c=""]{border-color:var(--line);background:var(--sheet)}
+body .k-sw:hover{border-color:color-mix(in srgb,var(--k-ink) 60%,transparent)}
+body .k-sw[aria-pressed="true"]{border-color:#a142f4}
+body .k-sw svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+body .k-sw:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+body .k-labs-pop{width:250px}
+body .k-pop-h{font-size:13.5px;font-weight:600;padding:2px 4px 8px}
+body .k-menu{display:flex;flex-direction:column;min-width:190px;padding:6px 0}
+body .k-mi{all:unset;box-sizing:border-box;cursor:pointer;padding:9px 16px;font-size:14px;display:flex;align-items:center;gap:10px;justify-content:space-between}
+body .k-mi:hover,body .k-mi:focus-visible{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+body .k-mi.danger{color:var(--red,#c5221f)}
+body .k-area select{font:inherit;font-size:13px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:3px 6px}
+/* the note window */
+body #kmodal{align-items:flex-start;padding-top:14vh}
+body .kmod{width:min(600px,94vw);box-sizing:border-box;max-height:76vh;overflow:visible;display:flex;flex-direction:column;gap:6px;background:var(--sheet);color:var(--k-ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.28);padding:12px 16px 6px}
+body .kmod .k-body-in{min-height:120px;max-height:55vh}
+body .kmod .k-list{max-height:55vh;overflow-y:auto}
+body .km-meta{font-size:12px;color:color-mix(in srgb,var(--k-ink) 62%,transparent);text-align:end;padding-top:4px}
+/* sections and empty page */
+body .k-h{font-size:11.5px;font-weight:600;letter-spacing:.06em;color:var(--muted);padding:6px 4px 0}
+body .k-emptyp{display:flex;flex-direction:column;align-items:center;gap:14px;padding:70px 16px;color:var(--muted);font-size:17px}
+body .k-emptyp svg{width:96px;height:96px;fill:none;stroke:currentColor;stroke-width:1;opacity:.35}
+body .k-emptyp p{margin:0}
+@media (max-width:600px){body .kgrid,body .kcol{gap:10px}body .kcard{padding:10px 12px}body .kmod{padding-top:10px}body #kmodal{padding-top:6vh}body .kb-chip{height:32px;font-size:13.5px}}
+/* team */
+body .tm-card h2 small{font-weight:400}
+body .tm-form{display:flex;flex-wrap:wrap;gap:10px;padding:12px 16px;align-items:flex-end}
+body .tm-form label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);flex:1 1 200px}
+body .tm-form input{font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+body .tm-acts{display:flex;gap:8px;align-items:center;flex:1 1 100%}
+body .tm-foot{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;padding:10px 16px 14px;border-top:1px solid var(--line);font-size:14px}
+body .tm-note{padding:0 16px 14px;margin:0;font-size:12.5px}
+body .tag.who{color:var(--accent)}
+body .tm-card .tag.who{display:none}
+body .tm-open{align-self:flex-start}
+body .tm-hint{margin-bottom:12px}
+/* books */
+body .bk-add input[type=number]{flex:0 0 7em;width:7em}
+body .bk input{font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+body .bk input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+body .bk-now{display:flex;flex-direction:column;gap:12px;padding:14px 16px}
+body .bk-author{color:var(--muted);font-size:14px}
+body .bk-log{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0}
+body .bk-log label{font-size:15px;font-weight:600}
+body .bk-log input{width:6.5em;flex:none;text-align:center;font-variant-numeric:tabular-nums}
+body .bk-of{color:var(--muted);font-variant-numeric:tabular-nums}
+body .bk-log .c-today{margin-inline-start:auto;opacity:1!important}
+body .bk-stats{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:14px;color:var(--muted)}
+body .bk-stats b{color:var(--ink)}
+body .bk-set{display:flex;flex-wrap:wrap;gap:10px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+body .bk-set label{display:flex;align-items:center;gap:8px}
+body .bk-set input{width:8em}
+body .bk-days{display:flex;flex-direction:column}
+body .bk-day{display:flex;justify-content:space-between;gap:12px;padding:9px 16px;border-top:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
+body .bk-day span:last-child{color:var(--muted)}
+/* notes like Keep */
+body .kgrid{display:flex;gap:12px;padding:12px 16px 16px;align-items:flex-start}
+body .kcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:12px}
+body .k-h{font-size:11.5px;font-weight:600;letter-spacing:.04em;color:var(--muted);padding:12px 16px 0}
+body .kcard[data-kdrag]{cursor:grab;-webkit-touch-callout:none}
+body .kcard.kdragging{position:relative;z-index:30;cursor:grabbing;box-shadow:0 12px 28px color-mix(in srgb,var(--ink) 22%,transparent);border-color:var(--accent);pointer-events:none;transition:none}
+body.kdrag-on,body.kdrag-on *{user-select:none;-webkit-user-select:none;cursor:grabbing}
+body .kcard{display:flex;flex-direction:column;gap:8px;margin:0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--sheet);transition:box-shadow .15s,border-color .15s}
+body .kcard:hover{border-color:color-mix(in srgb,var(--ink) 22%,var(--line));box-shadow:0 2px 10px color-mix(in srgb,var(--ink) 8%,transparent)}
+body .kcard.done .k-text{color:var(--muted)}
+body .k-text{white-space:pre-wrap;line-height:1.6;cursor:text;border-radius:6px}
+body .kcard.done .k-text{cursor:default}
+body .k-text:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+body .k-ed{width:100%;box-sizing:border-box;min-height:80px;resize:vertical;font:inherit;line-height:1.6}
+body .kcard .note-top{font-size:12px}
+body .kcard .note-actions{flex-wrap:wrap;gap:4px;transition:opacity .15s}
+@media (hover:hover){body .kcard:not(:hover):not(:focus-within) .note-actions{opacity:0}}
+body .kcard:hover .note-actions,body .kcard:focus-within .note-actions{opacity:1}
+body .k-labs,body .lab-pick,body .lab-bar{display:flex;flex-wrap:wrap;gap:6px}
+body .lab-bar{padding:4px 0 10px}
+body .lab-pick{align-items:center}
+body #note-form .lab-pick{padding:2px 0}
+body .lab-chip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;line-height:1;padding:6px 10px;border-radius:99px;
+  --lc:hsl(var(--lh,215) 55% 48%);background:color-mix(in srgb,var(--lc) 13%,var(--sheet));color:color-mix(in srgb,var(--lc) 62%,var(--ink));border:1px solid transparent}
+body .lab-chip small{font-size:11px;opacity:.75}
+body .lab-chip.all,body .lab-chip.none{--lc:var(--ink)}
+body .lab-chip[aria-pressed="true"]{border-color:color-mix(in srgb,var(--lc) 70%,transparent);background:color-mix(in srgb,var(--lc) 24%,var(--sheet));font-weight:600}
+body .lab-pick .lab-chip[aria-pressed="false"]{background:transparent;border-color:var(--line);color:var(--muted)}
+body .lab-chip:hover{filter:brightness(.97)}
+body .lab-chip:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+body .lab-pick .lab-new{font:inherit;font-size:12.5px;width:9.5em;height:auto!important;min-height:0!important;padding:5px 10px!important;border-radius:99px!important;border:1px dashed var(--line)!important;background:transparent!important;box-shadow:none!important;outline:none;color:var(--ink)}
+body .lab-pick .lab-new:focus{border-style:solid!important;border-color:var(--accent)!important}
+@media (max-width:520px){body .kgrid{padding:10px;gap:8px}body .kcol{gap:8px}body .kcard{padding:10px 12px}}
+body .s-box{max-width:620px;gap:10px;max-height:min(80vh,640px)}
+body #s-q{font-size:17px}
+body .s-hint{margin:6px 2px;color:var(--muted);font-size:14px}
+body .s-hint kbd{font:inherit;font-size:12px;border:1px solid var(--line);border-radius:5px;padding:0 5px}
+body .s-grp{display:flex;flex-direction:column;gap:2px}
+body .s-h{display:flex;align-items:baseline;gap:8px;font-size:13px;font-weight:600;color:var(--muted);padding:8px 4px 4px}
+body .s-h small{font-weight:400}
+body .s-it{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:2px;padding:9px 10px;border-radius:10px;cursor:pointer}
+body .s-it:hover,body .s-it:focus-visible{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+body .s-it:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+body .s-it.done .s-t{color:var(--muted)}
+body .s-t{font-size:15px;line-height:1.45}
+body .s-s{font-size:12.5px;color:var(--muted);line-height:1.4}
+body .s-it mark{background:color-mix(in srgb,var(--accent) 22%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+@media (min-width:960px){body header .s-open{display:none!important}}
+body .h-row{display:flex;align-items:center;gap:10px;min-width:0}
+body .s-title{all:unset;cursor:pointer;flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:9px;color:var(--muted);border:1px solid var(--line)}
+body .s-title:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 6%,transparent)}
+body .s-title:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+@media (max-width:959px){body .s-title{display:none}}
+@media (max-width:640px){body header .h-row{display:contents}}
+@media (max-width:640px){body header{grid-template-columns:1fr auto auto auto auto!important}body header .s-open{grid-row:1}}
+@media (min-width:600px){body #search-ov{align-items:flex-start;padding-top:12vh}}
+body .app-home{all:unset;display:flex;align-items:center;gap:inherit;min-width:0;cursor:pointer;border-radius:8px}
+body .app-home:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+body.side-rail .side-top .app-home{flex-direction:column}
 body .goal-ed{flex-wrap:wrap;gap:8px}
 body .goal-ed .g-name{flex:1 1 160px;min-width:0}
 body .goal-ed .g-on{color:var(--muted);font-size:13px}
@@ -899,19 +1409,19 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 </style>
 
 <div class="wrap" dir="rtl" lang="ar">
-  <nav id="side" aria-label="القايمة"><div class="side-top"><span class="logo" aria-hidden="true"></span><b id="app-name">دفتر مالك</b><button type="button" class="side-tg" id="side-tg" aria-expanded="false" aria-label="كبّر القايمة" title="كبّر القايمة"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M15 4.5v15"/></svg></button></div>
+  <nav id="rail" aria-label="الأجزاء"></nav><nav id="side" aria-label="القايمة"><div class="side-top"><button type="button" class="app-home" data-nav="today" title="النهارده"><span class="logo" aria-hidden="true"></span><b id="app-name">دفتر مالك</b></button><button type="button" class="side-tg" id="side-tg" aria-expanded="false" aria-label="كبّر القايمة" title="كبّر القايمة"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M15 4.5v15"/></svg></button></div>
     <div id="side-list"></div></nav>
   <div class="side-ov" id="side-ov" hidden></div>
   <div class="maincol">
   <header>
     <div class="h-title">
-      <h1 id="view-title">النهارده</h1>
+      <div class="h-row"><button type="button" class="s-menu" data-sidewide="1" aria-label="القايمة الجانبية" title="القايمة الجانبية"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><h1 id="view-title">النهارده</h1><button type="button" class="s-title" data-search="1" aria-label="دوّر (Ctrl+K)" title="دوّر (Ctrl+K)"><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
       <div class="h-sub"><div class="date" id="today-label"></div></div>
     </div>
     <div class="counts" id="counts"></div>
     <span class="sync" id="sync" hidden><i></i><span id="sync-t"></span></span>
     <button type="button" class="ai-fab" id="ai-fab" aria-label="المساعد" title="المساعد"><span aria-hidden="true">✦</span><span class="lbl"> المساعد</span></button>
-    <button type="button" class="gear" id="open-settings" aria-label="الإعدادات" title="الإعدادات"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    <button type="button" class="gear s-open" data-search="1" aria-label="دوّر" title="دوّر"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><button type="button" class="gear" id="open-settings" aria-label="الإعدادات" title="الإعدادات"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
   </header>
 
   <div class="tabs" role="tablist" id="tabs" aria-label="التنقل">
@@ -939,33 +1449,57 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
   <div class="foot" id="foot" hidden><button type="button" id="gh-settings">الاتصال بـ GitHub</button></div>
 </div></div>
 
+<aside id="dock-empty" aria-hidden="true"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h9l3 3v14H6z"/><path d="M15 3.5v3h3M9 11h6M9 14h6M9 17h3"/></svg><p>دوس على أي تاسك عشان تشوف تفاصيله هنا</p></aside>
 <div class="overlay" id="overlay" hidden>
   <form class="editor" id="editor" autocomplete="off">
-    <h3 id="ed-title">تاسك جديد</h3>
+    <div class="ed-bar">
+      <button type="button" class="ed-ic" id="ed-close" aria-label="قفل"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+      <button type="button" class="ed-check" id="ed-done" aria-label="خلص"></button>
+      <h3 id="ed-title">تاسك جديد</h3>
+      <span class="ed-chip ed-due" id="ed-due"><button type="button" id="ed-due-b"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span id="ed-due-t">ديدلاين</span></button><button type="button" class="ed-x" id="ed-due-x" aria-label="شيل الديدلاين" hidden>×</button><input id="f-due" type="date" tabindex="-1" aria-label="الديدلاين"></span>
+      <button type="button" class="ed-chip" id="ed-today" aria-pressed="false">النهارده</button>
+      <span class="ed-grow"></span>
+      <button type="button" class="ed-ic ed-flag" id="ed-flag" aria-label="الأولوية" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M5 21V4h11l-1.5 4L16 12H7v9z"/></svg></button>
+      <div class="ed-pop" id="ed-pripop" hidden></div>
+    </div>
+    <span class="ed-crumb" id="ed-crumb"></span>
     <div class="ed-par" id="ed-par-row" hidden><div class="note parent-of" id="ed-parent" hidden></div><button class="mini" type="button" id="ed-promote">خليه تاسك أساسي</button></div>
-    <div class="field"><label for="f-title">التاسك</label><input id="f-title" required maxlength="160" placeholder="مثلاً: تسليم فيديو الطعمية"></div>
+    <div class="field ed-tf"><label for="f-title">التاسك</label><input id="f-title" required maxlength="160" placeholder="مثلاً: تسليم فيديو الطعمية"></div>
+    <div class="field ed-nf" id="notes-wrap"><label for="f-notes" class="ed-sr">ملاحظات</label><textarea id="f-notes" maxlength="1000" rows="1" placeholder="ملاحظات"></textarea></div>
+    <div class="ed-subs" id="ed-sublist"></div>
+    <div class="ed-more" id="ed-more">
     <div class="row2" id="area-row">
       <div class="field"><label for="f-area">القسم</label><select id="f-area"></select></div>
       <div class="field" id="kind-field"><label for="f-kind">النوع</label><select id="f-kind"></select></div>
     </div>
     <label class="note" id="course-wrap" hidden style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="f-course" style="width:auto"> ده كورس (فصول ودروس)</label>
+    <div class="field" id="who-field" hidden><label for="f-who">مع مين</label><select id="f-who"></select></div>
     <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span><label class="note" id="nopkg-wrap" hidden style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-nopkg" style="width:auto"> مش محسوب من الباكدج (ميتنج، مراجعة…)</label></div>
-    <div class="field"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
+    <div class="field ed-prif"><span class="lab">الأولوية</span><div class="pris" id="f-pri"></div></div>
     <div class="field" id="rep-field"><span class="lab">بيتكرر</span><div class="chips rep-chips" id="f-rep" role="group" aria-label="بيتكرر"></div></div>
-    <div class="row2">
-      <div class="field"><label for="f-due">الديدلاين</label><input id="f-due" type="date"></div>
-      <label class="note" style="display:flex;gap:8px;align-items:center;align-self:end;min-height:42px"><input type="checkbox" id="f-today" style="width:auto"> حطه في خطة النهارده</label>
-    </div>
+    <label class="note ed-hide" style="display:flex;gap:8px;align-items:center;min-height:42px"><input type="checkbox" id="f-today" style="width:auto"> حطه في خطة النهارده</label>
     <div hidden>
       <div id="stage-wrap"><select id="f-stage"><option value="">—</option><option value="draft">درافت</option><option value="edits">تعديلات</option><option value="delivery">تسليم</option></select></div>
     </div>
     <details class="field" id="done-field" hidden><summary class="lab" style="cursor:pointer">خلص يوم: <span id="done-sum"></span></summary><input id="f-done" type="date" aria-label="خلص يوم"></details>
-    <details class="field" id="notes-wrap"><summary class="lab" style="cursor:pointer">ملاحظات</summary><textarea id="f-notes" maxlength="1000"></textarea></details>
+    </div>
     <div class="actions">
-      <div class="grow"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" id="ed-cancel">إلغاء</button><button class="btn" type="button" id="ed-subs" hidden>+ تسكات فرعية</button><button class="btn" type="button" id="ed-ai" hidden>✦ قسّمه</button><button class="btn" type="button" id="ed-pomo" hidden>▶ بومودورو</button></div>
+      <div class="grow"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" id="ed-cancel">إلغاء</button><button class="btn" type="button" id="ed-subs" hidden>+ تسكات فرعية</button><button class="btn" type="button" id="ed-ai" hidden>✦ قسّمه</button><button class="btn" type="button" id="ed-pomo" hidden><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span id="ed-pomo-t">ابدأ التايمر</span></button></div>
+      <span class="ed-made" id="ed-made"></span>
+      <button type="button" class="ed-ic" id="ed-more-b" aria-label="حاجات تانية" aria-expanded="false" aria-controls="ed-more"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="5.5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.5" cy="12" r="1.7"/></svg></button>
       <button class="btn danger" type="button" id="ed-delete" hidden>امسح</button>
     </div>
   </form>
+</div>
+
+<div class="overlay" id="kmodal" hidden></div>
+<div class="overlay" id="klab" hidden></div>
+
+<div class="overlay" id="search-ov" hidden>
+  <div class="editor s-box" role="dialog" aria-modal="true" aria-label="دوّر في الدفتر">
+    <input id="s-q" type="search" maxlength="80" autocomplete="off" placeholder="دوّر في التسكات والنوتس واليوميات…" aria-label="دوّر في الدفتر" aria-controls="s-res">
+    <div id="s-res" aria-live="polite"></div>
+  </div>
 </div>
 
 <div class="overlay" id="paper-ov" hidden>
@@ -1028,13 +1562,13 @@ const subsOf=id=>tasks.filter(t=>t.parentId===id).sort((a,b)=>(a.createdAt||0)-(
 const parentOf=t=>t&&t.parentId?tasks.find(p=>p.id===t.parentId)||null:null;
 const isTop=t=>!parentOf(t);
 const clip=(s,n=40)=>s.length>n?s.slice(0,n)+"…":s;
-let expanded=new Set();try{expanded=new Set(JSON.parse(localStorage.getItem("expanded")||"[]"))}catch(_){}
-const saveExpanded=()=>{try{localStorage.setItem("expanded",JSON.stringify([...expanded]))}catch(_){}};
+let expanded=new Set();try{localStorage.removeItem("expanded")}catch(_){}
+const saveExpanded=()=>{};
 const sortTasks=a=>a.slice().sort((x,y)=>(PRI_RANK[x.pri]??9)-(PRI_RANK[y.pri]??9)||(x.due||"9999").localeCompare(y.due||"9999")||(x.createdAt||0)-(y.createdAt||0));
 const isOpen=t=>t.status!=="done";
 const DOW=["الحد","الاتنين","التلات","الأربع","الخميس","الجمعة","السبت"];
 const repDue=t=>!!(t.repeat&&(t.repeat.days||[]).includes(new Date().getDay()));
-const isLong=t=>!!t&&!t.parentId&&(!!t.long||!!t.course||tasks.some(x=>x.parentId===t.id));
+const isLong=t=>!!t&&!t.parentId&&(!!t.long||!!t.course||!!t.book||tasks.some(x=>x.parentId===t.id));
 const inToday=t=>isOpen(t)&&(t.repeat?(t.lastDone!==today()&&t.skip!==today()&&(repDue(t)||(t.planDate&&t.planDate<=today()))):(t.planDate&&(isLong(t)?t.planDate===today():t.planDate<=today())));
 const repText=r=>{const d=(r&&r.days)||[];if(d.length===7)return "كل يوم";return "كل "+[6,0,1,2,3,4,5].filter(x=>d.includes(x)).map(x=>DOW[x]).join(" و")};
 
@@ -1050,6 +1584,8 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   if(t.course){const [d,n]=courseCount(t.course);
     meta.push(`<button type="button" class="subprog" data-expand="c:${t.id}" aria-expanded="${expanded.has("c:"+t.id)}"><span class="track"><span class="fill" style="width:${n?d/n*100:0}%"></span></span>${n?`${d}/${n} درس`:"ضيف الفصول"}</button>`);
     {const nx=courseNext(t.course);if(nx&&t.status!=="done")meta.push(`<span class="tag next-les">الجاي: ${esc(clip(nx.l.t,34))}</span>`)}}
+  {const p=personOf(t);if(p)meta.push(`<span class="tag who">مع ${esc(p.name)}</span>`)}
+  if(t.book&&t.status!=="done"&&t.book.total)meta.push(`<span class="tag next-les">ص ${Math.min(t.book.page||0,t.book.total)} من ${t.book.total}</span>`);
   if(subs.length){const d=subs.filter(s=>s.status==="done").length;
     meta.push(`<button type="button" class="subprog" data-expand="${t.id}" aria-expanded="${expanded.has(t.id)}"><span class="track"><span class="fill" style="width:${d/subs.length*100}%"></span></span>${d}/${subs.length}</button>`)}
   if(!noArea&&!(view==="today"&&t.client&&!parent))meta.push(`<span class="tag">${esc(AREA[t.area]||"")}</span>`);
@@ -1065,7 +1601,7 @@ function row(t,{showPlan=true,noArea=false,noClient=false,timer=false,noDone=fal
   const onT=t.repeat?inToday(t):(planned||late);
   const planBtn=(!done&&showPlan)?`<button class="mini ${onT?"on":""}" data-plan="${t.id}" type="button">${onT?(view==="today"?"أجّل":"✓ النهارده"):"+ النهارده"}</button>`:"";
   return `<div class="task p-${t.pri||"black"} ${done?"is-done":""} ${!done&&justAdded&&Date.now()-justAdded<1500&&t.createdAt>=justAdded-50?"fresh":""}">
-    <button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}، ${PRI_N[PRI_KEY(t)]}">${done?"✓":""}</button>
+    ${subs.length?`<button type="button" class="sub-chev" data-expand="${t.id}" aria-expanded="${expanded.has(t.id)}" aria-label="${expanded.has(t.id)?"اقفل":"افتح"} خطوات ${esc(t.title)}">${ARR}</button>`:""}<button class="check" data-toggle="${t.id}" type="button" aria-label="${done?"رجّعه مفتوح":"خلص"}، ${PRI_N[PRI_KEY(t)]}">${done?"✓":""}</button>
     <div class="body" data-edit="${t.id}"><div class="title">${esc(t.title)}</div>${t.closeNote?`<div class="closed-note">اتقفل بنوت: ${esc(t.closeNote)}</div>`:""}<div class="meta">${meta.join("")}</div></div>
     ${done?(nightFix(t)||"<span></span>"):`<div class="tools">${lateRow?`<button class="mini keep-today" type="button" data-keeptoday="${t.id}" aria-label="${esc(t.title)}: النهارده">النهارده</button>`:""}${timer||pomo&&pomo.id===t.id?`<button class="mini pomo-go ${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?"live":""}" type="button" data-pomo="${t.id}" aria-label="ابدأ التايمر على ${esc(t.title)}" title="ابدأ التايمر">${pomo&&pomo.id===t.id&&pomo.kind==="focus"&&!pomo.doneAt?(pomo.pausedAt?"واقف":"● شغال"):IC.play}</button>`:""}${planBtn}<button class="mini row-more" type="button" data-rowmenu="${t.id}" aria-haspopup="menu" aria-expanded="false" aria-label="حاجات تانية لـ ${esc(t.title)}"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5.5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.5" cy="12" r="1.7"/></svg></button></div>`}${!parent&&expanded.has(t.id)?subsBlock(t,subs):""}${t.course&&expanded.has("c:"+t.id)?courseBlock2(t):""}</div>`;
 }
@@ -1360,7 +1896,8 @@ document.addEventListener("click",async e=>{
     const lt=lessonTask(tid,cid,lid);
     await setCourse(tid,c=>{const x=c.chapters.find(h=>h.id===cid).lessons.find(y=>y.id===lid);x.done=!x.done;x.doneDate=x.done?today():null});
     {const c=tasks.find(x=>x.id===tid);const x=c&&c.course.chapters.find(h=>h.id===cid).lessons.find(y=>y.id===lid);
-     if(lt&&x&&x.done&&lt.status!=="done"){await applyDone(lt,true);render()}}return}
+     if(lt&&x&&x.done&&lt.status!=="done"){await applyDone(lt,true);render()}
+     else if(lt&&x&&!x.done&&lt.status==="done"){await applyDone(lt,false,{closeNote:""});render()}}return}
   const a=e.target.closest("[data-lesadd]");if(a){const [tid,cid]=a.dataset.lesadd.split("|");
     await setCourse(tid,c=>{const h=c.chapters.find(x=>x.id===cid);h.lessons.push({id:"l"+sid(),t:"درس "+(h.lessons.length+1),done:false,doneDate:null})});return}
   const dl=e.target.closest("[data-chdel]");if(dl){if(dl.dataset.sure!=="1"){dl.dataset.sure="1";dl.textContent="متأكد؟";setTimeout(()=>{dl.dataset.sure="";dl.textContent="امسح"},2500);return}
@@ -1614,13 +2151,13 @@ function aiSetupHtml(msg){const c=aiCfg||{prov:"gemini",key:"",model:""};const p
 function aiPanel(){
   if(!aiCfg||!aiCfg.key)return `<div class="ai-body">${aiSetupHtml("")}</div>`;
   const chips=[["رتّبلي النهارده","رتّبلي النهارده. لو محتاج تعرف صحيت إمتى وقدامي كام ساعة اسألني."],["إيه المتأخر؟","إيه التسكات المتأجلة من أيام أو اللي الديدلاين بتاعها قرب أو عدّى؟ واقترح أعمل فيها إيه."],["قسّم تاسك كبير","اختار أكبر تاسك مفتوح مالوش فرعيين وقسّمه لخطوات صغيرة."],["أنا عملت إيه الأسبوع ده؟","لخّصلي عملت إيه آخر 7 أيام، وإيه القسم اللي مخدش حقه."]];
-  return `<div class="ai-msgs" id="ai-msgs">${aiMsgs.length?"":`<div class="note" style="padding:8px 2px">قوله أي حاجة: «صحيت 2 الضهر وقدامي 8 ساعات رتّبلي اليوم»، أو «قسّملي فيديو هايدي»، أو «خلّصت الكابشنز».</div>`}
+  return `<div class="ai-msgs" id="ai-msgs">${aiMsgs.length?"":`<div class="ai-hello"><span class="ai-spark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/></svg></span><b>${new Date().getHours()<12?"صباح الخير":"مساء الخير"}</b><span>أقدر أساعدك في إيه؟</span></div>`}
     ${aiMsgs.map((m,i)=>m.role==="user"?`<div class="ai-m me">${esc(m.text)}</div>`:`<div class="ai-m bot"><div>${esc(m.text).replace(/\n/g,"<br>")}</div>
       ${(m.actions||[]).length?`<div class="ai-acts">${m.actions.map((a,j)=>`<label class="ai-act ${a.applied?"done":""}"><input type="checkbox" data-aiact="${i}|${j}" ${a.on?"checked":""} ${a.applied?"disabled":""}> <span>${esc(aiActText(a))}</span>${a.applied?" ✓":""}</label>`).join("")}
         ${m.actions.some(a=>!a.applied)?`<button class="btn primary" type="button" data-aiapply="${i}">طبّق اللي متعلّم</button>`:""}</div>`:""}</div>`).join("")}
     ${aiBusy?`<div class="ai-m bot ai-wait">بيفكر…</div>`:""}</div>
-  <div class="ai-chips">${chips.map(([l,q])=>`<button type="button" class="chip" data-aiq="${esc(q)}">${l}</button>`).join("")}</div>
-  <form class="ai-in" id="ai-in"><textarea id="ai-text" rows="2" placeholder="اكتب للمساعد…" aria-label="اكتب للمساعد"></textarea><button class="btn primary" type="submit" ${aiBusy?"disabled":""}>ابعت</button></form>
+  <div class="ai-chips ${aiMsgs.length?"":"big"}">${chips.map(([l,q])=>`<button type="button" class="chip" data-aiq="${esc(q)}">${l}</button>`).join("")}</div>
+  <form class="ai-in" id="ai-in"><textarea id="ai-text" rows="2" placeholder="فضّي دماغك أو اكتب خطتك…" aria-label="اكتب للمساعد"></textarea><button class="btn primary" type="submit" ${aiBusy?"disabled":""}>ابعت</button></form>
   <div class="ai-foot"><button type="button" data-aiclear="1">مسح المحادثة</button><span class="note" style="font-size:11px">نسخة ${AI_VER}</span><button type="button" data-aiset="1">إعدادات المساعد</button></div>`;
 }
 let aiShowSet=false;
@@ -2082,7 +2619,7 @@ const NI={ // nav icons, 18px strokes
   settings:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5"/></svg>',
   more:'<svg viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg>'};
 function navKey(){if(view==="project")return "proj";if(view==="all")return areaFilter?"area:"+areaFilter:"all";if(view==="notes")return notesMode==="journal"?"journal":notesMode==="files"?"files":"notes";return view}
-function goView(k){if(k==="more"){openSide();return}closeSide();
+function goView(k){if(k==="more"){openSide();return}closeSide();expanded.clear();document.body.classList.remove("v-keep");
   if(k.startsWith("project:")){projId=k.slice(8);k="project"}
   if(k.startsWith("area:")){view="all";areaFilter=k.slice(5)}else if(k==="all"){view="all";areaFilter=""}
   else if(k==="notes"||k==="journal"||k==="files"){view="notes";notesMode=k==="notes"?"notes":k;try{localStorage.setItem("notesMode",notesMode)}catch(_){}if(k!=="notes")vaultBoot()}
@@ -2109,10 +2646,10 @@ function paintShell(){const box=document.getElementById("side-list");if(!box)ret
     return `<button type="button" class="nv nv-g" data-sidegroup="${key}" aria-expanded="${open}" ${rail?`title="${esc(name)}"`:""}><span class="ni">${NI[ic]}</span><span class="nn">${name}</span><span class="g-arr" aria-hidden="true">${ARR}</span></button>${open?`<div class="ng-in">${inner}</div>`:""}`};
   box.innerHTML=`<div class="ng">${it("today","today","النهارده",c.today)}${it("upcoming","upcoming","الجاي",0)}${it("all","all","كل التسكات",0)}</div>
     <div class="ng">${grp("areas","area","الأقسام",AREAS.map(([k,n])=>it("area:"+k,"area",n,0)).join(""),cur.startsWith("area:"))}</div>
-    <div class="ng">${it("clients","clients","العملاء",0)}${(NI.projects?it("proj","projects","المشاريع",0):"")}${it("focus","focus","تركيز",0)}${it("notes","notes","النوتس",0)}</div>
+    <div class="ng">${it("clients","clients","العملاء",0)}${team.length?it("team","team","الفريق",0):""}${(NI.projects?it("proj","projects","المشاريع",0):"")}${it("focus","focus","تركيز",0)}${it("notes","notes","النوتس",0)}</div>
     <div class="ng">${grp("more","more","المزيد",it("week","week","الأسبوع",0)+it("journal","journal","يوميات",0)+it("files","files","ملفات",0),MORE.includes(cur))}</div>
     <div class="ng ng-foot">${it("settings","settings","الإعدادات",0)}</div>`;
-  const titles={proj:"المشاريع",today:"النهارده",upcoming:"الجاي",all:"كل التسكات",clients:"العملاء",focus:"تركيز",week:"الأسبوع",notes:"النوتس",journal:"يوميات",files:"ملفات",settings:"الإعدادات"};
+  const titles={team:"الفريق",proj:"المشاريع",today:"النهارده",upcoming:"الجاي",all:"كل التسكات",clients:"العملاء",focus:"تركيز",week:"الأسبوع",notes:"النوتس",journal:"يوميات",files:"ملفات",settings:"الإعدادات"};
   const vt=document.getElementById("view-title");if(vt){const pt=view==="project"&&tasks.find(x=>x.id===projId);vt.textContent=pt?pt.title:cur.startsWith("area:")?(AREA[areaFilter]||"قسم"):(titles[cur]||"");vt.tabIndex=-1}
   const tl=document.getElementById("today-label");if(tl)tl.textContent=view==="today"?fmtDay(today()):view==="all"?`${areaFilter?c.areas[areaFilter]||0:c.all} مفتوح`:"";
   const cn=document.getElementById("counts");if(cn)cn.hidden=view!=="today";
@@ -2198,7 +2735,7 @@ function todayView(todayList,doneToday){
       </div>`+
     goalsBox("today")+
     (todayList.length?"":`<div class="empty big-empty">يومك فاضي. اكتب أول تاسك فوق ودوس Enter.</div>`)+
-    grp("t:late","من الأيام اللي فاتت",sortTasks(late),{timer:true,lateRow:true},"",`<button type="button" class="late-all" data-lateall="1">كلهم للنهارده</button>`)+
+    grp("t:late","متأخر",sortTasks(late),{timer:true,lateRow:true},"",`<button type="button" class="late-all" data-lateall="1">كلهم للنهارده</button>`)+
     grp("t:plan","النهارده",plan,{timer:true})+
     grp("t:mine","شخصي",mine,{timer:true})+
     (doneShown.length?foldSection("t:done",`<span class="h-t">خلص النهارده</span>`,doneShown,{showPlan:false},""):"")}
@@ -2263,13 +2800,14 @@ document.addEventListener("click",e=>{
     const nb=document.querySelector(`[data-sidegroup="${k}"]`);if(nb)nb.focus()}});
 addEventListener("resize",()=>{paintRail();try{paintShell()}catch(_){}});
 
-const lessonTask=(tid,cid,lid)=>tasks.find(x=>x.lessonOf===tid&&x.lesson===cid+"|"+lid)||null;
+const lessonTask=(tid,cid,lid)=>{const all=tasks.filter(x=>x.lessonOf===tid&&x.lesson===cid+"|"+lid);return all.find(x=>x.status!=="done")||all[0]||null};
 function lesTodayBtn(t,ch,l){const lt=lessonTask(t.id,ch.id,l.id);const on=!!lt&&lt.status!=="done"&&!!lt.planDate&&lt.planDate<=today();
   return `<button type="button" class="c-today ${on?"on":""}" data-lestoday="${t.id}|${ch.id}|${l.id}" aria-pressed="${on}" aria-label="${esc(l.t)}: ${on?"شيله من النهارده":"حطه النهارده"}">${on?"✓ النهارده":"+ النهارده"}</button>`}
 async function lessonToToday(tid,cid,lid){const c=tasks.find(x=>x.id===tid);if(!c||!c.course)return;
   const ch=c.course.chapters.find(h=>h.id===cid),l=ch&&ch.lessons.find(y=>y.id===lid);if(!l)return;
   const lt=lessonTask(tid,cid,lid);
   if(lt&&lt.status!=="done"){const on=lt.planDate&&lt.planDate<=today();await write(lt.id,{planDate:on?"":today()});render();toast(on?"اتشال من النهارده":"اتحط في النهارده");return}
+  if(lt){await applyDone(lt,false,{closeNote:""});await write(lt.id,{planDate:today()});render();toast("اتحط في النهارده");return}
   await write("t"+sid(),{title:l.t,area:c.area,kind:c.kind||"",pri:c.pri||"blue",client:"",stage:"",due:"",notes:"",status:"open",planDate:today(),createdAt:Date.now(),doneAt:null,doneDate:null,lessonOf:tid,lesson:cid+"|"+lid},true);
   render();toast("اتحط في النهارده")}
 async function lessonSync(t,done){const c=tasks.find(x=>x.id===t.lessonOf);if(!c||!c.course||!t.lesson)return;const [cid,lid]=t.lesson.split("|");
@@ -2280,16 +2818,19 @@ document.addEventListener("click",async e=>{const b=e.target.closest("[data-lest
 let projId="";
 NI.projects='<svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="6" rx="2"/><rect x="3.5" y="14" width="17" height="6" rx="2"/><path d="M7 7h5M7 17h8"/></svg>';
 const projItems=()=>tasks.filter(t=>isOpen(t)&&isLong(t));
-function projProg(t){if(t.course){const [d,n]=courseCount(t.course);const nx=courseNext(t.course);return {d,n,next:nx?nx.l.t:"",unit:"درس"}}
+function projProg(t){if(t.book){const b=t.book;return {d:Math.min(b.page||0,b.total||0),n:b.total||0,next:"",unit:"صفحة"}}if(t.course){const [d,n]=courseCount(t.course);const nx=courseNext(t.course);return {d,n,next:nx?nx.l.t:"",unit:"درس"}}
   const s=subsOf(t.id);const open=sortTasks(s.filter(x=>x.status!=="done"));return {d:s.length-open.length,n:s.length,next:open[0]?open[0].title:"",unit:""}}
 function longCard(t){const p=projProg(t);const pct=p.n?Math.round(p.d/p.n*100):0;
   return `<button type="button" class="pj-card" data-nav="project:${t.id}"><span class="pj-top"><b class="pj-t">${esc(t.title)}</b><span class="pj-n">${p.n?`${p.d} من ${p.n}${p.unit?" "+p.unit:""}`:"لسه مفيش خطوات"}</span></span>
     ${p.n?`<span class="pj-bar"><i style="width:${pct}%"></i></span>`:""}${p.next?`<span class="pj-next">الجاي: ${esc(clip(p.next,60))}</span>`:""}</button>`}
-function projectsView(){const all=projItems();const pj=all.filter(t=>!t.course),cs=all.filter(t=>t.course);
+function projectsView(){const all=projItems();const pj=all.filter(t=>!t.course&&!t.book),cs=all.filter(t=>t.course),bk=all.filter(t=>t.book);
   const grp=(title,list,form,ph)=>`<section class="section pj-sec"><h2><span class="h-t">${title}</span><small>${list.length}</small></h2>
-    <div class="pj-list">${list.map(longCard).join("")||`<div class="empty">لسه مفيش.</div>`}</div>
+    <div class="pj-list">${list.map(projBlock).join("")||`<div class="empty">لسه مفيش.</div>`}</div>
     <form class="inline pj-add" data-pjadd="${form}"><input maxlength="160" placeholder="${ph}" aria-label="${ph}"><button class="btn" type="submit">أضف</button></form></section>`;
-  return grp("مشاريع",pj,"proj","مشروع جديد")+grp("كورسات",cs,"course","كورس جديد")}
+  return grp("مشاريع",pj,"proj","مشروع جديد")+grp("كورسات",cs,"course","كورس جديد")+
+    `<section class="section pj-sec"><h2><span class="h-t">كتب</span><small>${bk.length}</small></h2>
+    <div class="pj-list">${bk.map(projBlock).join("")||`<div class="empty">لسه مفيش. ضيف الكتاب اللي بتقراه وعدد صفحاته.</div>`}</div>
+    <form class="inline pj-add bk-add" data-bkadd="1"><input id="bk-title" maxlength="160" placeholder="كتاب جديد" aria-label="اسم الكتاب"><input id="bk-total" type="number" min="1" max="5000" placeholder="كام صفحة" aria-label="عدد الصفحات"><button class="btn" type="submit">أضف</button></form></section>`}
 function projectView(){const t=tasks.find(x=>x.id===projId);if(!t)return `<div class="empty big-empty">المشروع ده مش موجود. <button type="button" class="h-link" data-nav="proj">ارجع للمشاريع</button></div>`;
   const p=projProg(t);const pct=p.n?Math.round(p.d/p.n*100):0;
   let nextBtn="";
@@ -2302,7 +2843,7 @@ function projectView(){const t=tasks.find(x=>x.id===projId);if(!t)return `<div c
       ${p.next?`<div class="pj-nx"><span>الجاي: <b>${esc(p.next)}</b></span>${nextBtn}</div>`:""}
       ${t.notes?`<div class="pj-notes" dir="auto">${esc(t.notes)}</div>`:""}
       <div class="pj-acts"><button type="button" class="h-link" data-edit="${t.id}">${t.notes?"عدّل الهدف والتفاصيل":"اكتب الهدف والتفاصيل"}</button></div></section>
-    ${t.course?`<section class="section pj-course">${courseBlock2(t)}</section>`
+    ${t.book?bookBlock(t):t.course?`<section class="section pj-course">${courseBlock2(t)}</section>`
       :`<section class="section"><h2><span class="h-t">الخطوات</span><small>${open.length}</small></h2>${open.map(s=>row(s,{timer:true,inProj:true})).join("")||`<div class="empty">ضيف أول خطوة تحت.</div>`}
         <form class="inline pj-add" data-addsub="${t.id}"><input id="addsub-${t.id}" maxlength="160" placeholder="خطوة جديدة" aria-label="خطوة جديدة"><button class="btn" type="submit">أضف</button></form></section>
         ${done.length?foldSection("pj:done:"+t.id,`<span class="h-t">خلصوا</span>`,done,{showPlan:false,inProj:true},""):""}`}`}
@@ -2316,6 +2857,549 @@ document.addEventListener("input",e=>{if(e.target.id==="f-done")paintDoneSum()})
 function pmFix(date,time){if(!date||!time)return time;const [h,mi]=time.split(":").map(Number);
   if(h>=1&&h<12){const at=meetAt({date,time}),now=Date.now();if(at<now&&at+12*3600e3>now)return String(h+12).padStart(2,"0")+":"+String(mi).padStart(2,"0")}
   return time}
+NI.search='<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>';
+const sNorm=s=>String(s||"").toLowerCase().replace(/[ً-ْـ]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي");
+let sLast=null;
+function openSearch(){sLast=document.activeElement;closeSide();$("#search-ov").hidden=false;const q=$("#s-q");q.value="";paintSearch();q.focus()}
+function closeSearch(){$("#search-ov").hidden=true;if(sLast&&sLast.focus)sLast.focus()}
+function sSnip(text,q){const t=String(text||"").replace(/\s+/g," ");const i=sNorm(t).indexOf(q);if(i<0)return esc(clip(t,90));
+  const a=Math.max(0,i-30),b=Math.min(t.length,i+q.length+50);
+  return (a?"…":"")+esc(t.slice(a,i))+"<mark>"+esc(t.slice(i,i+q.length))+"</mark>"+esc(t.slice(i+q.length,b))+(b<t.length?"…":"")}
+function searchHits(raw){const q=sNorm(raw.trim());if(q.length<2)return null;const has=s=>sNorm(s).includes(q);const g=[];
+  const ts=tasks.filter(t=>has(t.title)||has(t.notes)||has(t.client)).sort((a,b)=>(a.status==="done")-(b.status==="done")||(b.createdAt||0)-(a.createdAt||0));
+  if(ts.length)g.push(["التسكات",ts.length,ts.slice(0,8).map(t=>{const p=parentOf(t);const sub=[t.status==="done"?"خلص"+(t.doneDate?" "+fmtDay(t.doneDate):""):"",p?"↳ "+p.title:"",t.client||AREA[t.area]||""].filter(Boolean).join(" · ");
+    return {k:"task:"+t.id,title:has(t.title)?sSnip(t.title,q):esc(t.title),sub:has(t.notes)&&!has(t.title)?sSnip(t.notes,q):esc(sub),done:t.status==="done"}})]);
+  const ns=notes.filter(n=>has(kPlain(n))||nLabelsOf(n).some(has));
+  if(ns.length)g.push(["النوتس",ns.length,ns.slice(0,6).map(n=>({k:"note:"+n.id,title:sSnip(kPlain(n),q),sub:n.resolved?"في الأرشيف":"",done:!!n.resolved}))]);
+  const js=Object.values(journal).filter(j=>j&&j.d&&has(j.text)).sort((a,b)=>a.d<b.d?1:-1);
+  if(js.length)g.push(["اليوميات",js.length,js.slice(0,6).map(j=>({k:"journal:"+j.d,title:esc(dayName(j.d))+" "+esc(fmtShort(j.d)),sub:sSnip(jStrip(j.text),q)}))]);
+  const cs=[...new Set(tasks.map(t=>t.client).filter(Boolean))].filter(has);
+  if(cs.length)g.push(["العملاء",cs.length,cs.slice(0,6).map(c=>({k:"client:"+c,title:sSnip(c,q),sub:""}))]);
+  const ms=meetings.filter(m=>has(m.title)).sort((a,b)=>a.date<b.date?1:-1);
+  if(ms.length)g.push(["الميتنجات",ms.length,ms.slice(0,6).map(m=>({k:"meet",title:sSnip(m.title,q),sub:esc(dayName(m.date)+" "+fmtTime(m.time))}))]);
+  return g}
+function paintSearch(){const box=$("#s-res");const g=searchHits($("#s-q").value);
+  if(!g){box.innerHTML=`<p class="s-hint">اكتب حرفين أو أكتر. <kbd>Ctrl</kbd>+<kbd>K</kbd> بيفتح البحث من أي حتة.</p>`;return}
+  if(!g.length){box.innerHTML=`<p class="s-hint">مفيش حاجة فيها «${esc($("#s-q").value.trim())}».</p>`;return}
+  box.innerHTML=g.map(([name,n,items])=>`<div class="s-grp"><div class="s-h">${name}<small>${n>items.length?`أول ${items.length} من ${n}`:n}</small></div>
+    ${items.map(it=>`<button type="button" class="s-it ${it.done?"done":""}" data-sr="${esc(it.k)}"><span class="s-t">${it.title}</span>${it.sub?`<span class="s-s">${it.sub}</span>`:""}</button>`).join("")}</div>`).join("")}
+function goSearch(k){closeSearch();const i=k.indexOf(":"),ty=i<0?k:k.slice(0,i),v=k.slice(i+1);
+  if(ty==="task"){const t=tasks.find(x=>x.id===v);if(t)openEditor(t);return}
+  if(ty==="note"){goView("notes");kOpen(v);return}
+  if(ty==="journal"){goView("journal");jDay=v;jState="";render();return}
+  if(ty==="client"){goView("clients");return}
+  if(ty==="meet"){goView("today");return}}
+document.addEventListener("click",e=>{
+  if(e.target.closest("[data-search]")){e.preventDefault();openSearch();return}
+  const r=e.target.closest("[data-sr]");if(r){goSearch(r.dataset.sr);return}
+  if(e.target.id==="search-ov")closeSearch()});
+document.addEventListener("input",e=>{if(e.target.id==="s-q")paintSearch()});
+document.addEventListener("keydown",e=>{const open=!$("#search-ov").hidden;
+  if((e.ctrlKey||e.metaKey)&&!e.altKey&&(e.key==="k"||e.key==="K"||e.code==="KeyK")){e.preventDefault();open?closeSearch():openSearch();return}
+  if(!open){if(e.key==="/"&&!e.ctrlKey&&!e.metaKey&&!/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)&&!document.activeElement.isContentEditable&&$("#overlay").hidden){e.preventDefault();openSearch()}return}
+  if(e.key==="Escape"){e.preventDefault();e.stopPropagation();closeSearch();return}
+  const items=[...document.querySelectorAll("#s-res [data-sr]")];if(!items.length)return;const at=items.indexOf(document.activeElement);
+  if(e.key==="Enter"&&e.target.id==="s-q"){e.preventDefault();goSearch(items[0].dataset.sr);return}
+  if(e.key==="ArrowDown"){e.preventDefault();items[Math.min(items.length-1,at+1)].focus();return}
+  if(e.key==="ArrowUp"){e.preventDefault();if(at<=0)$("#s-q").focus();else items[at-1].focus()}},true);
+let nFilter="",nNewLabels=[],nPick="",nEdit="",kd=null,kNoClick=0;
+const kOrd=n=>typeof n.order==="number"?n.order:-(n.createdAt||0);
+// masonry: cards go round the columns in order, so the order reads row by row like Keep
+function kLayout(g){const ids=g._ids||[];const cards={};g.querySelectorAll(".kcard").forEach(c=>cards[c.dataset.nid]=c);
+  const w=g.clientWidth,n=kListView?1:w<600?2:Math.max(1,Math.floor((w+16)/256));g.textContent="";const cols=[...Array(n)].map(()=>{const c=document.createElement("div");c.className="kcol";g.appendChild(c);return c});
+  ids.forEach((id,i)=>{if(cards[id])cols[i%n].appendChild(cards[id])})}
+function kAfter(){document.querySelectorAll(".kgrid").forEach(g=>{g._ids=[...g.querySelectorAll(".kcard")].map(c=>c.dataset.nid);kLayout(g)})}
+addEventListener("resize",()=>{if(view==="notes"&&notesMode==="notes"&&!kd)kAfter()});
+function kPlace(x,y){const c=kd.card;c.style.transform="none";const r=c.getBoundingClientRect();c.style.transform=`translate(${x-kd.gx-r.left}px,${y-kd.gy-r.top}px) rotate(1.5deg)`}
+function kStart(){kd.on=true;const r=kd.card.getBoundingClientRect();kd.gx=kd.x0-r.left;kd.gy=kd.y0-r.top;kd.start=[...kd.grid._ids];
+  kd.card.classList.add("kdragging");document.body.classList.add("kdrag-on");try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}kPlace(kd.x,kd.y)}
+function kEnd(save){const k=kd;kd=null;if(!k)return;clearTimeout(k.timer);if(!k.on)return;
+  k.card.classList.remove("kdragging");k.card.style.transform="";document.body.classList.remove("kdrag-on");kNoClick=Date.now();
+  if(!save){k.grid._ids=k.start;kLayout(k.grid);return}
+  const ids=k.grid._ids;if(ids.join()===k.start.join())return;
+  const vals=ids.map(id=>kOrd(notes.find(n=>n.id===id)||{})).sort((a,b)=>a-b);
+  for(let i=1;i<vals.length;i++)if(vals[i]<=vals[i-1])vals[i]=vals[i-1]+1;
+  ids.forEach((id,i)=>{const n=notes.find(x=>x.id===id);if(n&&kOrd(n)!==vals[i]){n.order=vals[i];writeNote(id,{order:vals[i]})}})}
+document.addEventListener("pointerdown",e=>{if(e.button!==0)return;const c=e.target.closest&&e.target.closest(".kcard[data-kdrag]");
+  if(!c||e.target.closest("button,input,textarea,select,a,.lab-pick"))return;const g=c.closest(".kgrid");if(!g||!g._ids)return;
+  kd={id:c.dataset.nid,card:c,grid:g,x0:e.clientX,y0:e.clientY,x:e.clientX,y:e.clientY,on:false,touch:e.pointerType!=="mouse",last:0};
+  if(kd.touch)kd.timer=setTimeout(()=>{if(kd&&!kd.on)kStart()},380)});
+document.addEventListener("pointermove",e=>{if(!kd)return;kd.x=e.clientX;kd.y=e.clientY;const far=Math.hypot(e.clientX-kd.x0,e.clientY-kd.y0);
+  if(!kd.on){if(kd.touch){if(far>8){clearTimeout(kd.timer);kd=null}return}if(far<6)return;kStart()}
+  e.preventDefault();kPlace(e.clientX,e.clientY);
+  if(Date.now()-kd.last<140)return;
+  const t=document.elementFromPoint(e.clientX,e.clientY);const o=t&&t.closest(".kcard");
+  if(o&&o!==kd.card&&o.closest(".kgrid")===kd.grid){const ids=kd.grid._ids,from=ids.indexOf(kd.id),to=ids.indexOf(o.dataset.nid);
+    if(from>-1&&to>-1){ids.splice(from,1);ids.splice(to,0,kd.id);kd.last=Date.now();kLayout(kd.grid);kPlace(e.clientX,e.clientY)}}},{passive:false});
+document.addEventListener("pointerup",()=>kEnd(true));
+document.addEventListener("pointercancel",()=>kEnd(false));
+document.addEventListener("touchmove",e=>{if(kd&&kd.on)e.preventDefault()},{passive:false});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&kd&&kd.on){e.preventDefault();kEnd(false)}},true);
+document.addEventListener("click",e=>{if(Date.now()-kNoClick<350&&e.target.closest(".kgrid")){e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener("click",async e=>{const p=e.target.closest("[data-npin]");if(!p)return;const n=notes.find(x=>x.id===p.dataset.npin);if(!n)return;
+  await writeNote(n.id,{pinned:!n.pinned});toast(n.pinned?"اتشال التثبيت":"اتثبتت فوق")});
+try{nFilter=localStorage.getItem("noteLabel")||""}catch(_){}
+const nLabelsOf=n=>Array.isArray(n.labels)?n.labels.filter(Boolean):[];
+function allLabels(){const c={};notes.forEach(n=>nLabelsOf(n).forEach(l=>c[l]=(c[l]||0)+1));kLabStore.forEach(l=>{if(!(l in c))c[l]=0});return Object.keys(c).sort((a,b)=>c[b]-c[a]||a.localeCompare(b,"ar"))}
+function labHue(s){let h=0;for(const ch of String(s))h=(h*31+ch.codePointAt(0))%360;return [12,35,95,150,190,215,265,320][h%8]}
+const labChip=(l,attrs="",on=null)=>`<button type="button" class="lab-chip" style="--lh:${labHue(l)}" ${on===null?"":`aria-pressed="${on}"`} ${attrs}>${esc(l)}</button>`;
+function labPicker(key,cur){const ls=[...new Set([...allLabels(),...cur])];
+  return `<div class="lab-pick" data-labpick="${esc(key)}">${ls.map(l=>labChip(l,`data-labtog="${esc(key)}|${esc(l)}"`,cur.includes(l))).join("")}
+    <input class="lab-new" data-labnew="${esc(key)}" maxlength="24" placeholder="+ تصنيف جديد" aria-label="تصنيف جديد"></div>`}
+function noteCard2(n){const ls=nLabelsOf(n),ed=nEdit===n.id;
+  return `<article class="kcard ${n.resolved?"done":""}" data-nid="${n.id}" ${n.resolved||ed?"":`data-kdrag="1"`}>
+    ${ed?`<textarea class="k-ed" data-nedit="${n.id}" maxlength="2000" aria-label="عدّل النوت">${esc(n.text)}</textarea>`
+      :`<div class="note-text k-text" ${n.resolved?"":`data-nedit-open="${n.id}" tabindex="0" role="button" aria-label="عدّل النوت"`}>${esc(n.text)}</div>`}
+    ${ls.length?`<div class="k-labs">${ls.map(l=>labChip(l,`data-labfilter="${esc(l)}" title="اعرض «${esc(l)}» بس"`)).join("")}</div>`:""}
+    <div class="note-top"><span class="by ${n.by==="claude"?"claude":""}">${n.by==="claude"?"كلود":"أنا"}</span><span>${esc(fmtShort(n.d||""))}</span>${n.area?`<span>${esc(AREA[n.area]||"")}</span>`:""}${n.resolved?`<span>${n.taskId||tasks.some(t=>t.noteId===n.id&&t.noteKind==="task")?"اتعملت تاسك":"خلصت"}</span>`:""}</div>
+    ${nPick===n.id?labPicker(n.id,ls):""}
+    <div class="note-actions">${n.resolved?`<button class="mini" type="button" data-nreopen="${n.id}">رجّعها</button>`
+      :`<button class="mini" type="button" data-npin="${n.id}" aria-pressed="${!!n.pinned}">${n.pinned?"شيل التثبيت":"ثبّت"}</button><button class="mini" type="button" data-npick="${n.id}" aria-expanded="${nPick===n.id}">تصنيف</button><button class="mini" type="button" data-ntask="${n.id}">اعملها تاسك</button><button class="mini" type="button" data-nresolve="${n.id}">خلصت</button>`}
+      <button class="mini danger" type="button" data-ndel="${n.id}">امسح</button></div></article>`}
+function notesView2(){
+  const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
+  const labs=allLabels();if(nFilter&&nFilter!=="__none"&&!labs.includes(nFilter))nFilter="";
+  const pass=n=>!nFilter||(nFilter==="__none"?!nLabelsOf(n).length:nLabelsOf(n).includes(nFilter));
+  const open=notes.filter(n=>!n.resolved&&pass(n)).sort((a,b)=>kOrd(a)-kOrd(b)),pin=open.filter(n=>n.pinned),rest=open.filter(n=>!n.pinned), closed=notes.filter(n=>n.resolved&&pass(n)).sort((a,b)=>(b.resolvedAt||b.createdAt||0)-(a.resolvedAt||a.createdAt||0)).slice(0,60);
+  const cnt=l=>notes.filter(n=>!n.resolved&&(l==="__none"?!nLabelsOf(n).length:nLabelsOf(n).includes(l))).length;
+  const bar=labs.length?`<div class="lab-bar" role="group" aria-label="التصنيفات"><button type="button" class="lab-chip all" data-labfilter="" aria-pressed="${!nFilter}">الكل</button>${labs.map(l=>labChip(l,`data-labfilter="${esc(l)}"`,nFilter===l).replace("</button>",`<small>${cnt(l)}</small></button>`)).join("")}<button type="button" class="lab-chip none" data-labfilter="__none" aria-pressed="${nFilter==="__none"}">من غير تصنيف<small>${cnt("__none")}</small></button></div>`:"";
+  const shut=!folded.has("notes-done-open");
+  return `<form class="compose" id="note-form">
+      <textarea id="n-text" maxlength="2000" placeholder="اكتب أي حاجة عايز ترجعلها، فكرة أو حاجة تقراها أو تعملها بعدين" aria-label="نوت جديدة"></textarea>
+      ${labPicker("new",nNewLabels)}
+      <div class="compose-row"><select id="n-area" aria-label="القسم">${areaOpts}</select><span style="flex:1"></span><button class="btn primary" type="submit">احفظ النوت</button></div></form>
+    ${bar}
+    <section class="section"><h2>${nFilter==="__none"?"من غير تصنيف":nFilter?esc(nFilter):"النوتس"}<small>${open.length}</small></h2>${open.length?(pin.length?`<div class="k-h">مثبتة</div><div class="kgrid" data-kgrid="pin">${pin.map(noteCard2).join("")}</div>${rest.length?`<div class="k-h">التانية</div>`:""}`:"")+(rest.length?`<div class="kgrid" data-kgrid="rest">${rest.map(noteCard2).join("")}</div>`:""):`<div class="empty">${nFilter?"مفيش نوتس مفتوحة في التصنيف ده.":"مفيش نوتس مفتوحة."}</div>`}</section>
+    ${closed.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="notes-done-open" aria-expanded="${!shut}">${ARR}خلصت</button><small>${closed.length}</small></h2>${shut?"":`<div class="kgrid">${closed.map(noteCard2).join("")}</div>`}</section>`:""}`}
+function setNFilter(v){nFilter=v;try{localStorage.setItem("noteLabel",v)}catch(_){}nNewLabels=v&&v!=="__none"?[v]:[];render()}
+async function setNoteLabels(key,ls){if(key==="new"){nNewLabels=ls;const keep=$("#n-text")?$("#n-text").value:"";render();if($("#n-text"))$("#n-text").value=keep;return}
+  await writeNote(key,{labels:ls})}
+function nKeepText(){return $("#n-text")?$("#n-text").value:""}
+document.addEventListener("click",async e=>{
+  const f=e.target.closest("[data-labfilter]");if(f){setNFilter(f.dataset.labfilter);return}
+  const p=e.target.closest("[data-npick]");if(p){nPick=nPick===p.dataset.npick?"":p.dataset.npick;const keep=nKeepText();render();if($("#n-text"))$("#n-text").value=keep;
+    const i=document.querySelector(`[data-labnew="${nPick}"]`);if(i)i.focus();return}
+  const t=e.target.closest("[data-labtog]");if(t){const s=t.dataset.labtog,i=s.indexOf("|"),key=s.slice(0,i),l=s.slice(i+1);
+    const cur=key==="new"?[...nNewLabels]:nLabelsOf(notes.find(x=>x.id===key)||{});
+    await setNoteLabels(key,cur.includes(l)?cur.filter(x=>x!==l):[...cur,l]);return}
+  const o=e.target.closest("[data-nedit-open]");if(o){nEdit=o.dataset.neditOpen;const keep=nKeepText();render();if($("#n-text"))$("#n-text").value=keep;
+    const ta=document.querySelector(`[data-nedit="${nEdit}"]`);if(ta){ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);ta.style.height=ta.scrollHeight+"px"}}});
+async function nSaveEdit(ta){const id=ta.dataset.nedit,v=ta.value.trim();nEdit="";const n=notes.find(x=>x.id===id);
+  if(n&&v&&v!==n.text){await writeNote(id,{text:v});toast("اتعدلت")}else render()}
+document.addEventListener("focusout",e=>{const ta=e.target.closest&&e.target.closest("[data-nedit]");if(ta&&nEdit===ta.dataset.nedit)nSaveEdit(ta)});
+document.addEventListener("keydown",async e=>{const el=e.target;
+  if(el.dataset&&el.dataset.neditOpen!==undefined&&(e.key==="Enter"||e.key===" ")){e.preventDefault();el.click();return}
+  if(el.dataset&&el.dataset.nedit){if(e.key==="Escape"){e.preventDefault();e.stopPropagation();nEdit="";render();return}
+    if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();el.blur();return}}
+  if(el.dataset&&el.dataset.labnew&&e.key==="Enter"){e.preventDefault();const l=el.value.trim().replace(/\s+/g," ").slice(0,24);if(!l)return;const key=el.dataset.labnew;
+    const cur=key==="new"?[...nNewLabels]:nLabelsOf(notes.find(x=>x.id===key)||{});if(!cur.includes(l))await setNoteLabels(key,[...cur,l]);
+    const i=document.querySelector(`[data-labnew="${key}"]`);if(i)i.focus()}});
+document.addEventListener("input",e=>{if(e.target.dataset&&e.target.dataset.nedit){e.target.style.height="auto";e.target.style.height=e.target.scrollHeight+"px"}});
+function bookPace(b){const since=daysAgo(13);const log=(b.log||[]).filter(x=>x.d>=since);
+  const pages=log.reduce((a,x)=>a+Math.max(0,(x.to||0)-(x.from||0)),0);const days=new Set(log.map(x=>x.d)).size;
+  return {pages,days,perDay:days?pages/14:0}}
+function bookBlock(t){const b=t.book||{},total=b.total||0,page=Math.min(b.page||0,total),left=Math.max(0,total-page);
+  const pc=bookPace(b),eta=pc.perDay>0&&left?Math.ceil(left/pc.perDay):0;
+  const on=t.planDate===today();
+  const byDay={};(b.log||[]).forEach(x=>{const r=byDay[x.d]||(byDay[x.d]={from:x.from,to:x.to});r.from=Math.min(r.from,x.from);r.to=Math.max(r.to,x.to)});
+  const days=Object.keys(byDay).sort().reverse();const shut=!folded.has("bk-log:"+t.id);
+  return `<section class="section bk"><div class="bk-now">
+      ${b.author?`<div class="bk-author">${esc(b.author)}</div>`:""}
+      <form class="bk-log" data-bklog="${t.id}"><label for="bk-page-${t.id}">وصلت لصفحة</label><input id="bk-page-${t.id}" type="number" min="0" max="${total||5000}" value="${page||""}" placeholder="${page}" inputmode="numeric"><span class="bk-of">من ${total}</span><button class="btn primary" type="submit">سجّل</button>
+        <button type="button" class="c-today ${on?"on":""}" data-plan="${t.id}" aria-pressed="${on}">${on?"✓ النهارده":"+ النهارده"}</button></form>
+      <div class="bk-stats">${left?`<span>فاضل <b>${left}</b> صفحة</span>`:`<span><b>وصلت لآخر الكتاب.</b></span>`}
+        ${pc.pages?`<span>آخر أسبوعين: ${pc.pages} صفحة في ${pc.days===1?"يوم واحد":pc.days===2?"يومين":pc.days+(pc.days<=10?" أيام":" يوم")}</span>`:""}
+        ${eta?`<span>بالمعدل ده هتخلصه في حوالي ${eta} ${eta===1?"يوم":eta===2?"يومين":eta<=10?"أيام":"يوم"}</span>`:""}</div>
+      ${!left&&total&&t.status!=="done"?`<div class="next"><button class="mini" type="button" data-toggle="${t.id}">علّم الكتاب خلص</button></div>`:""}
+      <div class="bk-set"><label>عدد الصفحات<input type="number" min="1" max="5000" value="${total}" data-bktotal="${t.id}"></label><label>الكاتب<input maxlength="60" value="${esc(b.author||"")}" data-bkauthor="${t.id}" placeholder="اختياري"></label></div></div></section>
+    ${days.length?`<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="bk-log:${t.id}" aria-expanded="${!shut}">${ARR}أيام القراية</button><small>${days.length}</small></h2>
+      ${shut?"":`<div class="bk-days">${days.map(d=>`<div class="bk-day"><span>${esc(dayName(d))} ${esc(fmtShort(d))}</span><span>ص ${byDay[d].from} ← ${byDay[d].to} · <b>${byDay[d].to-byDay[d].from}</b> صفحة</span></div>`).join("")}</div>`}</section>`:""}`}
+async function setBook(id,fn){const t=tasks.find(x=>x.id===id);if(!t||!t.book)return;const b=JSON.parse(JSON.stringify(t.book));fn(b);await write(id,{book:b})}
+document.addEventListener("submit",async e=>{const f=e.target;if(!f.dataset)return;
+  if(f.dataset.bkadd){e.preventDefault();e.stopPropagation();const title=$("#bk-title").value.trim(),total=Math.min(5000,Math.max(0,parseInt($("#bk-total").value)||0));
+    if(!title){$("#bk-title").focus();return}if(!total){toast("اكتب عدد صفحات الكتاب");$("#bk-total").focus();return}
+    const id="t"+sid();await write(id,{title,area:"study",kind:"",pri:"blue",client:"",stage:"",due:"",notes:"",status:"open",planDate:"",createdAt:Date.now(),doneAt:null,doneDate:null,book:{total,page:0,author:"",log:[]}},true);
+    goView("project:"+id);return}
+  if(f.dataset.bklog){e.preventDefault();const id=f.dataset.bklog,t=tasks.find(x=>x.id===id);if(!t)return;const inp=f.querySelector("input");
+    const total=t.book.total||5000,to=Math.min(total,Math.max(0,parseInt(inp.value)||0)),from=t.book.page||0;
+    if(to===from){toast("ده نفس المكان اللي كنت فيه");return}
+    await setBook(id,b=>{b.page=to;if(to>from)(b.log=b.log||[]).push({d:today(),from,to})});
+    toast(to>from?`اتسجل: ${to-from} صفحة`+(to>=total?" · وصلت لآخر الكتاب":""):"رجعت لصفحة "+to)}},true);
+document.addEventListener("change",async e=>{const el=e.target;if(!el.dataset)return;
+  if(el.dataset.bktotal){const v=Math.min(5000,Math.max(1,parseInt(el.value)||0));if(v)await setBook(el.dataset.bktotal,b=>{b.total=v})}
+  if(el.dataset.bkauthor!==undefined){const v=el.value.trim().slice(0,60);await setBook(el.dataset.bkauthor,b=>{b.author=v})}});
+let team=[],teamEdit="",teamCopyAt={},tmNewOpen=false;
+NI.team='<svg viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19.5c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="16.8" cy="9.5" r="2.4"/><path d="M15.8 14.6c2.4-.2 4.2 1.3 4.7 4.4"/></svg>';
+const personOf=t=>t&&t.assignee?team.find(p=>p.id===t.assignee):null;
+const SHEET_COLS=["Video Name","Client","Video Link","Start Date","Deadline","Task Week","Review Link","Video Length","Final Video","Status Video","Price","Payment","Notes"];
+function sheetRows(p){const m=today().slice(0,8)+"01";
+  const list=tasks.filter(t=>t.assignee===p.id&&!t.parentId&&(t.status!=="done"||(t.doneDate||"")>=m)).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  const wk=d=>{const x=new Date(d+"T12:00");return "W"+Math.ceil(x.getDate()/7)};
+  return list.map(t=>{const start=ymd(new Date(t.createdAt||Date.now()));
+    return [t.title,t.client||"","",start,t.due||"",wk(t.due||start),"","","",t.status==="done"?"Done":"In Progress","","",(t.notes||"").replace(/\s+/g," ").slice(0,200)].map(x=>String(x).replace(/\t/g," ")).join("\t")}).join("\n")}
+async function saveTeam(){try{await db.collection("config").doc("team").set({people:team});toast("اتحفظ ✓")}catch(_){toast("ماتحفظش، جرّب تاني")}}
+function teamCard(p){const m=today().slice(0,8)+"01";
+  const open=sortTasks(tasks.filter(t=>t.assignee===p.id&&isOpen(t))),doneM=tasks.filter(t=>t.assignee===p.id&&t.status==="done"&&(t.doneDate||"")>=m);
+  const ed=teamEdit===p.id;
+  return `<section class="section tm-card"><h2><span class="h-t">${esc(p.name)}</span><small>${open.length} مفتوح · ${doneM.length} خلص الشهر ده</small></h2>
+    ${ed?`<form class="tm-form" data-tmsave="${p.id}"><label>الاسم<input type="text" id="tm-name-${p.id}" maxlength="40" value="${esc(p.name)}" required></label>
+        <label>لينك الشيت<input type="url" id="tm-sheet-${p.id}" maxlength="300" value="${esc(p.sheet||"")}" placeholder="https://docs.google.com/spreadsheets/…" dir="ltr"></label>
+        <div class="tm-acts"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" data-tmedit="">إلغاء</button><span style="flex:1"></span><button class="mini danger" type="button" data-tmdel="${p.id}">شيله من الفريق</button></div></form>`:""}
+    ${open.map(t=>row(t,{timer:true})).join("")||`<div class="empty">مفيش فيديوهات مفتوحة معاه.</div>`}
+    <form class="inline pj-add" data-tmadd="${p.id}"><input type="text" maxlength="160" placeholder="فيديو جديد لـ${esc(p.name)}" aria-label="فيديو جديد لـ${esc(p.name)}"><button class="btn" type="submit">أضف</button></form>
+    <div class="tm-foot">${p.sheet?`<a class="h-link" href="${esc(p.sheet)}" target="_blank" rel="noopener">افتح الشيت ↗</a>`:`<span class="note">مفيش لينك شيت.</span>`}
+      <button type="button" class="h-link" data-tmcopy="${p.id}">${teamCopyAt[p.id]&&Date.now()-teamCopyAt[p.id]<4000?"✓ اتنسخ":"انسخ فيديوهات الشهر للشيت"}</button>
+      ${ed?"":`<button type="button" class="h-link" data-tmedit="${p.id}">تعديل</button>`}</div></section>`}
+function teamView(){
+  return (team.length?team.map(teamCard).join(""):`<div class="empty big-empty">ضيف اللي بيشتغلوا معاك، وبعدين ادّي أي فيديو لحد منهم من نافذة التاسك («مع مين») أو من هنا.</div>`)+
+    (team.length&&!tmNewOpen?`<button type="button" class="btn tm-open" data-tmnew="1">+ حد جديد في الفريق</button>`:
+    `<form class="section tm-new" id="tm-new"><h2><span class="h-t">حد جديد في الفريق</span></h2><div class="tm-form">
+      <label>الاسم<input type="text" id="tm-new-name" maxlength="40" required placeholder="مثلاً: معاذ"></label>
+      <label>لينك الشيت (اختياري)<input type="url" id="tm-new-sheet" maxlength="300" placeholder="https://docs.google.com/spreadsheets/…" dir="ltr"></label>
+      <div class="tm-acts"><button class="btn primary" type="submit">أضف</button></div></div>
+      <p class="note tm-note">«انسخ للشيت» بينسخ فيديوهات الشهر بنفس ترتيب أعمدة الشيت (${SHEET_COLS.length} عمود، من Video Name لحد Notes). افتح تاب الشهر في الشيت، اقف على أول خانة فاضية في Video Name، والزق.</p></form>`)}
+document.addEventListener("click",async e=>{
+  if(e.target.closest("[data-tmnew]")){tmNewOpen=true;render();const n=$("#tm-new-name");if(n)n.focus();return}
+  const ed=e.target.closest("[data-tmedit]");if(ed){teamEdit=ed.dataset.tmedit;render();const f=teamEdit&&document.getElementById("tm-name-"+teamEdit);if(f)f.focus();return}
+  const d=e.target.closest("[data-tmdel]");if(d){if(d.dataset.sure!=="1"){d.dataset.sure="1";d.textContent="متأكد؟ تسكاته هتفضل بس من غير اسم";setTimeout(()=>{d.dataset.sure="";d.textContent="شيله من الفريق"},3000);return}
+    const id=d.dataset.tmdel;team=team.filter(p=>p.id!==id);teamEdit="";await saveTeam();
+    for(const t of tasks.filter(x=>x.assignee===id))await write(t.id,{assignee:""});render();return}
+  const c=e.target.closest("[data-tmcopy]");if(c){const p=team.find(x=>x.id===c.dataset.tmcopy);if(!p)return;const txt=sheetRows(p);
+    if(!txt){toast("مفيش فيديوهات الشهر ده معاه");return}
+    try{await navigator.clipboard.writeText(txt);teamCopyAt[p.id]=Date.now();render();toast(`اتنسخ ${txt.split("\n").length} فيديو. الزقهم في الشيت`)}catch(_){toast("مقدرتش أنسخ، جرّب تاني")}}});
+document.addEventListener("submit",async e=>{const f=e.target;
+  if(f.id==="tm-new"){e.preventDefault();const name=$("#tm-new-name").value.trim().slice(0,40);if(!name)return;
+    if(team.some(p=>p.name===name)){toast("الاسم ده موجود");return}
+    team=[...team,{id:"p"+sid(),name,sheet:$("#tm-new-sheet").value.trim()}];tmNewOpen=false;await saveTeam();render();return}
+  if(f.dataset&&f.dataset.tmsave){e.preventDefault();const id=f.dataset.tmsave,name=$("#tm-name-"+id).value.trim().slice(0,40);if(!name)return;
+    team=team.map(p=>p.id===id?{...p,name,sheet:$("#tm-sheet-"+id).value.trim()}:p);teamEdit="";await saveTeam();render();return}
+  if(f.dataset&&f.dataset.tmadd){e.preventDefault();const inp=f.querySelector("input"),title=inp.value.trim();if(!title)return;const p=team.find(x=>x.id===f.dataset.tmadd);
+    await write("t"+sid(),{title,area:"work",kind:"",pri:"blue",client:findClient(title)||"",stage:"",due:"",notes:"",status:"open",planDate:"",createdAt:Date.now(),doneAt:null,doneDate:null,assignee:f.dataset.tmadd},true);
+    toast(`اتضاف لـ${p?p.name:""}`);const n=document.querySelector(`[data-tmadd="${f.dataset.tmadd}"] input`);if(n)n.focus()}});
+const KC=[["","من غير لون"],["coral","أحمر"],["peach","برتقالي"],["sand","أصفر"],["mint","أخضر"],["sage","أخضر مزرق"],["fog","لبني"],["storm","أزرق"],["dusk","بنفسجي"],["blossom","وردي"],["clay","بني"],["chalk","رمادي"]];
+const KI={
+  pin:'<svg viewBox="0 0 24 24"><path d="M9 3.5h6l-1 5.5 3.5 3.5v1.5h-11V12.5L10 9z"/><path d="M12 14v6.5"/></svg>',
+  pinOn:'<svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 3.5h6l-1 5.5 3.5 3.5v1.5h-11V12.5L10 9z"/><path d="M12 14v6.5"/></svg>',
+  color:'<svg viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.2 0 1.8-.8 1.8-1.7 0-1-.8-1.4-.8-2.4 0-1.1.9-1.9 2-1.9h1.8a3.7 3.7 0 0 0 3.7-3.7C20.5 6.8 16.7 3.5 12 3.5z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10" cy="7.5" r="1.2" fill="currentColor"/><circle cx="14.5" cy="7.5" r="1.2" fill="currentColor"/></svg>',
+  label:'<svg viewBox="0 0 24 24"><path d="M3.5 6.5v5l8.8 8.8a1.6 1.6 0 0 0 2.3 0l5.2-5.2a1.6 1.6 0 0 0 0-2.3L11 4h-5A2.5 2.5 0 0 0 3.5 6.5z"/><circle cx="8" cy="8.5" r="1.3"/></svg>',
+  task:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12.2 2.4 2.4 4.6-5"/></svg>',
+  list:'<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="m7.5 12 3 3 6-6.5"/></svg>',
+  arch:'<svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="4.5" rx="1"/><path d="M5 8.5v10a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5v-10M12 11.5v5M9.5 14l2.5 2.5 2.5-2.5"/></svg>',
+  unarch:'<svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="4.5" rx="1"/><path d="M5 8.5v10a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5v-10M12 17v-5M9.5 14.5 12 12l2.5 2.5"/></svg>',
+  more:'<svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="18.5" r="1.6" fill="currentColor" stroke="none"/></svg>',
+  bulb:'<svg viewBox="0 0 24 24"><path d="M9 18.5h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><path d="m6 12.5 4 4 8-9"/></svg>'};
+let kc={open:false,title:"",text:"",list:false,items:[],color:"",pinned:false,area:""},kmId="",kmD=null,kMenu=null;
+const kPlain=n=>[n.title||"",n.text||"",...(n.items||[]).map(i=>i.t)].filter(Boolean).join("\n");
+const kIc=(name,attrs,label,pressed)=>`<button type="button" class="k-ic" ${attrs} aria-label="${label}" title="${label}"${pressed===undefined?"":` aria-pressed="${pressed}"`}>${KI[name]}</button>`;
+function kTools(n,scope){const id=n?n.id:"kc",arch=n&&n.resolved;
+  return `<div class="k-tools">${kIc("color",`data-kmenu="color|${id}|${scope}"`,"لون النوت")}${kIc("label",`data-kmenu="label|${id}|${scope}"`,"تصنيف")}
+    ${n?kIc("task",`data-ntask="${id}"`,"اعملها تاسك")+(arch?kIc("unarch",`data-nreopen="${id}"`,"رجّعها من الأرشيف"):kIc("arch",`data-nresolve="${id}"`,"أرشفها")):kIc("list",`data-kclist="1"`,kc.list?"شيل المربعات":"لستة بمربعات",kc.list)}
+    ${kIc("more",`data-kmenu="more|${id}|${scope}"`,"أكتر")}</div>`}
+function kPop(n,scope){if(!kMenu||kMenu.scope!==scope||kMenu.id!==(n?n.id:"kc"))return "";const id=kMenu.id,cur=n?(n.color||""):kc.color;
+  if(kMenu.kind==="color")return `<div class="k-pop k-colors" role="group" aria-label="لون النوت">${KC.map(([c,nm])=>`<button type="button" class="k-sw" data-c="${c}" data-kcolor="${id}|${c}" aria-label="${nm}" title="${nm}" aria-pressed="${cur===c}">${cur===c?KI.check:""}</button>`).join("")}</div>`;
+  if(kMenu.kind==="label")return `<div class="k-pop k-labs-pop"><div class="k-pop-h">صنّف النوت</div>${labPicker(n?n.id:"new",n?nLabelsOf(n):nNewLabels)}</div>`;
+  const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,nm])=>`<option value="${k}" ${(n?n.area:kc.area)===k?"selected":""}>${nm}</option>`).join("");
+  return `<div class="k-pop k-menu" role="menu">${n?`<button type="button" class="k-mi danger" data-ndel="${id}">امسح</button><button type="button" class="k-mi" data-kcopy="${id}">اعمل نسخة</button>
+      <button type="button" class="k-mi" data-ktoggle="${id}">${n.items?"شيل المربعات":"ورّي المربعات"}</button>`:""}
+    <label class="k-mi k-area">القسم <select data-karea="${id}" aria-label="القسم">${areaOpts}</select></label></div>`}
+function kListEd(scope,items){const open=items.map((it,i)=>[it,i]).filter(([it])=>!it.done),done=items.map((it,i)=>[it,i]).filter(([it])=>it.done);
+  const row=([it,i])=>`<div class="kl-row ${it.done?"on":""}"><button type="button" class="k-cb" data-klcb="${scope}|${i}" aria-pressed="${!!it.done}" aria-label="${it.done?"شيل العلامة":"علّم"}">${it.done?KI.check:""}</button><input type="text" class="kl-in" data-kli="${scope}|${i}" value="${esc(it.t)}" maxlength="300" aria-label="عنصر"><button type="button" class="kl-x" data-klx="${scope}|${i}" aria-label="امسح العنصر">×</button></div>`;
+  return `<div class="k-list">${open.map(row).join("")}<div class="kl-row kl-add"><span class="kl-plus">+</span><input type="text" class="kl-in" data-klnew="${scope}" maxlength="300" placeholder="عنصر جديد" aria-label="عنصر جديد"></div>
+    ${done.length?`<div class="kl-done-h">${done.length} ${done.length===1?"عنصر متعلّم":"عناصر متعلّمة"}</div>${done.map(row).join("")}`:""}</div>`}
+function kComposer(){if(!kc.open)return `<div class="kcomp" id="kc"><button type="button" class="kc-open" data-kcopen="text">اكتب نوت…</button>${kIc("list",`data-kcopen="list"`,"لستة جديدة")}</div>`;
+  return `<div class="kcomp on" id="kc" data-c="${kc.color}">
+    <div class="k-top"><input type="text" id="kc-title" class="k-title-in" maxlength="120" placeholder="العنوان" value="${esc(kc.title)}" aria-label="العنوان">${kIc(kc.pinned?"pinOn":"pin",`data-kcpin="1"`,kc.pinned?"شيل التثبيت":"ثبّت",kc.pinned)}</div>
+    ${kc.list?kListEd("kc",kc.items):`<textarea id="n-text" class="k-body-in" maxlength="2000" placeholder="اكتب نوت…" aria-label="النوت">${esc(kc.text)}</textarea>`}
+    ${nNewLabels.length?`<div class="k-labs">${nNewLabels.map(l=>labChip(l,`data-labtog="new|${esc(l)}" title="شيل «${esc(l)}»"`)).join("")}</div>`:""}
+    <div class="k-bar">${kTools(null,"kc")}<button type="button" class="k-close" data-kcclose="1">قفل</button></div>${kPop(null,"kc")}</div>`}
+function noteCard3(n){const its=n.items||[],open=its.filter(i=>!i.done),done=its.length-open.length,ls=nLabelsOf(n),menu=kMenu&&kMenu.scope==="card"&&kMenu.id===n.id;
+  return `<article class="kcard ${menu?"menu-on":""}" data-nid="${n.id}" data-c="${n.color||""}" ${n.resolved?"":`data-kdrag="1"`} tabindex="0" aria-label="${esc(clip(kPlain(n)||"نوت فاضية",60))}">
+    ${n.resolved?"":kIc(n.pinned?"pinOn":"pin",`data-npin="${n.id}"`,n.pinned?"شيل التثبيت":"ثبّت",!!n.pinned).replace('class="k-ic"','class="k-ic k-pin"')}
+    ${n.title?`<div class="k-title">${esc(n.title)}</div>`:""}
+    ${n.items?`<div class="k-cl">${open.slice(0,10).map(i=>`<div class="k-it"><button type="button" class="k-cb" data-kcheck="${n.id}|${i.id}" aria-pressed="false" aria-label="علّم: ${esc(i.t)}"></button><span>${esc(i.t)}</span></div>`).join("")}${open.length>10?`<div class="k-more">+ ${open.length-10}</div>`:""}${done?`<div class="k-more">+ ${done} ${done===1?"عنصر متعلّم":"عناصر متعلّمة"}</div>`:""}</div>`
+      :n.text?`<div class="k-text">${esc(n.text)}</div>`:(n.title?"":`<div class="k-text k-empty">نوت فاضية</div>`)}
+    ${(()=>{const tk=n.resolved&&(n.taskId||tasks.some(t=>t.noteId===n.id&&t.noteKind==="task"));return n.by==="claude"||ls.length||tk?`<div class="k-labs">${tk?`<span class="k-by">اتعملت تاسك</span>`:""}${n.by==="claude"?`<span class="k-by">كلود</span>`:""}${ls.map(l=>labChip(l,`data-labfilter="${esc(l)}" title="اعرض «${esc(l)}» بس"`)).join("")}</div>`:""})()}
+    ${kTools(n,"card")}${menu?kPop(n,"card"):""}</article>`}
+function notesView3(){document.body.classList.add("v-keep");return `<div class="kwrap">${knav()}<div class="kmain">${notesView3in()}</div></div>`}
+function notesView3in(){if(kmId&&!notes.find(n=>n.id===kmId))setTimeout(()=>kClose(false));const labs=allLabels();if(nFilter&&!["__none","__arch","__trash"].includes(nFilter)&&!labs.includes(nFilter))nFilter="";
+  const arch=nFilter==="__arch",pass=n=>!nFilter||arch||(nFilter==="__none"?!nLabelsOf(n).length:nLabelsOf(n).includes(nFilter));
+  const list=notes.filter(n=>(arch?!!n.resolved:!n.resolved)&&pass(n)).sort(arch?(a,b)=>(b.resolvedAt||b.createdAt||0)-(a.resolvedAt||a.createdAt||0):(a,b)=>kOrd(a)-kOrd(b));
+  const pin=arch?[]:list.filter(n=>n.pinned),rest=arch?list:list.filter(n=>!n.pinned),nArch=notes.filter(n=>n.resolved).length;
+  const chip=(v,ic,name,cnt)=>`<button type="button" class="kb-chip" data-labfilter="${esc(v)}" aria-pressed="${nFilter===v}">${KI[ic]}<span>${esc(name)}</span>${cnt?`<small>${cnt}</small>`:""}</button>`;
+  const bar=`<div class="kbar" role="group" aria-label="النوتس والتصنيفات">${chip("","bulb","النوتس")}${labs.map(l=>chip(l,"label",l,notes.filter(n=>!n.resolved&&nLabelsOf(n).includes(l)).length)).join("")}${labs.length?chip("__none","label","من غير تصنيف"):""}${chip("__arch","arch","الأرشيف",nArch)}${chip("__trash","trash","المحذوفات")}<button type="button" class="kb-chip" data-klabels="1">${KI.edit}<span>عدّل التصنيفات</span></button></div>`;
+  const viewBtn=`<div class="k-viewrow">${kIc(kListView?"grid":"rows",`data-klayout="1"`,kListView?"عرض الشبكة":"عرض اللستة")}</div>`;
+  if(nFilter==="__trash")return bar+viewBtn+kTrashView();
+  const grid=(key,arr)=>`<div class="kgrid${kListView?" klist":""}" data-kgrid="${key}">${arr.map(noteCard3).join("")}</div>`;
+  const empty=`<div class="k-emptyp">${KI[arch?"arch":"bulb"]}<p>${arch?"النوتس اللي بتأرشفها هتظهر هنا":nFilter?"مفيش نوتس في التصنيف ده":"النوتس اللي بتكتبها هتظهر هنا"}</p></div>`;
+  return `<div class="kpage">${bar}${viewBtn}${arch?"":kComposer()}
+    ${list.length?(pin.length?`<div class="k-h">مثبتة</div>${grid("pin",pin)}${rest.length?`<div class="k-h">التانية</div>`:""}`:"")+(rest.length?grid(arch?"arch":"rest",rest):""):empty}</div>`}
+function kRender(){const keep=document.activeElement&&document.activeElement.id;render();if(keep){const el=document.getElementById(keep);if(el){el.focus();if(el.setSelectionRange&&el.value!=null)el.setSelectionRange(el.value.length,el.value.length)}}kGrow()}
+function kGrow(){document.querySelectorAll(".k-body-in").forEach(t=>{t.style.height="auto";t.style.height=Math.min(t.scrollHeight,window.innerHeight*.55)+"px"})}
+// composer
+function kcOpen(list){kc={open:true,title:"",text:"",list:!!list,items:[],color:"",pinned:false,area:""};nNewLabels=nFilter&&!nFilter.startsWith("__")?[nFilter]:[];kMenu=null;render();
+  const f=list?document.querySelector('[data-klnew="kc"]'):$("#n-text");if(f)f.focus()}
+async function kcClose(){if(!kc.open)return;const d=kc;kc={...kc,open:false};kMenu=null;
+  const items=d.list?d.items.filter(i=>i.t.trim()):null;const has=d.title.trim()||(d.list?items.length:d.text.trim());
+  if(has){const data={title:d.title.trim(),text:d.list?"":d.text.trim(),...(d.list?{items}:{}),color:d.color,pinned:d.pinned,area:d.area,labels:[...nNewLabels],order:-Date.now(),review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()};
+    nNewLabels=nFilter&&!nFilter.startsWith("__")?[nFilter]:[];await writeNote("n"+sid(),data,true);toast("النوت اتحفظت")}
+  else render()}
+// the note window
+function kOpen(id){const n=notes.find(x=>x.id===id);if(!n)return;kmId=id;kmD={title:n.title||"",text:n.text||"",items:n.items?JSON.parse(JSON.stringify(n.items)):null};kMenu=null;kmPaint();
+  $("#kmodal").hidden=false;const f=n.items?document.querySelector('[data-klnew="km"]'):$("#km-text");if(f){f.focus();if(f.setSelectionRange)f.setSelectionRange(f.value.length,f.value.length)}}
+function kEdited(n){const t=n.editedAt||n.createdAt;if(!t)return "";const d=new Date(t),ds=ymd(d);
+  return (n.editedAt?"اتعدلت ":"اتعملت ")+(ds===today()?"الساعة "+fmtTime(String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")):fmtShort(ds))}
+function kmPaint(){const n=notes.find(x=>x.id===kmId);if(!n||!kmD)return;const keep=document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#kmodal")?(document.activeElement.id||document.activeElement.dataset.kli||document.activeElement.dataset.klnew):"";
+  $("#kmodal").innerHTML=`<div class="kmod" data-c="${n.color||""}" role="dialog" aria-modal="true" aria-label="النوت">
+    <div class="k-top"><input type="text" id="km-title" class="k-title-in" maxlength="120" placeholder="العنوان" value="${esc(kmD.title)}" aria-label="العنوان">${n.resolved?"":kIc(n.pinned?"pinOn":"pin",`data-npin="${n.id}"`,n.pinned?"شيل التثبيت":"ثبّت",!!n.pinned)}</div>
+    ${kmD.items?kListEd("km",kmD.items):`<textarea id="km-text" class="k-body-in" maxlength="2000" placeholder="اكتب نوت…" aria-label="النوت">${esc(kmD.text)}</textarea>`}
+    ${n.by==="claude"||nLabelsOf(n).length?`<div class="k-labs">${n.by==="claude"?`<span class="k-by">كلود</span>`:""}${nLabelsOf(n).map(l=>labChip(l,`data-labtog="${n.id}|${esc(l)}" title="شيل «${esc(l)}»"`)).join("")}</div>`:""}
+    <div class="km-meta">${esc(kEdited(n))}${n.area&&AREA[n.area]?` · ${esc(AREA[n.area])}`:""}</div>
+    <div class="k-bar">${kTools(n,"km")}<button type="button" class="k-close" data-kmclose="1">قفل</button></div>${kPop(n,"km")}</div>`;
+  kGrow();if(keep){const el=document.getElementById(keep)||document.querySelector(`#kmodal [data-kli="${keep}"],#kmodal [data-klnew="${keep}"]`);if(el)el.focus()}}
+async function kClose(save=true){if(!kmId)return;const id=kmId,d=kmD;kmId="";kmD=null;kMenu=null;$("#kmodal").hidden=true;$("#kmodal").innerHTML="";
+  const n=notes.find(x=>x.id===id);if(!save||!n){render();return}
+  const ch={};if(d.title.trim()!==(n.title||""))ch.title=d.title.trim();
+  if(d.items){const it=d.items.filter(i=>i.t.trim());if(JSON.stringify(it)!==JSON.stringify(n.items||[]))ch.items=it}
+  else if(d.text.trim()!==(n.text||""))ch.text=d.text.trim();
+  if(Object.keys(ch).length){ch.editedAt=Date.now();await writeNote(id,ch)}else render();
+  const c=document.querySelector(`.kcard[data-nid="${id}"]`);if(c)c.focus()}
+// list editing (composer or window)
+const kItems=s=>s==="kc"?kc.items:kmD&&kmD.items;
+const kRepaint=s=>s==="kc"?kRender():kmPaint();
+function kItemFocus(s,i){const el=document.querySelector(`[data-kli="${s}|${i}"]`);if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length)}}
+document.addEventListener("input",e=>{const el=e.target;
+  if(el.id==="kc-title")kc.title=el.value;else if(el.id==="n-text"&&kc.open){kc.text=el.value;kGrow()}
+  else if(el.id==="km-title"&&kmD)kmD.title=el.value;else if(el.id==="km-text"&&kmD){kmD.text=el.value;kGrow()}
+  else if(el.dataset&&el.dataset.kli){const [s,i]=el.dataset.kli.split("|");const it=kItems(s);if(it&&it[+i])it[+i].t=el.value}});
+document.addEventListener("keydown",e=>{const el=e.target;if(!el.dataset)return;
+  if(el.dataset.klnew&&e.key==="Enter"){e.preventDefault();const s=el.dataset.klnew,it=kItems(s);if(!it||!el.value.trim())return;it.push({id:"i"+sid(),t:el.value.trim(),done:false});kRepaint(s);const n=document.querySelector(`[data-klnew="${s}"]`);if(n)n.focus();return}
+  if(el.dataset.kli){const [s,i]=el.dataset.kli.split("|"),it=kItems(s);if(!it)return;
+    if(e.key==="Enter"){e.preventDefault();it.splice(+i+1,0,{id:"i"+sid(),t:"",done:false});kRepaint(s);kItemFocus(s,+i+1);return}
+    if(e.key==="Backspace"&&!el.value){e.preventDefault();it.splice(+i,1);kRepaint(s);if(+i>0)kItemFocus(s,+i-1);else{const n=document.querySelector(`[data-klnew="${s}"]`);if(n)n.focus()}return}}
+  if((e.key==="Enter")&&(e.ctrlKey||e.metaKey)&&(el.closest&&(el.closest("#kc")||el.closest("#kmodal")))){e.preventDefault();el.closest("#kc")?kcClose():kClose()}});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;
+  if(kMenu){e.preventDefault();e.stopPropagation();kMenu=null;kmId?kmPaint():kRender();return}
+  if(kmId){e.preventDefault();e.stopPropagation();kClose();return}
+  if(kc.open&&document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#kc")){e.preventDefault();e.stopPropagation();kcClose()}},true);
+// clicks
+document.addEventListener("pointerdown",e=>{if(kc.open&&$("#kmodal").hidden&&!e.target.closest("#kc")&&!e.target.closest(".k-pop")&&!e.target.closest(".toast,#toast")&&$("#kc"))kcClose()},true);
+document.addEventListener("click",async e=>{const t=e.target;
+  if(t.id==="kmodal"){kClose();return}
+  const ko=t.closest("[data-kcopen]");if(ko){kcOpen(ko.dataset.kcopen==="list");return}
+  if(t.closest("[data-kcclose]")){kcClose();return}
+  if(t.closest("[data-kmclose]")){kClose();return}
+  if(t.closest("[data-kcpin]")){kc.pinned=!kc.pinned;kRender();return}
+  if(t.closest("[data-kclist]")){kc.list=!kc.list;if(kc.list){kc.items=kc.text.split("\n").map(x=>x.trim()).filter(Boolean).map(x=>({id:"i"+sid(),t:x,done:false}));kc.text=""}else{kc.text=kc.items.map(i=>i.t).join("\n");kc.items=[]}kRender();return}
+  const m=t.closest("[data-kmenu]");if(m){const [kind,id,scope]=m.dataset.kmenu.split("|");kMenu=kMenu&&kMenu.kind===kind&&kMenu.id===id&&kMenu.scope===scope?null:{kind,id,scope};scope==="km"?kmPaint():kRender();
+    const f=document.querySelector(`.k-pop [data-labnew]`);if(f&&kind==="label")f.focus();return}
+  const sw=t.closest("[data-kcolor]");if(sw){const [id,c]=sw.dataset.kcolor.split("|");if(id==="kc"){kc.color=c;kRender();return}await writeNote(id,{color:c});kmId?kmPaint():null;return}
+  const cp=t.closest("[data-kcopy]");if(cp){const n=notes.find(x=>x.id===cp.dataset.kcopy);if(!n)return;const {id,...d}=n;kMenu=null;
+    await writeNote("n"+sid(),{...JSON.parse(JSON.stringify(d)),order:kOrd(n)-1,pinned:false,createdAt:Date.now(),editedAt:null,d:today()},true);if(kmId)kClose(false);toast("اتعملت نسخة");return}
+  const tg=t.closest("[data-ktoggle]");if(tg){const id=tg.dataset.ktoggle,n=notes.find(x=>x.id===id);if(!n)return;kMenu=null;
+    if(kmId===id&&kmD){if(kmD.items){kmD.text=kmD.items.map(i=>i.t).join("\n");kmD.items=null}else{kmD.items=kmD.text.split("\n").map(x=>x.trim()).filter(Boolean).map(x=>({id:"i"+sid(),t:x,done:false}));kmD.text=""}
+      await writeNote(id,kmD.items?{items:kmD.items,text:""}:{items:null,text:kmD.text});kmPaint();return}
+    await writeNote(id,n.items?{items:null,text:n.items.map(i=>i.t).join("\n")}:{items:(n.text||"").split("\n").map(x=>x.trim()).filter(Boolean).map(x=>({id:"i"+sid(),t:x,done:false})),text:""});return}
+  const ck=t.closest("[data-kcheck]");if(ck){const [id,iid]=ck.dataset.kcheck.split("|"),n=notes.find(x=>x.id===id);if(!n||!n.items)return;
+    await writeNote(id,{items:n.items.map(i=>i.id===iid?{...i,done:!i.done}:i)});return}
+  const cb=t.closest("[data-klcb]");if(cb){const [s,i]=cb.dataset.klcb.split("|"),it=kItems(s);if(it&&it[+i]){it[+i].done=!it[+i].done;kRepaint(s)}return}
+  const kx=t.closest("[data-klx]");if(kx){const [s,i]=kx.dataset.klx.split("|"),it=kItems(s);if(it){it.splice(+i,1);kRepaint(s)}return}
+  const card=t.closest(".kcard");if(card&&!t.closest("button,a,input,select,label,.k-pop")){kOpen(card.dataset.nid);return}
+  if(kMenu&&!t.closest(".k-pop")){kMenu=null;kmId?kmPaint():kRender()}});
+document.addEventListener("keydown",e=>{const c=e.target;if(c.classList&&c.classList.contains("kcard")&&(e.key==="Enter"||e.key===" ")){e.preventDefault();kOpen(c.dataset.nid)}});
+document.addEventListener("change",async e=>{const el=e.target;if(!el.dataset||el.dataset.karea===undefined)return;const id=el.dataset.karea;
+  if(id==="kc"){kc.area=el.value;return}await writeNote(id,{area:el.value});if(kmId===id)kmPaint()});
+// labels in the composer and the window repaint them in place
+document.addEventListener("click",async e=>{const t=e.target.closest("[data-labtog]");if(!t||!t.closest("#kmodal"))return;e.stopPropagation();
+  const s=t.dataset.labtog,i=s.indexOf("|"),id=s.slice(0,i),l=s.slice(i+1),n=notes.find(x=>x.id===id);if(!n)return;const cur=nLabelsOf(n);
+  await writeNote(id,{labels:cur.includes(l)?cur.filter(x=>x!==l):[...cur,l]});kmPaint()},true);
+document.addEventListener("keydown",async e=>{const el=e.target;if(!el.dataset||!el.dataset.labnew||e.key!=="Enter"||!el.closest("#kmodal"))return;e.preventDefault();e.stopPropagation();
+  const l=el.value.trim().replace(/\s+/g," ").slice(0,24),n=notes.find(x=>x.id===el.dataset.labnew);if(!l||!n)return;const cur=nLabelsOf(n);
+  if(!cur.includes(l))await writeNote(n.id,{labels:[...cur,l]});kmPaint();const f=document.querySelector('#kmodal [data-labnew]');if(f)f.focus()},true);
+let kLabStore=[],kListView=false;try{kListView=localStorage.getItem("keepList")==="1"}catch(_){}
+KI.trash='<svg viewBox="0 0 24 24"><path d="M5 7h14M10 4h4M7 7l1 13h8l1-13M10.5 11v6M13.5 11v6"/></svg>';
+KI.edit='<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>';
+KI.grid='<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>';
+KI.rows='<svg viewBox="0 0 24 24"><rect x="4" y="4.5" width="16" height="6" rx="1.5"/><rect x="4" y="13.5" width="16" height="6" rx="1.5"/></svg>';
+KI.restore='<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v4.5h4.5"/></svg>';
+async function saveLabStore(list){kLabStore=list;try{await db.collection("config").doc("notelabels").set({list})}catch(_){toast("ماتحفظش، جرّب تاني")}}
+function knav(){const labs=allLabels(),it=(v,ic,name)=>`<button type="button" class="kn-it" data-labfilter="${esc(v)}" ${nFilter===v?'aria-current="page"':""}>${KI[ic]}<span>${esc(name)}</span></button>`;
+  return `<nav class="knav" aria-label="النوتس والتصنيفات">${it("","bulb","النوتس")}${labs.map(l=>it(l,"label",l)).join("")}
+    <button type="button" class="kn-it" data-klabels="1">${KI.edit}<span>عدّل التصنيفات</span></button>${it("__arch","arch","الأرشيف")}${it("__trash","trash","المحذوفات")}</nav>`}
+function kTrashView(){const list=trash.filter(x=>x.kind==="note").sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));
+  return `<div class="k-trash-h"><span>النوتس اللي في المحذوفات بتتمسح لوحدها بعد أسبوع.</span>${list.length?`<button type="button" class="k-close" data-ktrashall="1">فضّي المحذوفات</button>`:""}</div>`+
+    (list.length?`<div class="kgrid${kListView?" klist":""}" data-kgrid="trash">${list.map(x=>{const n=x.data||{};return `<article class="kcard ktr" data-tid="${x.id}" data-c="${esc(n.color||"")}">
+      ${n.title?`<div class="k-title">${esc(n.title)}</div>`:""}<div class="k-text">${esc(n.items?n.items.map(i=>(i.done?"☑ ":"☐ ")+i.t).join("\n"):(n.text||""))}</div>
+      <div class="k-tools">${kIc("restore",`data-krestore="${x.id}"`,"رجّعها")}${kIc("trash",`data-ktrashdel="${x.id}"`,"امسحها خالص")}</div></article>`}).join("")}</div>`
+      :`<div class="k-emptyp">${KI.trash}<p>مفيش نوتس في المحذوفات</p></div>`)}
+function kLabelsWin(){const labs=allLabels();
+  $("#klab").innerHTML=`<div class="kmod klab" role="dialog" aria-modal="true" aria-label="عدّل التصنيفات"><div class="k-pop-h klab-h">عدّل التصنيفات</div>
+    <div class="klab-row">${KI.label}<input type="text" id="klab-new" maxlength="24" placeholder="اعمل تصنيف جديد" aria-label="تصنيف جديد"><button type="button" class="k-ic" data-klabadd="1" aria-label="اعمله" title="اعمله">${KI.check}</button></div>
+    ${labs.map((l,i)=>`<div class="klab-row">${kIc("trash",`data-klabdel="${esc(l)}"`,"امسح «"+l+"»")}<input type="text" value="${esc(l)}" data-klabren="${esc(l)}" maxlength="24" aria-label="اسم التصنيف"><span class="klab-n">${notes.filter(n=>nLabelsOf(n).includes(l)).length||""}</span></div>`).join("")}
+    <div class="k-bar"><span></span><button type="button" class="k-close" data-klabclose="1">تمام</button></div></div>`;
+  $("#klab").hidden=false}
+async function kRenameLabel(from,to){to=to.trim().replace(/\s+/g," ").slice(0,24);if(!to||to===from)return;
+  for(const n of notes.filter(x=>nLabelsOf(x).includes(from))){const ls=nLabelsOf(n).map(l=>l===from?to:l);await writeNote(n.id,{labels:[...new Set(ls)]})}
+  await saveLabStore([...new Set(kLabStore.map(l=>l===from?to:l).concat(kLabStore.includes(from)?[]:[to]))]);if(nFilter===from)nFilter=to}
+async function kDeleteLabel(l){for(const n of notes.filter(x=>nLabelsOf(x).includes(l)))await writeNote(n.id,{labels:nLabelsOf(n).filter(x=>x!==l)});
+  await saveLabStore(kLabStore.filter(x=>x!==l));if(nFilter===l)nFilter=""}
+document.addEventListener("click",async e=>{const t=e.target;
+  if(t.closest("[data-klabels]")){kLabelsWin();const f=$("#klab-new");if(f)f.focus();return}
+  if(t.closest("[data-klabclose]")||t.id==="klab"){$("#klab").hidden=true;render();return}
+  if(t.closest("[data-klabadd]")){const v=$("#klab-new").value.trim().replace(/\s+/g," ").slice(0,24);if(v&&!allLabels().includes(v))await saveLabStore([...kLabStore,v]);kLabelsWin();$("#klab-new").focus();return}
+  const d=t.closest("[data-klabdel]");if(d){if(d.dataset.sure!=="1"){d.dataset.sure="1";d.classList.add("sure");d.title=d.ariaLabel="دوس تاني عشان تمسحه";setTimeout(()=>{d.dataset.sure="";d.classList.remove("sure")},2500);return}
+    await kDeleteLabel(d.dataset.klabdel);kLabelsWin();toast("التصنيف اتمسح");return}
+  const kr=t.closest("[data-krestore]");if(kr){await restoreTrash(kr.dataset.krestore);return}
+  if(t.closest("[data-klayout]")){kListView=!kListView;try{localStorage.setItem("keepList",kListView?"1":"0")}catch(_){}render();return}
+  const td=t.closest("[data-ktrashdel]");if(td){if(td.dataset.sure!=="1"){td.dataset.sure="1";td.classList.add("sure");td.title="دوس تاني عشان تتمسح خالص";setTimeout(()=>{td.dataset.sure="";td.classList.remove("sure")},2500);return}
+    try{await trashCol.doc(td.dataset.ktrashdel).delete();toast("اتمسحت خالص")}catch(_){toast("ماتمسحتش")}return}
+  const ta=t.closest("[data-ktrashall]");if(ta){if(ta.dataset.sure!=="1"){ta.dataset.sure="1";ta.textContent="متأكد؟ هتتمسح كلها خالص";setTimeout(()=>{ta.dataset.sure="";ta.textContent="فضّي المحذوفات"},3000);return}
+    for(const x of trash.filter(y=>y.kind==="note")){try{await trashCol.doc(x.id).delete()}catch(_){}}toast("المحذوفات اتفضّت");return}});
+document.addEventListener("keydown",async e=>{const el=e.target;
+  if(el.id==="klab-new"&&e.key==="Enter"){e.preventDefault();$("[data-klabadd]").click();return}
+  if(e.key==="Escape"&&!$("#klab").hidden){e.preventDefault();e.stopPropagation();$("#klab").hidden=true;render()}},true);
+document.addEventListener("change",async e=>{const el=e.target;if(!el.dataset||el.dataset.klabren===undefined)return;await kRenameLabel(el.dataset.klabren,el.value);kLabelsWin()});
+function projBlock(t){const p=projProg(t),pct=p.n?Math.round(p.d/p.n*100):0,shut=folded.has("pj:"+t.id);let inner="";
+  if(!shut){
+    if(t.book){const b=t.book,on=t.planDate===today();
+      inner=`<form class="bk-log pj-in" data-bklog="${t.id}"><label for="bk-page-${t.id}">وصلت لصفحة</label><input id="bk-page-${t.id}" type="number" min="0" max="${b.total||5000}" value="${b.page||""}" placeholder="${b.page||0}" inputmode="numeric"><span class="bk-of">من ${b.total||0}</span><button class="btn" type="submit">سجّل</button><button type="button" class="c-today ${on?"on":""}" data-plan="${t.id}" aria-pressed="${on}">${on?"✓ النهارده":"+ النهارده"}</button></form>`}
+    else if(t.course){const all=[];(t.course.chapters||[]).forEach(ch=>(ch.lessons||[]).forEach(l=>{if(!l.done)all.push([ch,l])}));
+      inner=all.length?`<div class="pj-les">${all.slice(0,4).map(([ch,l],i)=>`<div class="c-lw"><button type="button" class="c-l ${i===0?"nx":""}" data-les="${t.id}|${ch.id}|${l.id}" aria-pressed="false"><span class="c-box"></span><span class="c-t">${esc(l.t)}</span></button>${lesTodayBtn(t,ch,l)}</div>`).join("")}</div>${all.length>4?`<button type="button" class="h-link pj-more" data-nav="project:${t.id}">كمان ${all.length-4} ›</button>`:""}`
+        :`<div class="empty">${p.n?"كل الدروس خلصت.":"لسه مفيش دروس."} <button type="button" class="h-link" data-nav="project:${t.id}">افتح الكورس</button></div>`}
+    else{const open=sortTasks(subsOf(t.id).filter(x=>x.status!=="done"));
+      const fresh=Date.now()-120000,shown=open.filter((x,i)=>i<6||(x.createdAt||0)>fresh);
+      inner=shown.map(s=>row(s,{timer:true,inProj:true,noArea:true})).join("")+(open.length>shown.length?`<button type="button" class="h-link pj-more" data-nav="project:${t.id}">كمان ${open.length-shown.length} ›</button>`:"")+
+        `<form class="inline pj-add pj-in" data-addsub="${t.id}"><input maxlength="160" placeholder="خطوة جديدة في «${esc(clip(t.title,30))}»" aria-label="خطوة جديدة"><button class="btn" type="submit">أضف</button></form>`}}
+  return `<div class="pj-blk ${shut?"shut":""}"><div class="pj-bh"><button type="button" class="fold" data-fold="pj:${t.id}" aria-expanded="${!shut}">${ARR}<span class="pj-t">${esc(t.title)}</span></button>
+      <span class="pj-n">${p.n?`${p.d} من ${p.n}${p.unit?" "+p.unit:""}`:""}</span><button type="button" class="h-link pj-go" data-nav="project:${t.id}" aria-label="افتح ${esc(t.title)}">افتح ›</button></div>
+    ${p.n?`<span class="pj-bar"><i style="width:${pct}%"></i></span>`:""}${inner}</div>`}
+const ROUTES={today:"today",upcoming:"upcoming",all:"all",clients:"clients",team:"team",proj:"projects",focus:"focus",week:"week",notes:"notes",journal:"journal",files:"files",settings:"settings"};
+function routeKey(){if(view==="project")return "project/"+projId;if(view==="all"&&areaFilter)return "area/"+areaFilter;
+  if(view==="notes")return notesMode==="notes"?"notes":notesMode;return ROUTES[view]||view}
+function keyFromHash(h){const p=(h||"").replace(/^#\/?/,"").split("/").filter(Boolean).map(x=>{try{return decodeURIComponent(x)}catch(_){return x}});if(!p.length)return null;
+  if(p[0]==="area"&&p[1])return AREA[p[1]]?"area:"+p[1]:null;if(p[0]==="project"&&p[1])return "project:"+p[1];if(p[0]==="projects")return "proj";
+  return ROUTES[p[0]]&&p[0]!=="proj"?p[0]:null}
+let routeLock=false;
+function routeSync(push){const h="#/"+routeKey().split("/").map(encodeURIComponent).join("/");
+  if(location.hash!==h){try{push?history.pushState({v:1},"",h):history.replaceState({v:1},"",h)}catch(_){}}
+  const t=document.getElementById("view-title");if(t&&t.textContent)document.title=t.textContent+" · "+(((typeof appName!=="undefined"&&appName)||"").trim()||"دفتر مالك")}
+{const _go=goView;goView=function(k){_go(k);if(!routeLock&&k!=="more")routeSync(true)}}
+// windows (task, note, search, labels, paper) take one step of «back» on the phone
+const OVS=["#overlay","#kmodal","#search-ov","#paper-ov","#klab"];let ovDepth=0,ovIgnore=0;
+const ovOpen=()=>OVS.some(s=>{const e=document.querySelector(s);return e&&!e.hidden});
+new MutationObserver(()=>{const o=ovOpen();
+  if(o&&!ovDepth){ovDepth=1;try{history.pushState({ov:1},"",location.hash)}catch(_){}}
+  else if(!o&&ovDepth){ovDepth=0;ovIgnore++;try{history.back()}catch(_){ovIgnore--}}}).observe(document.body,{subtree:true,attributes:true,attributeFilter:["hidden"]});
+addEventListener("popstate",()=>{if(ovIgnore){ovIgnore--;return}
+  if(ovDepth&&ovOpen()){ovDepth=0;document.dispatchEvent(new KeyboardEvent("keydown",{key:"Escape",bubbles:true,cancelable:true}));
+    setTimeout(()=>{OVS.forEach(s=>{const e=document.querySelector(s);if(e&&!e.hidden&&s!=="#overlay"&&s!=="#kmodal")e.hidden=true});if(!$("#overlay").hidden&&typeof closeEditor==="function")closeEditor();if(!$("#kmodal").hidden&&typeof kClose==="function")kClose()},0);return}
+  const k=keyFromHash(location.hash);if(!k){routeSync(false);return}
+  routeLock=true;try{goView(k)}finally{routeLock=false}routeSync(false)});
+{const _g=goView;let t=0;goView=function(k){document.body.classList.add("v-enter");clearTimeout(t);t=setTimeout(()=>document.body.classList.remove("v-enter"),450);_g(k)}}
+document.body.classList.add("v-enter");setTimeout(()=>document.body.classList.remove("v-enter"),900);
+document.addEventListener("click",e=>{const b=e.target.closest("[data-sidewide]");if(!b)return;setWide(!sideWide);const n=document.querySelector("[data-sidewide]");if(n){n.setAttribute("aria-expanded",String(sideWide));n.focus()}});
+const TASKV=k=>["today","upcoming","all","clients","team","proj"].includes(k)||String(k).startsWith("area:");
+// 30 Oct: the lists stay on every page and hold everything the old side list had (Malek compared it with the old one)
+const LISTV=k=>["focus","notes","journal","files","week","proj"].includes(k);
+let listsHidden=false;try{listsHidden=localStorage.getItem("listsHidden")==="1"}catch(_){}
+const SPARK='<svg viewBox="0 0 24 24"><path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z" fill="currentColor" stroke="none"/></svg>';
+function paintRail2(){const r=document.getElementById("rail");if(!r)return;const cur=navKey();
+  const sec=cur==="proj"||view==="project"?"proj":TASKV(cur)?"tasks":["notes","journal","files"].includes(cur)?"notes":cur;
+  const it=(key,nav,ic,name)=>`<button type="button" class="rl" ${nav?`data-nav="${nav}"`:""} ${sec===key?'aria-current="page"':""} aria-label="${name}" title="${name}"><span class="ni">${ic}</span></button>`;
+  r.innerHTML=`<button type="button" class="rl rl-home" data-nav="today" aria-label="النهارده" title="النهارده"><span class="logo" aria-hidden="true"></span></button>
+    ${it("tasks","today",NI.all,"التسكات")}${it("focus","focus",NI.focus,"تركيز")}${it("notes","notes",NI.notes,"النوتس")}${it("proj","proj",NI.projects||NI.all,"المشاريع")}${it("week","week",NI.week,"الأسبوع")}
+    <button type="button" class="rl" data-search="1" aria-label="دوّر" title="دوّر (Ctrl+K)"><span class="ni">${NI.search}</span></button>
+    <button type="button" class="rl" data-aiopen="1" aria-label="المساعد" title="المساعد"><span class="ni">${SPARK}</span></button>
+    <span class="rl-gap"></span>${it("settings","settings",NI.settings,"الإعدادات")}`}
+function paintLists(){const box=document.getElementById("side-list");if(!box)return;const c=navCounts(),cur=navKey();
+  const it=(k,ic,name,n)=>`<button type="button" class="nv" data-nav="${k}" ${cur===k?'aria-current="page"':""}><span class="ni">${ic}</span><span class="nn">${esc(name)}</span>${n?`<i class="nc">${n}</i>`:""}</button>`;
+  box.innerHTML=`<div class="ng">${it("today",NI.today,"النهارده",c.today)}${it("upcoming",NI.upcoming,"الجاي",c.upcoming||0)}${it("all",NI.all,"كل التسكات",c.all)}</div>
+    <div class="nh">الأقسام</div><div class="ng">${AREAS.map(([k,n])=>it("area:"+k,'<b class="hash">#</b>',n,c.areas[k]||0)).join("")}</div>
+    <div class="ng">${it("clients",NI.clients,"العملاء",0)}${team.length?it("team",NI.team,"الفريق",0):""}${it("proj",NI.projects||NI.all,"المشاريع",0)}${it("focus",NI.focus,"تركيز",0)}${it("notes",NI.notes,"النوتس",0)}</div>
+    <div class="nh">المزيد</div><div class="ng">${it("week",NI.week,"الأسبوع",0)}${it("journal",NI.journal,"يوميات",0)}${it("files",NI.files,"ملفات",0)}</div>`}
+function paintShell2(){const desk=isDesk();const cur=navKey();
+  document.body.classList.toggle("dz",desk);
+  if(!desk){document.body.classList.remove("lists-on","dock-on");return}
+  document.body.classList.remove("side-rail");
+  paintRail2();
+  const task=TASKV(cur)&&view!=="project";
+  document.body.classList.toggle("lists-on",(task||LISTV(cur))&&!listsHidden);
+  document.body.classList.toggle("dock-on",task&&matchMedia("(min-width:1280px)").matches);
+  if(task||LISTV(cur))paintLists()}
+{const _p=paintShell;paintShell=function(){_p();paintShell2()}}
+addEventListener("resize",()=>{try{paintShell2()}catch(_){}});
+document.addEventListener("click",e=>{
+  const w=e.target.closest("[data-sidewide]");if(w&&isDesk()){e.stopImmediatePropagation();listsHidden=!listsHidden;try{localStorage.setItem("listsHidden",listsHidden?"1":"0")}catch(_){}paintShell2();return}
+  if(e.target.closest("[data-aiopen]")){e.preventDefault();openAi();return}},true);
+// the detail panel: switching to another task saves the open one first
+let edDirty=false;
+document.addEventListener("input",e=>{if(e.target.closest&&e.target.closest("#editor"))edDirty=true});
+document.addEventListener("change",e=>{if(e.target.closest&&e.target.closest("#editor"))edDirty=true});
+document.addEventListener("submit",e=>{if(e.target.id==="editor")edDirty=false},true);
+{const _o=openEditor;openEditor=function(t){
+  if(document.body.classList.contains("dock-on")&&!$("#overlay").hidden&&edDirty&&$("#f-title").value.trim()&&!(t&&editing&&t.id===editing.id)){
+    const f=$("#editor");edDirty=false;try{f.requestSubmit()}catch(_){}
+    setTimeout(()=>{_o(t);edDirty=false},60);return}
+  _o(t);edDirty=false}}
+const inPick=t=>inToday(t)||tasks.some(s=>s.parentId===t.id&&s.status!=="done"&&inToday(s));
+let edQuiet=false,edT=null;
+function edSave(now){clearTimeout(edT);edT=null;if(!editing||!$("#f-title").value.trim())return;
+  const id=editing.id,go=()=>{edT=null;if(!editing||editing.id!==id||$("#overlay").hidden)return;edQuiet=true;try{$("#editor").requestSubmit()}catch(_){edQuiet=false}};
+  if(now)go();else edT=setTimeout(go,600)}
+function edFlush(){if(edT){clearTimeout(edT);edT=null;if(editing&&!$("#overlay").hidden&&$("#f-title").value.trim()){edQuiet=true;try{$("#editor").requestSubmit()}catch(_){edQuiet=false}}}}
+const edDay=d=>{try{return new Date(d+"T12:00").toLocaleDateString("ar-u-nu-latn",{weekday:"long",day:"numeric",month:"long"})}catch(_){return d}};
+function edGrow(){const a=$("#f-notes");if(!a)return;a.style.height="auto";a.style.height=Math.min(a.scrollHeight+2,420)+"px"}
+function paintEd(sync){const t=editing&&tasks.find(x=>x.id===editing.id);const ed=$("#editor");if(!ed)return;
+  ed.classList.toggle("ed-new",!t);
+  const par=t&&parentOf(t),done=!!t&&t.status==="done";
+  const pk=edPri==="red"?"red":edPri==="black"?"black":"blue";
+  const b=$("#ed-done");b.hidden=!t;
+  if(t){b.dataset.toggle=t.id;b.className="ed-check p-"+pk+(done?" is-done":"");b.textContent=done?"✓":"";b.setAttribute("aria-label",(done?"رجّعه مفتوح":"خلص")+": "+t.title)}
+  $("#ed-flag").className="ed-ic ed-flag p-"+pk;$("#ed-flag").setAttribute("aria-label","الأولوية: "+PRI_N[pk]);
+  $("#ed-pripop").innerHTML=PRI.map(([k,n])=>`<button type="button" data-edpri="${k}" aria-pressed="${k===pk}" class="p-${k}">${'<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"currentColor\"><path d=\"M5 21V4h11l-1.5 4L16 12H7v9z\"/></svg>'}<span>${n}</span>${k===pk?"✓":""}</button>`).join("");
+  const due=$("#f-due").value;$("#ed-due-t").textContent=due?"ديدلاين "+edDay(due):"ديدلاين";$("#ed-due").classList.toggle("on",!!due);
+  $("#ed-due").classList.toggle("late",!!due&&!done&&due<today());$("#ed-due-x").hidden=!due;
+  if(sync&&!edT&&t){$("#f-today").checked=!!(t.planDate&&t.planDate<=today());$("#f-done").value=done?(t.doneDate||""):"";$("#done-field").hidden=!done;paintDoneSum()}
+  const on=$("#f-today").checked;$("#ed-today").setAttribute("aria-pressed",on);$("#ed-today").textContent=on?"✓ النهارده":"النهارده";$("#ed-today").hidden=done;
+  const an=(AREAS.find(a=>a[0]===(t?t.area:$("#f-area").value))||[])[1]||"";
+  $("#ed-crumb").textContent=t?(par?"↳ "+par.title:[an,t.client].filter(Boolean).join(" › ")):"";
+  const subs=t&&!par?subsOf(t.id):[];const box=$("#ed-sublist");
+  if(!t||par||t.repeat||t.repeatOf){box.hidden=true;box.innerHTML=""}else{box.hidden=false;const nd=subs.filter(s=>s.status==="done").length;
+    const keep=document.activeElement&&document.activeElement.id==="ed-subin",kv=keep?$("#ed-subin").value:"";
+    box.innerHTML=(subs.length?`<div class="ed-sh"><b>التسكات الفرعية</b><span>${nd}/${subs.length}</span></div>`:"")+
+      subs.map(s=>{const sd=s.status==="done",sk=PRI_KEY(s);return `<div class="ed-sub ${sd?"is-done":""}"><button type="button" class="ed-check sm p-${sk} ${sd?"is-done":""}" data-toggle="${s.id}" aria-label="${sd?"رجّعه مفتوح":"خلص"}: ${esc(s.title)}">${sd?"✓":""}</button><button type="button" class="ed-st" data-edopen="${s.id}">${esc(s.title)}</button></div>`}).join("")+
+      `<div class="ed-sadd"><span aria-hidden="true">+</span><input id="ed-subin" maxlength="160" placeholder="تاسك فرعي" aria-label="تاسك فرعي جديد" enterkeyhint="done"></div>`;
+    if(keep){const i=$("#ed-subin");i.value=kv;i.focus()}}
+  const m=t?focusOf(t):0;$("#ed-pomo-t").textContent="ابدأ التايمر"+(m?" · "+fmtMin(m)+" اتسجلت":"");
+  $("#ed-made").textContent=t&&t.createdAt?"اتعمل "+new Date(t.createdAt).toLocaleDateString("ar-u-nu-latn",{weekday:"long"}):"";
+  const more=!t||edMoreOpen;$("#ed-more").hidden=!more;ed.classList.toggle("more-open",!!t&&more);$("#ed-more-b").setAttribute("aria-expanded",more);$("#ed-more-b").hidden=!t;
+  edGrow()}
+let edMoreOpen=false;
+{const _o=openEditor;openEditor=function(t){clearTimeout(edT);edT=null;edMoreOpen=false;$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");_o(t);paintEd();
+  if(t){setTimeout(()=>{const a=document.activeElement;if(a&&a.id==="f-title")a.blur()},40)}}}
+{const _c=closeEditor;closeEditor=function(){edFlush();_c()}}
+{const _r=render;render=function(){_r.apply(this,arguments);if(editing&&!$("#overlay").hidden)try{paintEd(true)}catch(_){}}}
+async function edAddSub(title){const p=editing&&tasks.find(x=>x.id===editing.id);if(!p||!title)return;
+  await write("t"+sid(),{title,area:p.area,kind:p.kind||"",pri:p.pri||"blue",client:p.client||"",stage:"",due:"",notes:"",status:"open",planDate:"",createdAt:Date.now(),doneAt:null,doneDate:null,parentId:p.id},true);
+  if(p.status==="done"){await applyDone(p,false);toast("التاسك الأساسي رجع مفتوح")}
+  render()}
+document.addEventListener("input",e=>{if(!e.target.closest||!e.target.closest("#editor")||e.target.id==="ed-subin")return;if(e.target.id==="f-notes")edGrow();if(editing)edSave(false)});
+document.addEventListener("change",e=>{if(!e.target.closest||!e.target.closest("#editor")||e.target.id==="ed-subin")return;if(e.target.id==="f-due")paintEd();if(editing)edSave(e.target.tagName!=="INPUT"||e.target.type!=="text")});
+document.addEventListener("keydown",e=>{if(e.target.id==="ed-subin"&&e.key==="Enter"){e.preventDefault();const v=e.target.value.trim();if(!v)return;e.target.value="";edAddSub(v)}
+  else if(e.target.id==="f-title"&&e.key==="Enter"&&editing){e.preventDefault();edSave(true);e.target.blur()}});
+document.addEventListener("click",e=>{
+  if(e.target.closest("#ed-close")){closeEditor();return}
+  if(e.target.closest("#ed-due-b")){const i=$("#f-due");try{i.showPicker()}catch(_){i.focus()}return}
+  if(e.target.closest("#ed-due-x")){$("#f-due").value="";paintEd();if(editing)edSave(true);return}
+  if(e.target.closest("#ed-today")){const c=$("#f-today");c.checked=!c.checked;paintEd();if(editing)edSave(true);return}
+  const fl=e.target.closest("#ed-flag");if(fl){const p=$("#ed-pripop");p.hidden=!p.hidden;fl.setAttribute("aria-expanded",!p.hidden);if(!p.hidden){const s=p.querySelector('[aria-pressed="true"]');if(s)s.focus()}return}
+  const pr=e.target.closest("[data-edpri]");if(pr){edPri=pr.dataset.edpri;paintPri();$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");paintEd();if(editing)edSave(true);return}
+  if(!e.target.closest("#ed-pripop")&&!$("#ed-pripop").hidden){$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false")}
+  if(e.target.closest("#ed-more-b")){edMoreOpen=!edMoreOpen;paintEd();return}
+  const so=e.target.closest("[data-edopen]");if(so){const s=tasks.find(x=>x.id===so.dataset.edopen);if(s){edFlush();openEditor(s)}return}
+  if(e.target.closest("#f-pri [data-p]")||e.target.closest("#f-rep button")){setTimeout(()=>{paintEd();if(editing)edSave(true)},0)}
+  if(e.target.closest("#ed-delete")){clearTimeout(edT);edT=null}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#ed-pripop").hidden){e.stopImmediatePropagation();$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");$("#ed-flag").focus()}},true);
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -2332,7 +3416,7 @@ function renderInner(){
   {const dn=doneToday.filter(t=>!subsOf(t.id).length).length,tot=dn+todayList.length;
    $("#counts").innerHTML=tot?`<div class="dprog ${!todayList.length?"all":""}" role="img" aria-label="خلص ${dn} من ${tot} النهارده"><span class="dp-t">${!todayList.length?"خلصت يومك كله":`خلصت <b>${dn}</b> من ${tot}`}</span><span class="dp-bar"><i style="width:${Math.round(dn/tot*100)}%"></i></span></div>`:"";
    if(view==="today"){const pr=notes.filter(n=>n.by==="claude"&&!n.resolved).length;
-     $("#counts").innerHTML+=`<div class="ts-act">${pr?`<button type="button" class="hint-chip" data-goto="notes">كلود كاتبلك ${pr===1?"نوت":pr+" نوتس"}</button>`:""}<button type="button" class="h-link paper-l" data-paper="1">انسخ للورقة</button></div>`}}
+     $("#counts").innerHTML+=`<div class="ts-act">${pr?`<button type="button" class="hint-chip" data-goto="notes">نوتس (${pr})</button>`:""}<button type="button" class="h-link paper-l" data-paper="1">انسخ للورقة</button></div>`}}
   $("#chips").hidden=view!=="all";const tb=document.querySelector(".wrap>.bar");if(tb)tb.hidden=ghScreen||view!=="all";
   const v=$("#view");
   if(!loaded||ghScreen){return}
@@ -2355,7 +3439,7 @@ function renderInner(){
       `<form class="proj" id="new-proj"><div class="proj-head"><h3>مشروع جديد</h3></div>
         <div class="inline"><input id="np-name" placeholder="اسم المشروع" maxlength="60" required><select id="np-area" class="btn" style="padding:7px 8px">${areaOpts}</select></div>
         <div class="inline"><input id="np-goal" placeholder="الهدف في سطر (اختياري)" maxlength="160"><button class="btn primary" type="submit">أضف</button></div></form>`;
-  }else if(view==="notes"){v.innerHTML=notesTabs()+(notesMode==="journal"?journalView():notesMode==="files"?filesView():notesView());if(notesMode==="journal")jAfter();
+  }else if(view==="notes"){v.innerHTML=notesTabs()+(notesMode==="journal"?journalView():notesMode==="files"?filesView():notesView3());if(notesMode==="journal")jAfter();else if(notesMode==="notes")kAfter();
   }else if(view==="notes-old"){
     const areaOpts=`<option value="">بدون قسم</option>`+AREAS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
     const rev=notes.filter(n=>n.review&&!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
@@ -2378,12 +3462,14 @@ function renderInner(){
       `<section class="section"><h2>كل النوتس<small>${rest.length}</small></h2>${rest.length?rest.map(card).join(""):`<div class="empty">لسه مفيش نوتس.</div>`}</section>`;
   }else if(view==="clients"){
     const names=clientNames();
-    v.innerHTML=(names.length?clientsList(names):`<div class="empty" style="padding-top:16px">لسه مفيش عملاء. أي تاسك في «شغل» عليه اسم عميل هيظهر هنا، أو ضيف عميل من تحت.</div>`)+
+    v.innerHTML=(team.length?"":`<div class="hint tm-hint"><span>بتقسّم الشغل على ناس معاك؟</span><button type="button" class="mini" data-nav="team">اعمل الفريق</button></div>`)+(names.length?clientsList(names):`<div class="empty" style="padding-top:16px">لسه مفيش عملاء. أي تاسك في «شغل» عليه اسم عميل هيظهر هنا، أو ضيف عميل من تحت.</div>`)+
       `<form class="proj" id="new-client"><div class="proj-head"><h3>عميل جديد</h3></div>
         <div class="cl-form"><label style="flex:1 1 160px">الاسم<input id="nc-name" maxlength="60" required></label>
         <div class="chips" role="group" aria-label="نوع الشغل"><button type="button" class="chip" data-ncmode="single" aria-pressed="true">بالقطعة</button><button type="button" class="chip" data-ncmode="package" aria-pressed="false">باكدج</button></div>
         <label id="nc-target-wrap" hidden>عدد الفيديوهات<input id="nc-target" type="number" min="1" max="999"></label>
         <button class="btn primary" type="submit">أضف</button></div></form>`;
+  }else if(view==="team"){
+    v.innerHTML=teamView();
   }else if(view==="proj"){
     v.innerHTML=projectsView();
   }else if(view==="project"){
@@ -2599,13 +3685,14 @@ function taskOptions(sel){
   const planned=sortTasks(open.filter(inToday));
   const label=t=>{const p=parentOf(t);return esc(p?`${t.title} ← ${p.title}`:t.title)};
   const opt=t=>`<option value="${t.id}" ${t.id===sel?"selected":""}>${label(t)}</option>`;
-  return planned.map(opt).join("");
+  const out=[];planned.forEach(t=>{const p=parentOf(t);if(p&&p.status!=="done"&&!out.includes(p))out.push(p);if(!out.includes(t))out.push(t)});
+  return out.map(opt).join("");
 }
 function focusView(){
   let card;
   if(!pomo){
     const first=sortTasks(tasks.filter(t=>t.status!=="done"&&inToday(t)))[0];
-    if(!fsTask||!tasks.some(t=>t.id===fsTask&&t.status!=="done"&&inToday(t)))fsTask=first?first.id:"";
+    if(!fsTask||!tasks.some(t=>t.id===fsTask&&t.status!=="done"&&inPick(t)))fsTask=first?first.id:"";
     const len=fmode==="focus"?pset.focus:fmode==="long"?pset.long:pset.brk;
     card=`<div class="chips" role="group" aria-label="الوضع">${[["focus","تركيز"],["short","استراحة قصيرة"],["long","استراحة طويلة"]].map(([k,n])=>`<button type="button" class="chip" data-fmode="${k}" aria-pressed="${fmode===k}">${n}</button>`).join("")}</div>
       <div class="fbig">${clock(len*60000)}</div><div class="fstatus">${fmode==="focus"?"اختار التاسك ودوس ابدأ":"وقت الاستراحة"}</div>
@@ -2650,7 +3737,7 @@ function focusView(){
     <label>صوت المنبّه ${pset.vol??80}%<input id="ps-vol" type="range" min="0" max="100" step="10" value="${pset.vol??80}"></label>
     <button class="mini" type="button" data-ptest="1">جرّب الصوت</button></div></details>`;
   const td=sessions.filter(s=>s.date===today()).sort((a,b)=>(b.at||0)-(a.at||0));
-  if(!maTask||!tasks.some(t=>t.id===maTask&&t.status!=="done"&&inToday(t)))maTask=fsTask||"";
+  if(!maTask||!tasks.some(t=>t.id===maTask&&t.status!=="done"&&inPick(t)))maTask=fsTask||"";
   const todayBox=`<section class="section"><h2>النهارده<small>${fmtMin(sumMin(td))}</small></h2>
     ${td.length?td.map(s=>`<div class="ses"><time>${new Date(s.at||Date.now()).toLocaleTimeString("ar-u-nu-latn",{hour:"numeric",minute:"2-digit"})}</time><span class="st" title="${esc(s.title)}">${esc(s.title||"تاسك اتمسح")}</span>
       <input id="ses-${s.id}" type="number" min="1" max="600" value="${s.min}" aria-label="الدقايق" data-sesmin="${s.id}"><button class="x" type="button" data-sesdel="${s.id}" aria-label="امسح الجلسة">×</button></div>`).join("")
@@ -2802,7 +3889,7 @@ async function writeNote(id,data,isNew){
 document.addEventListener("click",async e=>{
   const r=e.target.closest("[data-rt]");if(r){toggleRoutine(r.dataset.rt);return}
   const g=e.target.closest("[data-goto]");if(g){goView(g.dataset.goto);return}
-  const nr=e.target.closest("[data-nresolve]");if(nr){await writeNote(nr.dataset.nresolve,{resolved:true,resolvedAt:Date.now()});toast("اتنقلت لـ«خلصت»");return}
+  const nr=e.target.closest("[data-nresolve]");if(nr){const id=nr.dataset.nresolve;await writeNote(id,{resolved:true,resolvedAt:Date.now()});if(kmId===id)kClose(false);toast("اتأرشفت",()=>writeNote(id,{resolved:false,resolvedAt:null}));return}
   const nf=e.target.closest("[data-nflag]");if(nf){await writeNote(nf.dataset.nflag,{review:true});return}
   const nt=e.target.closest("[data-ntoday]");if(nt){const n=notes.find(x=>x.id===nt.dataset.ntoday);if(!n)return;
     const had=tasks.find(t=>t.noteId===n.id&&t.status!=="done");if(had){await write(had.id,{planDate:today()});toast("اتحطت في خطة النهارده");return}
@@ -2816,7 +3903,7 @@ document.addEventListener("click",async e=>{
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="note-form")return;e.preventDefault();
   const text=$("#n-text").value.trim();if(!text)return;
-  const data={text,area:$("#n-area").value,review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()};
+  const data={text,area:$("#n-area").value,labels:[...nNewLabels],order:-Date.now(),review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()};nNewLabels=nFilter&&nFilter!=="__none"?[nFilter]:[];
   $("#n-text").value="";$("#n-text").blur();
   await writeNote("n"+sid(),data,true);toast("النوت اتحفظت");
 });
@@ -2939,8 +4026,8 @@ function clientInfo(){courseBox();const el=$("#client-info");const n=cname($("#f
 let fromNote=null;
 document.addEventListener("click",e=>{const b=e.target.closest("[data-ntask]");if(!b)return;const n=notes.find(x=>x.id===b.dataset.ntask);if(!n)return;
   openEditor(null);fromNote=n.id;$("#ed-title").textContent="تاسك من نوت";
-  $("#f-title").value=n.text.replace(/\s+/g," ").slice(0,160);if(n.area&&AREA[n.area])$("#f-area").value=n.area;fillKinds("");
-  $("#f-notes").value=n.text.length>160?n.text:"";$("#notes-wrap").open=n.text.length>160;$("#f-today").checked=false;});
+  const nt=kPlain(n);$("#f-title").value=nt.replace(/\s+/g," ").slice(0,160);if(n.area&&AREA[n.area])$("#f-area").value=n.area;fillKinds("");
+  $("#f-notes").value=nt.length>160?nt:"";$("#notes-wrap").open=nt.length>160;$("#f-today").checked=false;});
 let edRep=[];
 function paintRep(){const all=edRep.length===7;
   $("#f-rep").innerHTML=`<button type="button" class="chip" data-rp="none" aria-pressed="${!edRep.length}">لأ</button><button type="button" class="chip" data-rp="all" aria-pressed="${all}">كل يوم</button>`+
@@ -2962,6 +4049,8 @@ function openEditor(t){
   $("#f-client").value=t?.client||"";$("#f-course").checked=!!t?.course;$("#f-nopkg").checked=!!t?.noPkg;
   $("#f-stage").value=t?.stage||"";
   $("#f-due").value=t?.due||"";
+  {const w=$("#f-who"),cur=t?.assignee||"";$("#who-field").hidden=!team.length&&!cur;
+   w.innerHTML=`<option value="">أنا</option>`+team.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("")+(cur&&!team.some(p=>p.id===cur)?`<option value="${esc(cur)}">حد اتشال من الفريق</option>`:"");w.value=cur}
   $("#f-notes").value=t?.notes||"";$("#notes-wrap").open=!!(t&&t.notes);
   $("#f-done").value=t?.status==="done"?(t.doneDate||""):"";$("#f-done").max=today();$("#done-field").hidden=!(t&&t.status==="done");$("#done-field").open=false;paintDoneSum();
   $("#f-today").checked=t?!!(t.planDate&&t.planDate<=today()):view==="today";
@@ -2994,12 +4083,12 @@ $("#ed-delete").addEventListener("click",async()=>{
   try{for(const s of subs)await col.doc(s.id).delete();await col.doc(id).delete();tasks=tasks.filter(x=>x.id!==id&&x.parentId!==id);toast("اتمسح",()=>{const tr=trash.filter(x=>x.kind==="task"&&x.oid===id).sort((a,b)=>b.deletedAt-a.deletedAt)[0];if(tr)restoreTrash(tr.id)});if(pid)await syncParent(pid);else render()}catch(e){toast("ماتمسحش، جرّب تاني")}
 });
 $("#editor").addEventListener("submit",async e=>{
-  e.preventDefault();
+  e.preventDefault();const quiet=edQuiet;edQuiet=false;
   const title=$("#f-title").value.trim();if(!title)return;
   const par=parentOf(editing);
   const area=par?par.area:$("#f-area").value;
   const wantToday=$("#f-today").checked;
-  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,...($("#rep-field").hidden?{}:edRep.length?{repeat:{days:edRep.slice().sort()}}:(editing&&editing.repeat?{repeat:null}:{})),...(!$("#course-wrap").hidden&&$("#f-course").checked?{course:(editing&&editing.course)||{chapters:[]}}:(editing&&editing.course&&!courseCount(editing.course)[1]?{course:null}:{})),due:$("#f-due").value,notes:$("#f-notes").value.trim()};
+  const data={title,area,pri:edPri,client:par?(par.client||""):$("#f-client").value.trim(),kind:par?(par.kind||""):(area==="work"?"":$("#f-kind").value),stage:area==="work"?$("#f-stage").value:"",noPkg:!$("#nopkg-wrap").hidden&&$("#f-nopkg").checked,...($("#rep-field").hidden?{}:edRep.length?{repeat:{days:edRep.slice().sort()}}:(editing&&editing.repeat?{repeat:null}:{})),...(!$("#course-wrap").hidden&&$("#f-course").checked?{course:(editing&&editing.course)||{chapters:[]}}:(editing&&editing.course&&!courseCount(editing.course)[1]?{course:null}:{})),due:$("#f-due").value,notes:$("#f-notes").value.trim(),...(!$("#who-field").hidden?{assignee:$("#f-who").value}:{})};
   let doneOn=$("#f-done").value, needResolve=false;
   if(doneOn&&editing&&!par&&editing.status!=="done"&&subsOf(editing.id).some(s=>s.status!=="done")){doneOn="";needResolve=true}
   if(doneOn){const was=editing&&editing.status==="done"&&editing.doneDate===doneOn;
@@ -3008,11 +4097,11 @@ $("#editor").addEventListener("submit",async e=>{
   if(editing){
     const was=!!(editing.planDate&&editing.planDate<=today());
     if(wantToday!==was)data.planDate=wantToday?today():"";
-    const id=editing.id, subs=par?[]:subsOf(id);closeEditor();
+    const id=editing.id, subs=par?[]:subsOf(id);if(!quiet)closeEditor();
     if(await write(id,data,false)){
       for(const s of subs)if(s.area!==data.area||(s.client||"")!==data.client||(s.kind||"")!==data.kind)await write(s.id,{area:data.area,client:data.client,kind:data.kind});
       if(par)await syncParent(par.id);
-      if(needResolve)openResolve(id);else toast("اتحفظ")}
+      if(needResolve)openResolve(id);else if(!quiet)toast("اتحفظ");else render()}
   }else{
     Object.assign(data,doneOn?{planDate:"",createdAt:Date.now()}:{status:"open",planDate:wantToday?today():"",createdAt:Date.now(),doneAt:null,doneDate:null});
     const id="t"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -3065,6 +4154,9 @@ document.addEventListener("submit",async e=>{
     if(await writeClient(name,pk?{mode:"package",target,since:today().slice(0,8)+"01"}:{mode:"single"})){$("#nc-name").value="";$("#nc-target").value="";toast("العميل اتضاف")}}
 });
 try{const v=localStorage.getItem("view");if(v&&["today","upcoming","focus","all","clients","notes","week"].includes(v))view=v;const af=localStorage.getItem("areaFilter");if(view==="all"&&af)areaFilter=af}catch(_){}
+{const rk=keyFromHash(location.hash);if(rk){if(rk.startsWith("area:")){view="all";areaFilter=rk.slice(5)}else if(rk.startsWith("project:")){view="project";projId=rk.slice(8)}
+  else if(rk==="notes"||rk==="journal"||rk==="files"){view="notes";notesMode=rk}else{view=rk;if(rk==="all")areaFilter=""}}}
+setTimeout(()=>routeSync(false),0);
 setTabs();renderChips();render();
 
 /* ===== storage on GitHub =====
@@ -3233,6 +4325,8 @@ document.addEventListener("click",e=>{
   libCol.onSnapshot(snap=>{lib=snap.docs.map(d=>({id:d.id,...d.data()}));if(fOpen&&fOpen.src==="lib"){const m=lib.find(x=>x.id===fOpen.id);if(m&&m.sha!==fOpen.sha&&!fEdit){fOpen.sha=m.sha}}
     if(view==="notes"&&notesMode==="files"&&!fEdit&&!(document.activeElement&&document.activeElement.id==="f-q"))render()},()=>{});
   db.doc("config/app").onSnapshot(d=>{appName=d.exists?(d.data().name||""):"";applyAppName()},()=>{});
+  db.doc("config/notelabels").onSnapshot(d=>{const l=d.exists&&d.data().list;kLabStore=Array.isArray(l)?l.filter(x=>typeof x==="string"&&x):[];if(view==="notes"&&$("#klab").hidden)render()},()=>{});
+  db.doc("config/team").onSnapshot(d=>{const p=d.exists&&d.data().people;team=Array.isArray(p)?p.filter(x=>x&&x.id&&x.name):[];if(!(view==="team"&&document.activeElement&&document.activeElement.closest("form")))render()},()=>{});
   db.doc("config/goals").onSnapshot(d=>{const it=d.exists&&d.data().items;goals=Array.isArray(it)?it.filter(g=>g&&g.on):[];if(!(view==="settings"&&document.activeElement&&document.activeElement.closest("#goals-set")))render()},()=>{});
   db.doc("config/routine").onSnapshot(d=>{const items=d.exists&&d.data().items;if(Array.isArray(items)&&items.length){routineItems=items;render()}},()=>{});
   meetCol=db.collection("meetings");
