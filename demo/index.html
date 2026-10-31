@@ -278,6 +278,9 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+html body .more-l{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;width:100%;min-height:40px;margin-top:4px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--accent)}
+html body .more-l:hover{background:var(--accent-soft)}
+html body .more-l:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 /* the task details (30 Oct, canvas Main + Phone-Task) */
 html body #editor{display:flex;flex-direction:column;gap:12px}
 html body #editor .ed-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:2px}
@@ -1639,7 +1642,7 @@ try{if(!LS.getItem("folded2")){folded.add("t:done");LS.setItem("folded2","1");LS
 const ARR=`<span class="arr" aria-hidden="true"><svg width="12" height="8" viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 function foldSection(key,title,list,opts,emptyMsg){
   const shut=folded.has(key);
-  return `<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="${key}" aria-expanded="${!shut}">${ARR}${title}</button><small>${list.length}</small></h2>${shut?"":list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
+  return `<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="${key}" aria-expanded="${!shut}">${ARR}${title}</button><small>${list.length}</small></h2>${shut?"":list.length?listRows(key,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-fold]");if(!b)return;const k=b.dataset.fold;
   folded.has(k)?folded.delete(k):folded.add(k);try{LS.setItem("folded",JSON.stringify([...folded]))}catch(_){}
@@ -3414,8 +3417,18 @@ document.addEventListener("click",e=>{
   if(e.target.closest("#f-pri [data-p]")||e.target.closest("#f-rep button")){setTimeout(()=>{paintEd();if(editing)edSave(true)},0)}
   if(e.target.closest("#ed-delete")){clearTimeout(edT);edT=null}},true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#ed-pripop").hidden){e.stopImmediatePropagation();$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");$("#ed-flag").focus()}},true);
+const LONG_AT=6;let moreOpen=new Set();
+function listRows(key,list,opts){
+  const rows=l=>l.map(t=>row(t,opts)).join("");
+  if(!(opts&&opts.noArea)||list.length<=LONG_AT+1)return rows(list);
+  if(moreOpen.has(key))return rows(list)+`<button type="button" class="h-link more-l" data-more="${esc(key)}" aria-expanded="true">أقل</button>`;
+  return rows(list.slice(0,LONG_AT))+`<button type="button" class="h-link more-l" data-more="${esc(key)}" aria-expanded="false">عرض ${list.length-LONG_AT} كمان</button>`}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-more]");if(!b)return;const k=b.dataset.more;
+  moreOpen.has(k)?moreOpen.delete(k):moreOpen.add(k);render();
+  const nb=[...document.querySelectorAll("[data-more]")].find(x=>x.dataset.more===k);if(nb)nb.focus()});
+{const _g=goView;goView=function(){moreOpen.clear();return _g.apply(this,arguments)}}
 function section(title,list,opts,emptyMsg){
-  return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
+  return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?listRows("s:"+title,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
 
 function render(){
