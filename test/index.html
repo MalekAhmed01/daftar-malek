@@ -267,6 +267,28 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+
+html body .set-nav{padding-inline:6px}
+
+
+html body .pj-add:not(:focus-within):has(input:placeholder-shown) button{display:none}
+html body .pj-add:not(:focus-within) input:placeholder-shown{border-color:transparent;background:none;box-shadow:none;color:var(--muted)}
+html body .goal-hint{background:none!important;font-size:13px;color:var(--muted)}
+html body .rt-w{margin-inline-end:8px}
+html body .dnav{margin-bottom:56px}
+
+
+html body #editor .ed-link{all:unset;cursor:pointer;color:var(--muted);font-size:13.5px;padding:8px 2px}
+html body #editor .ed-link:hover{color:var(--accent)}
+html body #editor .ed-link[hidden]{display:none}
+html body #editor #ed-delete,html body #editor #ed-ai{background:none!important;border:0!important;box-shadow:none!important;min-height:0;padding:6px 10px;font-size:13.5px;color:var(--muted)}
+html body #editor #ed-delete:hover{color:var(--red,#c0392b)}
+
+
+html body.lists-on #rail .rl:not(.rl-home):not([data-nav="settings"]){display:none}
+html body #rail [data-search],html body #rail [data-aiopen]{display:none!important}
+html body #dock-tgl{display:none!important}
+
 html body .fcard.m-focus .fbig{color:var(--ink)}
 html body #dock-tgl{display:none}
 @media (min-width:1280px){html body.dz #dock-tgl{display:inline-grid}}
@@ -3622,14 +3644,12 @@ function dockSummary(){
   const nts=notes.filter(n=>!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,3);
   const when=d=>d===t0?"النهارده":d===plusDays(1)?"بكره":fmtShort(d);
   return `<div class="ds"><div class="ds-top"><b>ملخص النهارده</b><span>${esc(fmtDay(t0))}</span></div>
-    <button type="button" class="ds-card ds-prog" data-nav="today">${ringSvg(dn,tot)}<span><b>${tot?`خلصت ${dn} من ${tot}`:"يومك فاضي"}</b><small>${tot?(late?`${late} منهم متأخر`:tl.length?`فاضل ${tl.length}`:"خلصت كله"):"اكتب أول تاسك من الخانة السريعة"}</small></span></button>
     ${m?`<div class="ds-card"><span><small>الميتنج الجاي</small><b>${esc(m.title)}</b><small>${when(m.date)} · ${fmtTime(m.time)}</small></span></div>`:""}
     <button type="button" class="ds-card" data-nav="focus"><span><small>التركيز</small><b>${tmin?`اشتغلت ${dkMin(tmin)} النهارده`:"لسه ماشتغلتش بالتايمر النهارده"}</b>${wmin?`<small>${dkMin(wmin)} آخر 7 أيام</small>`:""}</span></button>
     ${dl.length?`<div class="ds-sec"><h4>أقرب ديدلاين</h4>${dl.map(t=>`<button type="button" class="ds-row" data-edit="${t.id}"><i class="ds-dot ds-${PRI_KEY(t)}"></i><span>${esc(clip(t.title,36))}</span><small class="${t.due<t0?"ds-late":""}">${when(t.due)}</small></button>`).join("")}</div>`:""}
-    ${routineItems.length?`<button type="button" class="ds-card" data-nav="today"><span><small>الروتين</small><b>${rdn} من ${routineItems.length} النهارده</b></span></button>`:""}
     <div class="ds-sec"><h4>فكرة في بالك؟</h4><textarea id="ds-idea" rows="2" maxlength="1000" placeholder="اكتبها هنا وهتتحفظ في النوتس" aria-label="فكرة سريعة"></textarea>
       <div class="ds-act"><small>Enter يحفظ، وShift+Enter سطر جديد</small><button type="button" class="mini" data-ds-idea="1">احفظها</button></div>
-      ${nts.map(n=>`<button type="button" class="ds-row ds-note" data-nav="notes"><span>${esc(clip(String(n.text||"").replace(/\s+/g," "),60))}</span></button>`).join("")}</div>
+      </div>
   </div>`}
 function paintDock(){const el=document.getElementById("dock-empty");if(!el||!document.body.classList.contains("dock-on"))return;
   const a=document.activeElement,typing=!!(a&&el.contains(a)&&a.id==="ds-idea");if(typing&&a.value)return;
@@ -3649,6 +3669,22 @@ document.addEventListener("change",e=>{if(e.target.id==="dock-sel")setDetailMode
 document.addEventListener("click",e=>{if(e.target.closest("[data-ds-idea]")){saveIdea();return}
   const d=e.target.closest("[data-dockmode]");if(d){setDetailMode(detailMode==="popup"?"side":"popup")}});
 
+let edRepOpen=false,edRepLocked=false;
+{const _o=openEditor;openEditor=function(t){edRepOpen=false;edRepLocked=!!(t&&(t.parentId||subsOf(t.id).length||t.status==="done"||t.repeatOf));_o(t)}}   // locked: steps, done tasks and copies never repeat
+{const _p=paintEd;paintEd=function(){_p.apply(this,arguments);
+  const f=document.getElementById("rep-field");if(!f)return;
+  let a=document.getElementById("ed-rep-add");if(!a){a=document.createElement("button");a.type="button";a.id="ed-rep-add";a.className="ed-link";a.textContent="+ خليه يتكرر";f.after(a)}
+  if(edRepLocked){a.hidden=true;return}
+  if(edRep.length)edRepOpen=true;
+  f.hidden=!edRepOpen;a.hidden=edRepOpen}}
+document.addEventListener("click",e=>{if(!e.target.closest("#ed-rep-add"))return;edRepOpen=true;paintEd()});
+function tidyPages(){
+  document.querySelectorAll("h2").forEach(h=>{const t=h.textContent.trim();
+    if(t==="البومودورو"&&view==="focus")h.hidden=true;                                    // the page is already called «تركيز»
+    if(/^اللي خلص آخر 7 أيام/.test(t)&&/^0\s*تاسك/.test(t.replace(/^اللي خلص آخر 7 أيام\s*/,""))){      // nothing finished: one sentence, no five empty bars
+      const s=h.closest("section");if(s)[...s.children].forEach(c=>{if(c!==h&&!c.classList.contains("empty"))c.hidden=true})}});
+  document.querySelectorAll("a,button,.h-link").forEach(b=>{if(b.textContent.trim()==="إعدادات التايمر")b.hidden=true})}   // the timer settings live in الإعدادات
+{const _r=render;render=function(){_r.apply(this,arguments);try{tidyPages()}catch(_){}}}
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?listRows("s:"+title,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
