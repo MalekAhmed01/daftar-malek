@@ -3645,7 +3645,7 @@ function dockSummary(){
   const when=d=>d===t0?"النهارده":d===plusDays(1)?"بكره":fmtShort(d);
   return `<div class="ds"><div class="ds-top"><b>ملخص النهارده</b><span>${esc(fmtDay(t0))}</span></div>
     ${m?`<div class="ds-card"><span><small>الميتنج الجاي</small><b>${esc(m.title)}</b><small>${when(m.date)} · ${fmtTime(m.time)}</small></span></div>`:""}
-    <button type="button" class="ds-card" data-nav="focus"><span><small>التركيز</small><b>${tmin?`اشتغلت ${dkMin(tmin)} النهارده`:"لسه ماشتغلتش بالتايمر النهارده"}</b>${wmin?`<small>${dkMin(wmin)} آخر 7 أيام</small>`:""}</span></button>
+    ${tmin?`<button type="button" class="ds-card" data-nav="focus"><span><small>التركيز</small><b>اشتغلت ${dkMin(tmin)} النهارده</b>${wmin?`<small>${dkMin(wmin)} آخر 7 أيام</small>`:""}</span></button>`:""}
     ${dl.length?`<div class="ds-sec"><h4>أقرب ديدلاين</h4>${dl.map(t=>`<button type="button" class="ds-row" data-edit="${t.id}"><i class="ds-dot ds-${PRI_KEY(t)}"></i><span>${esc(clip(t.title,36))}</span><small class="${t.due<t0?"ds-late":""}">${when(t.due)}</small></button>`).join("")}</div>`:""}
     <div class="ds-sec"><h4>فكرة في بالك؟</h4><textarea id="ds-idea" rows="2" maxlength="1000" placeholder="اكتبها هنا وهتتحفظ في النوتس" aria-label="فكرة سريعة"></textarea>
       <div class="ds-act"><small>Enter يحفظ، وShift+Enter سطر جديد</small><button type="button" class="mini" data-ds-idea="1">احفظها</button></div>
