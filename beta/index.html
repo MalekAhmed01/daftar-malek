@@ -134,7 +134,10 @@ h1{font-family:var(--f-display);font-weight:700;font-size:30px;margin:0;line-hei
 .wl-card .btn{min-height:46px;justify-content:center}
 .bt-danger-zone{border-top:1px solid var(--line);padding-top:12px;display:flex}.bt-danger-zone .btn{flex:1}
 .btn.bt-danger{color:var(--red);border-color:var(--red)}
-#bt-login,#bt-acc,#bt-fb{overflow:auto}
+.bt-steps{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.bt-steps li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.7;color:var(--ink)}
+.bt-steps b{flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:14px;margin-top:2px}
+#bt-login,#bt-acc,#bt-fb,#bt-intro{overflow:auto}
 html body .wrap .foot{display:flex!important;padding:12px 0 6px}
 html body .wrap .foot button{min-height:40px;padding:0 10px}
 .test-flag{font-size:13px;background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:7px 10px}
@@ -1494,7 +1497,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
     <button type="button" class="ai-fab" id="ai-fab" aria-label="المساعد" title="المساعد"><span aria-hidden="true">✦</span><span class="lbl"> المساعد</span></button>
     <button type="button" class="gear s-open" data-search="1" aria-label="دوّر" title="دوّر"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><button type="button" class="gear" id="open-settings" aria-label="الإعدادات" title="الإعدادات"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
   </header>
-  <div class="test-flag demo-flag">نسخة بيتا للأصحاب: التسكات بتتحفظ في حسابك وتفتحها من أي جهاز. أي حاجة تلاقيها غريبة أو عايز تغيّرها، دوس «ابعت رأيك» تحت.</div>
+  
 
   <div class="tabs" role="tablist" id="tabs" aria-label="التنقل">
     <button role="tab" data-view="today" aria-selected="true"><span class="ti" data-ic="today"></span><span>النهارده</span></button>
@@ -4364,7 +4367,7 @@ function demoWelcome(){const w=document.createElement("div");w.className="welcom
   document.body.appendChild(w);setTimeout(()=>{const n=document.getElementById("wl-name");if(n)n.focus()},50);
   w.querySelector("form").addEventListener("submit",async e=>{e.preventDefault();const nm=document.getElementById("wl-name").value.trim();const st=w.querySelector('input[name="wl-start"]:checked').value;
     if(st==="samples"){for(const S of [DEMO_SEED(),DEMO_EXTRA()])for(const [c,docs] of Object.entries(S))for(const [id,d] of Object.entries(docs))db.collection(c).doc(id).set(d)}
-    db.collection("config").doc("app").update(Object.assign({welcomed:true},nm?{name:"دفتر "+nm}:{}));w.remove()})}
+    db.collection("config").doc("app").update(Object.assign({welcomed:true},nm?{name:"دفتر "+nm}:{}));w.remove();setTimeout(betaIntro,250)})}
 /* ===== beta: accounts and storage on Supabase =====
    one generic table docs(user_id, col, id, data): every collection of the app is a set of rows. Writes show on screen at once,
    then go out in one request per collection (debounced); unsent changes stay in this browser and go out on the next open.
@@ -4499,8 +4502,21 @@ async function bootBeta(){
   const ft=document.getElementById("foot");if(ft){ft.hidden=false;ft.innerHTML='<button type="button" data-bt="feedback">ابعت رأيك</button><button type="button" data-bt="account">حسابي</button>'}
   setSync("busy","بيحمّل…");
   setTimeout(()=>{let seen=false;const off=d.doc("config/app").onSnapshot(s=>{if(seen)return;seen=true;setTimeout(()=>{try{off&&off()}catch(_){}},0);
-    const x=s.exists?s.data():{};if(!x.welcomed&&!document.getElementById("wl-form"))demoWelcome()})},0);
+    const x=s.exists?s.data():{};if(!x.welcomed){if(!document.getElementById("wl-form"))demoWelcome()}else if(!x.introDone)betaIntro()})},0);
   return d}
+
+
+/* ----- first-run card: what this is and how to use it (shown once per account) ----- */
+function betaIntro(){if(document.getElementById("bt-intro"))return;
+  const li=(n,t)=>`<li><b>${n}</b><span>${t}</span></li>`;
+  btAsk("bt-intro",`<div class="wl-card"><h2>إزاي تستخدم الدفتر</h2><p class="bt-sub">ده دفتر تسكات تفضّي فيه دماغك. نسخة بيتا للتجربة: جرّبه براحتك.</p>
+    <ol class="bt-steps">${li("١","اكتب التاسك في الخانة اللي فوق في «النهارده» واضغط Enter. اكتب «!» في أولها لو مهم جداً.")}
+    ${li("٢","دوس على الدايرة جنب التاسك لما تخلصه. دوس على التاسك نفسه عشان تفتح تفاصيله وتضيف تاسكات فرعية.")}
+    ${li("٣","القوايم: «النهارده» اللي عليك النهارده، «الجاي» اللي جاي، «التسكات» كلها، «تركيز» تايمر، و«المزيد» الباقي.")}
+    ${li("٤","داتاك ليك انت بس، وتفتحها من أي جهاز بنفس الإيميل والباسورد.")}
+    ${li("٥","أي حاجة لخبطتك أو عايز تغيّرها: «ابعت رأيك» في آخر الصفحة. رأيك بيوصل لمالك.")}</ol>
+    <button class="btn primary" type="button" id="bt-intro-ok">فهمت، يلا</button></div>`);
+  document.getElementById("bt-intro-ok").addEventListener("click",()=>{db.collection("config").doc("app").update({introDone:true});btClose("bt-intro")})}
 
 /* ----- feedback and account ----- */
 const btClose=id=>{const e=document.getElementById(id);if(e)e.remove()};
