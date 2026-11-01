@@ -532,6 +532,9 @@ html body #rail,html body #dock-empty{display:none}
   /* lists */
   html body.dz #side .nv{min-height:34px;font-size:14px;border-radius:7px;padding-inline:10px;gap:10px}
   html body.dz #side .nv[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  html body.dz #side .nh-b{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:0;cursor:pointer;font-family:inherit;text-align:start}
+  html body.dz #side .nh-b .nh-a{transition:transform .15s;opacity:.7}
+  html body.dz #side .nh-b[aria-expanded="false"] .nh-a{transform:rotate(90deg)}
   html body.dz #side .nh{font-size:12px;font-weight:600;color:var(--muted);padding:12px 10px 4px}
   html body.dz #side .hash{font-weight:400;color:var(--muted);width:18px;text-align:center;display:inline-block}
   html body.dz #side .nc{font-style:normal;font-size:12.5px;color:var(--muted);background:none;margin-inline-start:auto}
@@ -1680,6 +1683,12 @@ const parentOf=t=>t&&t.parentId?tasks.find(p=>p.id===t.parentId)||null:null;
 const isTop=t=>!parentOf(t);
 const clip=(s,n=40)=>s.length>n?s.slice(0,n)+"…":s;
 let expanded=new Set();try{LS.removeItem("expanded")}catch(_){}
+// 1 Nov (Malek): the steps under a task show open by default; the arrow is only for hiding them, and what he hid is remembered.
+// Plain task ids use the "hidden" set (saved); course keys ("c:...") keep the old opt-in set.
+{const hid=new Set();try{JSON.parse(LS.getItem("subHidden")||"[]").forEach(x=>hid.add(x))}catch(_){}
+ const keep=()=>{try{LS.setItem("subHidden",JSON.stringify([...hid]))}catch(_){}};
+ const inner=new Set(),plain=k=>!String(k).startsWith("c:");
+ expanded={has:k=>plain(k)?!hid.has(k):inner.has(k),add:k=>{if(plain(k)){hid.delete(k);keep()}else inner.add(k)},delete:k=>{if(plain(k)){hid.add(k);keep()}else inner.delete(k)},clear:()=>inner.clear()}}
 const saveExpanded=()=>{};
 const sortTasks=a=>a.slice().sort((x,y)=>(PRI_RANK[x.pri]??9)-(PRI_RANK[y.pri]??9)||(x.due||"9999").localeCompare(y.due||"9999")||(x.createdAt||0)-(y.createdAt||0));
 const isOpen=t=>t.status!=="done";
@@ -3431,12 +3440,15 @@ function paintRail2(){const r=document.getElementById("rail");if(!r)return;const
     <button type="button" class="rl" data-search="1" aria-label="دوّر" title="دوّر (Ctrl+K)"><span class="ni">${NI.search}</span></button>
     <button type="button" class="rl" data-aiopen="1" aria-label="المساعد" title="المساعد"><span class="ni">${SPARK}</span></button>
     <span class="rl-gap"></span>${it("settings","settings",NI.settings,"الإعدادات")}`}
+// 1 Nov (Malek): «الأقسام» and «المزيد» can be folded from their titles; the choice is remembered
+let sideFold={};try{sideFold=JSON.parse(LS.getItem("sideFold")||"{}")||{}}catch(_){}
+const secHead=(k,t)=>`<button type="button" class="nh nh-b" data-fold="${k}" aria-expanded="${!sideFold[k]}"><span>${t}</span><svg class="nh-a" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`;
 function paintLists(){const box=document.getElementById("side-list");if(!box)return;const c=navCounts(),cur=navKey();
   const it=(k,ic,name,n)=>`<button type="button" class="nv" data-nav="${k}" ${cur===k?'aria-current="page"':""}><span class="ni">${ic}</span><span class="nn">${esc(name)}</span>${n?`<i class="nc">${n}</i>`:""}</button>`;
   box.innerHTML=`<div class="ng">${it("today",NI.today,"النهارده",c.today)}${it("upcoming",NI.upcoming,"الجاي",c.upcoming||0)}${it("all",NI.all,"كل التسكات",c.all)}</div>
-    <div class="nh">الأقسام</div><div class="ng">${AREAS.map(([k,n])=>it("area:"+k,'<b class="hash">#</b>',n,c.areas[k]||0)).join("")}</div>
+    ${secHead("areas","الأقسام")}${sideFold.areas?"":`<div class="ng">${AREAS.map(([k,n])=>it("area:"+k,'<b class="hash">#</b>',n,c.areas[k]||0)).join("")}</div>`}
     <div class="ng">${it("clients",NI.clients,"العملاء",0)}${team.length?it("team",NI.team,"الفريق",0):""}${it("proj",NI.projects||NI.all,"المشاريع",0)}${it("focus",NI.focus,"تركيز",0)}${it("notes",NI.notes,"النوتس",0)}</div>
-    <div class="nh">المزيد</div><div class="ng">${it("week",NI.week,"الأسبوع",0)}${it("journal",NI.journal,"يوميات",0)}${it("files",NI.files,"ملفات",0)}</div>`}
+    ${secHead("more","المزيد")}${sideFold.more?"":`<div class="ng">${it("week",NI.week,"الأسبوع",0)}${it("journal",NI.journal,"يوميات",0)}${it("files",NI.files,"ملفات",0)}</div>`}`}
 function paintShell2(){const desk=isDesk();const cur=navKey();
   document.body.classList.toggle("dz",desk);
   if(!desk){document.body.classList.remove("lists-on","dock-on");return}
@@ -3449,6 +3461,7 @@ function paintShell2(){const desk=isDesk();const cur=navKey();
 {const _p=paintShell;paintShell=function(){_p();paintShell2()}}
 addEventListener("resize",()=>{try{paintShell2()}catch(_){}});
 document.addEventListener("click",e=>{
+  const fb=e.target.closest("[data-fold]");if(fb){e.stopImmediatePropagation();const k=fb.dataset.fold;sideFold[k]=!sideFold[k];try{LS.setItem("sideFold",JSON.stringify(sideFold))}catch(_){}paintShell2();return}
   const w=e.target.closest("[data-sidewide]");if(w&&isDesk()){e.stopImmediatePropagation();listsHidden=!listsHidden;try{LS.setItem("listsHidden",listsHidden?"1":"0")}catch(_){}paintShell2();return}
   if(e.target.closest("[data-aiopen]")){e.preventDefault();openAi();return}},true);
 // the detail panel: switching to another task saves the open one first
@@ -4693,13 +4706,22 @@ function btAccount(){if(document.getElementById("bt-acc"))return;
     <button class="btn" type="button" data-bt="chpw">غيّر الباسورد</button>
     <div class="bt-err" id="bt-ae" role="status"></div>
     <button class="btn" type="button" data-bt="tour">شوف الجولة التعريفية</button>
-    <div class="bt-row"><button class="btn" type="button" data-bt="export">نزّل داتاي</button><button class="btn" type="button" data-bt="logout">اخرج</button></div>
+    <div class="bt-row"><button class="btn" type="button" data-bt="export">نزّل داتاي</button><button class="btn" type="button" data-bt="import">استورد داتا من ملف</button><input type="file" id="bt-imp" accept="application/json,.json" hidden></div>
+    <div class="bt-row"><button class="btn" type="button" data-bt="logout">اخرج</button></div>
     <div class="bt-danger-zone"><button class="btn bt-danger" type="button" data-bt="del">امسح حسابي وكل داتاي</button></div>
     <button class="btn" type="button" data-bt="close-acc">قفل</button></div>`)}
 const btMsg=(t,bad)=>{const e=document.getElementById("bt-ae");if(e){e.textContent=t;e.style.color=bad?"var(--red)":"var(--accent)"}};
 async function btWaitSaved(){for(let i=0;i<30&&db.busy();i++)await new Promise(r=>setTimeout(r,200));return !db.busy()}
 function btWipeLocal(){const uid=db.uid;sbLS.set(SB_SESS,null);sbLS.set("sbdb:"+uid+":pending",null);sbLS.set("sbdb:"+uid+":cache",null);
   Object.keys(localStorage).filter(k=>k.startsWith("beta:")).forEach(k=>localStorage.removeItem(k))}
+/* import: a file in the same shape as «نزّل داتاي» ({data:{collection:{id:doc}}}) or a plain {collection:{id:doc}}; same ids are overwritten, nothing else is touched */
+document.addEventListener("change",async e=>{if(!e.target||e.target.id!=="bt-imp")return;const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;
+  try{const j=JSON.parse(await f.text());const data=j&&j.data&&typeof j.data==="object"&&!Array.isArray(j.data)?j.data:j;let n=0;
+    for(const col of Object.keys(data)){const docs=data[col];if(!docs||typeof docs!=="object"||Array.isArray(docs)||!/^[a-z_]+$/i.test(col))continue;
+      for(const id of Object.keys(docs)){if(col==="config"&&id==="app")continue;if(col==="settings"&&id==="calendar")continue;const d=docs[id];if(!d||typeof d!=="object")continue;db.collection(col).doc(id).set(d);n++}}
+    btMsg(n?"بيستورد "+n+" عنصر…":"الملف مفيهوش داتا أعرفها.",!n);
+    if(n){if(await btWaitSaved()){btMsg("اتستورد "+n+" عنصر. بيحمّل من جديد…");setTimeout(()=>location.reload(),900)}else btMsg("لسه بيحفظ. سيب الصفحة مفتوحة لحد ما اللمبة تبقى خضرا.",true)}}
+  catch(_){btMsg("الملف مش مفهوم. لازم يبقى ملف داتا JSON.",true)}});
 /* the red pill used to open the GitHub connect screen (the notebook's own behaviour): here it says why it is red instead */
 document.addEventListener("click",e=>{if(!e.target.closest("#sync.err"))return;e.stopImmediatePropagation();e.preventDefault();
   const le=typeof db!=="undefined"&&db&&db.lastErr;toast(le?"السبب: "+le:"مش متصل، وهيحاول تاني لوحده.")},true);
@@ -4716,6 +4738,7 @@ document.addEventListener("click",async e=>{const b=e.target.closest("[data-bt]"
     try{const out={};let off=0;for(;;){const r=await sbRest("docs?select=col,id,data&order=col.asc,id.asc&limit=1000&offset="+off);if(!r.ok)throw new Error("http");const rows=await r.json();rows.forEach(x=>{(out[x.col]=out[x.col]||{})[x.id]=x.data});if(rows.length<1000)break;off+=1000}
       const a2=document.createElement("a");a2.href=URL.createObjectURL(new Blob([JSON.stringify({exportedAt:new Date().toISOString(),email:sbSess.user.email,data:out},null,1)],{type:"application/json"}));a2.download="daftar-data-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a2);a2.click();a2.remove();btMsg("الملف نزل.")}
     catch(_){btMsg("معرفتش أنزّل الداتا. جرّب تاني.",true)}return}
+  if(a==="import"){document.getElementById("bt-imp").click();return}
   if(a==="del"){if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="متأكد؟ كل داتاك هتتمسح ومش هترجع. دوس تاني للتأكيد";return}
     try{const r=await sbRest("rpc/delete_my_account",{method:"POST",body:"{}"});if(!r.ok)throw new Error("http");btWipeLocal();document.body.innerHTML='<div style="padding:40px 20px;text-align:center;font-family:inherit">الحساب واتمسحت داتاه. شكراً إنك جرّبت الدفتر.</div>'}
     catch(_){btMsg("معرفتش أمسح الحساب. جرّب تاني أو كلّم مالك.",true)}return}
