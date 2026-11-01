@@ -4526,13 +4526,20 @@ async function sbSignIn(email,pw){
   if(!r.ok)throw new Error(r.status===400||r.status===401||r.status===422?"bad":r.status===429?"rate":"other");
   return sbKeep(r.j)}
 let sbRefreshing=null;
+/* another tab may have refreshed already (refresh tokens are single-use): adopt its newer session instead of signing out */
+function sbAdopt(){const s=sbLS.get(SB_SESS);if(s&&s.user&&(!sbSess||s.refresh_token!==sbSess.refresh_token||s.expires_at>sbSess.expires_at)){sbSess=s;return true}return false}
+addEventListener("storage",e=>{if(e.key===SB_SESS)sbAdopt()});
 async function sbToken(){
   if(!sbSess)throw new Error("auth");
+  sbAdopt();
   if(sbSess.expires_at-60>Date.now()/1000)return sbSess.access_token;
   if(!sbRefreshing)sbRefreshing=(async()=>{
-    try{const r=await sbAuthReq("token?grant_type=refresh_token",{refresh_token:sbSess.refresh_token});
+    try{const used=sbSess.refresh_token;
+      const r=await sbAuthReq("token?grant_type=refresh_token",{refresh_token:used});
       if(r.ok){sbKeep(r.j);return}
-      if(r.status>=400&&r.status<500){sbSess=null;sbLS.set(SB_SESS,null);throw new Error("auth")}
+      /* the token was rejected: if another tab already rotated it, use that one; only a real rejection (400/401/403) signs out, never rate limits or server errors */
+      if(sbAdopt()&&sbSess.refresh_token!==used&&sbSess.expires_at-60>Date.now()/1000)return;
+      if(r.status===400||r.status===401||r.status===403){sbSess=null;sbLS.set(SB_SESS,null);throw new Error("auth")}
       throw new Error("net")}
     catch(e){throw e.message==="auth"?e:new Error("net")}
     finally{sbRefreshing=null}})();
@@ -4540,7 +4547,7 @@ async function sbToken(){
 async function sbRest(path,opt,again){
   const t=await sbToken();
   const r=await fetch(SB_URL+"/rest/v1/"+path,{cache:"no-store",...(opt||{}),headers:{"apikey":SB_KEY,"Authorization":"Bearer "+t,...((opt&&opt.body)?{"Content-Type":"application/json"}:{}),...((opt&&opt.headers)||{})}});
-  if(r.status===401){if(again===false){sbSess=null;sbLS.set(SB_SESS,null);throw new Error("auth")}sbSess.expires_at=0;return sbRest(path,opt,false)}
+  if(r.status===401){if(again===false){throw new Error("auth")}sbSess.expires_at=0;return sbRest(path,opt,false)}
   return r}
 async function sbHttp(r){let t="";try{t=(await r.text()).slice(0,200)}catch(_){}throw new Error("http "+r.status+" "+t)}
 class SupabaseDB{
