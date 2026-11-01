@@ -267,6 +267,108 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+
+html body .set-nav{padding-inline:6px}
+
+
+html body .pj-add:not(:focus-within):has(input:placeholder-shown) button{display:none}
+html body .pj-add:not(:focus-within) input:placeholder-shown{border-color:transparent;background:none;box-shadow:none;color:var(--muted)}
+html body .goal-hint{background:none!important;font-size:13px;color:var(--muted)}
+html body .rt-w{margin-inline-end:8px}
+html body .dnav{margin-bottom:56px}
+
+
+html body #editor .ed-link{all:unset;cursor:pointer;color:var(--muted);font-size:13.5px;padding:8px 2px}
+html body #editor .ed-link:hover{color:var(--accent)}
+html body #editor .ed-link[hidden]{display:none}
+html body #editor #ed-delete,html body #editor #ed-ai{background:none!important;border:0!important;box-shadow:none!important;min-height:0;padding:6px 10px;font-size:13.5px;color:var(--muted)}
+html body #editor #ed-delete:hover{color:var(--red,#c0392b)}
+
+
+html body.lists-on #rail .rl:not(.rl-home):not([data-nav="settings"]){display:none}
+html body #rail [data-search],html body #rail [data-aiopen]{display:none!important}
+html body #dock-tgl{display:none!important}
+
+html body .fcard.m-focus .fbig{color:var(--ink)}
+html body #dock-tgl{display:none}
+@media (min-width:1280px){html body.dz #dock-tgl{display:inline-grid}}
+html body.dz.dock-on aside#dock-empty{justify-content:flex-start;align-items:stretch;text-align:start;overflow-y:auto;color:var(--ink);padding:22px 20px 28px;font-size:15px}
+html body aside#dock-empty .ds{display:flex;flex-direction:column;gap:12px;width:100%}
+html body aside#dock-empty .ds-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+html body aside#dock-empty .ds-top b{font-size:18px;font-weight:700}
+html body aside#dock-empty .ds-top span{font-size:13px;color:var(--muted)}
+html body aside#dock-empty .ds-card{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);background:var(--sheet);border-radius:14px;cursor:default}
+html body aside#dock-empty button.ds-card{cursor:pointer}
+html body aside#dock-empty button.ds-card:hover,html body aside#dock-empty .ds-row:hover{background:var(--accent-soft)}
+html body aside#dock-empty .ds-card:focus-visible,html body aside#dock-empty .ds-row:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+html body aside#dock-empty .ds-card span{display:flex;flex-direction:column;gap:2px;min-width:0}
+html body aside#dock-empty .ds-card b{font-size:15.5px;font-weight:600}
+html body aside#dock-empty small{font-size:12.5px;color:var(--muted);font-weight:500}
+html body aside#dock-empty .ds-prog .ring{flex:none}
+html body aside#dock-empty .ds-sec{display:flex;flex-direction:column;gap:6px;padding-top:4px}
+html body aside#dock-empty .ds-sec h4{margin:0 0 2px;font-size:13px;font-weight:600;color:var(--muted)}
+html body aside#dock-empty .ds-row{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;min-height:40px;padding:6px 10px;border-radius:10px;cursor:pointer;font-size:14.5px}
+html body aside#dock-empty .ds-row span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body aside#dock-empty .ds-dot{width:10px;height:10px;border-radius:3px;flex:none;border:2px solid currentColor}
+html body aside#dock-empty .ds-red{color:var(--red);background:var(--red)}html body aside#dock-empty .ds-blue{color:var(--blue)}html body aside#dock-empty .ds-black{color:var(--black)}
+html body aside#dock-empty .ds-late{color:var(--red);font-weight:600}
+html body aside#dock-empty .ds-note{color:var(--muted)}
+html body aside#dock-empty textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--sheet);border:1px solid var(--line);border-radius:12px;padding:10px 12px;resize:vertical;min-height:64px;box-sizing:border-box;width:100%;line-height:1.6}
+html body aside#dock-empty textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+html body aside#dock-empty .ds-act{display:flex;align-items:center;justify-content:space-between;gap:8px}
+html body #tour{position:fixed;inset:0;z-index:95}
+html body #tour.tour-dim{background:rgba(10,14,28,.62)}
+html body #tour .tour-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 100vmax rgba(10,14,28,.62);outline:2px solid var(--accent);outline-offset:0;pointer-events:none}
+html body #tour .tour-card{position:fixed;box-sizing:border-box;background:var(--sheet);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:16px 16px 12px;box-shadow:0 18px 48px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:8px}
+html body #tour .tour-n{font-size:12.5px;color:var(--muted);font-weight:600}
+html body #tour h3{margin:0;font-size:19px;font-weight:700;line-height:1.4}
+html body #tour p{margin:0;font-size:15px;line-height:1.75;color:var(--ink)}
+html body #tour .tour-act{display:flex;align-items:center;gap:8px;margin-top:6px}
+html body #tour .tour-act span{flex:1}
+html body #tour .tour-act button{font:inherit;font-size:15px;font-weight:600;min-height:44px;padding:0 16px;border-radius:12px;cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+html body #tour .tour-act .tour-skip{border:0;background:none;color:var(--muted);padding:0 6px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+html body #tour .tour-act .tour-next{background:var(--accent);border-color:var(--accent);color:#fff}
+html body #tour .tour-act button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+html body #tour .tour-act button[hidden]{display:none}
+/* desktop keeps the old look: the new bits are hidden */
+html body .hd-more,html body #hd-more,html body #counts .dp-ring,html body .late-all .la-i,html body .rt-strip .rt-ds{display:none!important}
+html body .rt-l{all:unset;display:inline-flex;align-items:center;min-height:36px;font-size:14px;color:var(--muted);margin-inline-end:4px;cursor:default}
+html body .tag-i{display:inline-flex;align-items:center;gap:4px}
+html body #hd-menu{position:fixed;z-index:80;width:232px;box-sizing:border-box;padding:6px;border-radius:14px;background:var(--sheet);border:1px solid var(--line);box-shadow:0 14px 34px rgba(0,0,0,.28);display:flex;flex-direction:column}
+html body #hd-menu button{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:12px;min-height:48px;padding:0 12px;border-radius:10px;font-size:15px;font-weight:500;color:var(--ink);cursor:pointer}
+html body #hd-menu button:hover,html body #hd-menu button:focus-visible{background:var(--accent-soft)}
+html body #hd-menu button .li{color:var(--muted);flex:none}
+html body #hd-menu button span{flex:1}
+html body #hd-menu .hd-n{font-style:normal;min-width:22px;height:22px;padding:0 6px;box-sizing:border-box;border-radius:99px;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+@media (max-width:959px){
+  html body #open-settings{display:none!important}
+  html body #hd-more{display:grid!important}
+  html body .counts .ts-act{display:none!important}
+  html body .dprog .dp-t,html body .dprog .dp-bar{display:none!important}
+  html body #counts .dprog .dp-ring{display:inline-flex!important;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink)}
+  html body .late-all{all:unset;box-sizing:border-box;cursor:pointer;min-width:44px;min-height:40px;display:grid;place-items:center;color:var(--accent)}
+  html body .late-all:focus-visible{box-shadow:0 0 0 2px var(--accent);border-radius:8px}
+  html body .late-all .la-i{display:grid!important}html body .late-all .la-t{display:none!important}
+  html body .rt-strip:not(.rt-open) .rt{display:none!important}
+  html body .rt-strip{flex-wrap:wrap!important;overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
+  html body .rt-strip .rt-l{display:inline-flex;align-items:center;gap:10px;box-sizing:border-box;height:40px;padding:0 16px;margin:0;border-radius:999px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer}
+  html body .rt-strip .rt-l:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+  html body .rt-strip .rt-l small{color:var(--muted);font-size:13px;font-weight:500}
+  html body .rt-strip .rt-l .rt-w{display:inline!important}
+  html body .rt-strip .rt-ds{display:inline-flex!important;gap:4px}
+  html body .rt-strip .rt-d{width:10px;height:10px;border-radius:50%;box-sizing:border-box;border:1.8px solid var(--muted)}
+  html body .rt-strip .rt-d.on{background:var(--accent);border-color:var(--accent)}
+  /* the quick box: one line until you tap it */
+  html body .qa2:not(.qa-hold):not(:focus-within):not(:has([aria-expanded="true"])):has(#qa-title:placeholder-shown){flex-wrap:nowrap}
+  html body .qa2:not(.qa-hold):not(:focus-within):not(:has([aria-expanded="true"])):has(#qa-title:placeholder-shown) .qa-tools{display:contents}
+  html body .qa2:not(.qa-hold):not(:focus-within):not(:has([aria-expanded="true"])):has(#qa-title:placeholder-shown) .qa-tools>:not(.qa-pri){display:none!important}
+  html body .qa2:not(.qa-hold):not(:focus-within):not(:has([aria-expanded="true"])):has(#qa-title:placeholder-shown) .qa-pri{border:0!important;background:none!important}
+  html body .tabs [data-view="more"] .ti{position:relative}
+  html body .tabs [data-view="more"].has-dot .ti::after{content:"";position:absolute;top:-2px;inset-inline-end:-4px;width:9px;height:9px;border-radius:50%;background:var(--red)}
+}
+html body .more-l{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;width:100%;min-height:40px;margin-top:4px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--accent)}
+html body .more-l:hover{background:var(--accent-soft)}
+html body .more-l:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 /* the task details (30 Oct, canvas Main + Phone-Task) */
 html body #editor{display:flex;flex-direction:column;gap:12px}
 html body #editor .ed-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:2px}
@@ -417,6 +519,9 @@ html body #rail,html body #dock-empty{display:none}
   /* lists */
   html body.dz #side .nv{min-height:34px;font-size:14px;border-radius:7px;padding-inline:10px;gap:10px}
   html body.dz #side .nv[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  html body.dz #side .nh-b{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:0;cursor:pointer;font-family:inherit;text-align:start}
+  html body.dz #side .nh-b .nh-a{transition:transform .15s;opacity:.7}
+  html body.dz #side .nh-b[aria-expanded="false"] .nh-a{transform:rotate(90deg)}
   html body.dz #side .nh{font-size:12px;font-weight:600;color:var(--muted);padding:12px 10px 4px}
   html body.dz #side .hash{font-weight:400;color:var(--muted);width:18px;text-align:center;display:inline-block}
   html body.dz #side .nc{font-style:normal;font-size:12.5px;color:var(--muted);background:none;margin-inline-start:auto}
@@ -1563,6 +1668,7 @@ const parentOf=t=>t&&t.parentId?tasks.find(p=>p.id===t.parentId)||null:null;
 const isTop=t=>!parentOf(t);
 const clip=(s,n=40)=>s.length>n?s.slice(0,n)+"…":s;
 let expanded=new Set();try{localStorage.removeItem("expanded")}catch(_){}
+
 const saveExpanded=()=>{};
 const sortTasks=a=>a.slice().sort((x,y)=>(PRI_RANK[x.pri]??9)-(PRI_RANK[y.pri]??9)||(x.due||"9999").localeCompare(y.due||"9999")||(x.createdAt||0)-(y.createdAt||0));
 const isOpen=t=>t.status!=="done";
@@ -1626,7 +1732,7 @@ try{if(!localStorage.getItem("folded2")){folded.add("t:done");localStorage.setIt
 const ARR=`<span class="arr" aria-hidden="true"><svg width="12" height="8" viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 function foldSection(key,title,list,opts,emptyMsg){
   const shut=folded.has(key);
-  return `<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="${key}" aria-expanded="${!shut}">${ARR}${title}</button><small>${list.length}</small></h2>${shut?"":list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
+  return `<section class="section ${shut?"folded":""}"><h2><button type="button" class="fold" data-fold="${key}" aria-expanded="${!shut}">${ARR}${title}</button><small>${list.length}</small></h2>${shut?"":list.length?listRows(key,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-fold]");if(!b)return;const k=b.dataset.fold;
   folded.has(k)?folded.delete(k):folded.add(k);try{localStorage.setItem("folded",JSON.stringify([...folded]))}catch(_){}
@@ -2349,7 +2455,9 @@ function applyAppName(){const n=(appName||"").trim()||APP_DEFAULT;const h=docume
   const m=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(m)m.content=n}
 function appSetHtml(){return `<section class="section"><h2>الدفتر</h2><div class="sets"><div class="srow"><label for="app-name-in" style="font-size:14px;color:var(--muted)">الاسم</label>
   <input type="text" id="app-name-in" value="${esc(appName||APP_DEFAULT)}" maxlength="30" aria-label="اسم الدفتر"></div><div class="note">بيظهر فوق وفي اسم التاب.</div>
-  <div class="srow"><label class="sw"><input type="checkbox" id="snd-on" ${tickOn?"checked":""}> صوت لما أعلّم على تاسك</label><button type="button" class="mini" data-sndtest="1">اسمعه</button></div></div></section>`}
+  <div class="srow"><label class="sw"><input type="checkbox" id="snd-on" ${tickOn?"checked":""}> صوت لما أعلّم على تاسك</label><button type="button" class="mini" data-sndtest="1">اسمعه</button></div>
+  <div class="srow"><span>مش فاكر القوايم بتعمل إيه؟</span><button type="button" class="mini" data-tour="1">شوف الجولة التعريفية</button></div>
+  <div class="srow dk-set"><span>تفاصيل التاسك على الشاشات الكبيرة</span><select id="dock-sel" aria-label="تفاصيل التاسك"><option value="side" ${detailMode!=="popup"?"selected":""}>لوحة في الجنب</option><option value="popup" ${detailMode==="popup"?"selected":""}>نافذة منبثقة</option></select></div></div></section>`}
 document.addEventListener("change",async e=>{if(e.target.id!=="app-name-in")return;const v=e.target.value.trim()||APP_DEFAULT;appName=v;applyAppName();
   try{await db.collection("config").doc("app").set({name:v});toast("اتحفظ ✓")}catch(_){toast("ماتحفظش، جرّب تاني")}});
 
@@ -3311,12 +3419,15 @@ function paintRail2(){const r=document.getElementById("rail");if(!r)return;const
     <button type="button" class="rl" data-search="1" aria-label="دوّر" title="دوّر (Ctrl+K)"><span class="ni">${NI.search}</span></button>
     <button type="button" class="rl" data-aiopen="1" aria-label="المساعد" title="المساعد"><span class="ni">${SPARK}</span></button>
     <span class="rl-gap"></span>${it("settings","settings",NI.settings,"الإعدادات")}`}
+// 1 Nov (Malek): «الأقسام» and «المزيد» can be folded from their titles; the choice is remembered
+let sideFold={};try{sideFold=JSON.parse(localStorage.getItem("sideFold")||"{}")||{}}catch(_){}
+const secHead=(k,t)=>`<button type="button" class="nh nh-b" data-sidefold="${k}" aria-expanded="${!sideFold[k]}"><span>${t}</span><svg class="nh-a" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`;
 function paintLists(){const box=document.getElementById("side-list");if(!box)return;const c=navCounts(),cur=navKey();
   const it=(k,ic,name,n)=>`<button type="button" class="nv" data-nav="${k}" ${cur===k?'aria-current="page"':""}><span class="ni">${ic}</span><span class="nn">${esc(name)}</span>${n?`<i class="nc">${n}</i>`:""}</button>`;
   box.innerHTML=`<div class="ng">${it("today",NI.today,"النهارده",c.today)}${it("upcoming",NI.upcoming,"الجاي",c.upcoming||0)}${it("all",NI.all,"كل التسكات",c.all)}</div>
-    <div class="nh">الأقسام</div><div class="ng">${AREAS.map(([k,n])=>it("area:"+k,'<b class="hash">#</b>',n,c.areas[k]||0)).join("")}</div>
+    ${secHead("areas","الأقسام")}${sideFold.areas?"":`<div class="ng">${AREAS.map(([k,n])=>it("area:"+k,'<b class="hash">#</b>',n,c.areas[k]||0)).join("")}</div>`}
     <div class="ng">${it("clients",NI.clients,"العملاء",0)}${team.length?it("team",NI.team,"الفريق",0):""}${it("proj",NI.projects||NI.all,"المشاريع",0)}${it("focus",NI.focus,"تركيز",0)}${it("notes",NI.notes,"النوتس",0)}</div>
-    <div class="nh">المزيد</div><div class="ng">${it("week",NI.week,"الأسبوع",0)}${it("journal",NI.journal,"يوميات",0)}${it("files",NI.files,"ملفات",0)}</div>`}
+    ${secHead("more","المزيد")}${sideFold.more?"":`<div class="ng">${it("week",NI.week,"الأسبوع",0)}${it("journal",NI.journal,"يوميات",0)}${it("files",NI.files,"ملفات",0)}</div>`}`}
 function paintShell2(){const desk=isDesk();const cur=navKey();
   document.body.classList.toggle("dz",desk);
   if(!desk){document.body.classList.remove("lists-on","dock-on");return}
@@ -3329,6 +3440,7 @@ function paintShell2(){const desk=isDesk();const cur=navKey();
 {const _p=paintShell;paintShell=function(){_p();paintShell2()}}
 addEventListener("resize",()=>{try{paintShell2()}catch(_){}});
 document.addEventListener("click",e=>{
+  const fb=e.target.closest("[data-sidefold]");if(fb){e.stopImmediatePropagation();const k=fb.dataset.sidefold;sideFold[k]=!sideFold[k];try{localStorage.setItem("sideFold",JSON.stringify(sideFold))}catch(_){}paintShell2();return}
   const w=e.target.closest("[data-sidewide]");if(w&&isDesk()){e.stopImmediatePropagation();listsHidden=!listsHidden;try{localStorage.setItem("listsHidden",listsHidden?"1":"0")}catch(_){}paintShell2();return}
   if(e.target.closest("[data-aiopen]")){e.preventDefault();openAi();return}},true);
 // the detail panel: switching to another task saves the open one first
@@ -3374,8 +3486,9 @@ function paintEd(sync){const t=editing&&tasks.find(x=>x.id===editing.id);const e
   $("#ed-made").textContent=t&&t.createdAt?"اتعمل "+new Date(t.createdAt).toLocaleDateString("ar-u-nu-latn",{weekday:"long"}):"";
   const more=!t||edMoreOpen;$("#ed-more").hidden=!more;ed.classList.toggle("more-open",!!t&&more);$("#ed-more-b").setAttribute("aria-expanded",more);$("#ed-more-b").hidden=!t;
   edGrow()}
-let edMoreOpen=false;
-{const _o=openEditor;openEditor=function(t){clearTimeout(edT);edT=null;edMoreOpen=false;$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");_o(t);paintEd();
+// 1 Nov (Malek): the details behind ⋯ show open from the start; ⋯ hides them and the choice is remembered
+let edMoreOpen=true;try{edMoreOpen=localStorage.getItem("edMore")!=="0"}catch(_){}
+{const _o=openEditor;openEditor=function(t){clearTimeout(edT);edT=null;$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");_o(t);paintEd();
   if(t){setTimeout(()=>{const a=document.activeElement;if(a&&a.id==="f-title")a.blur()},40)}}}
 {const _c=closeEditor;closeEditor=function(){edFlush();_c()}}
 {const _r=render;render=function(){_r.apply(this,arguments);if(editing&&!$("#overlay").hidden)try{paintEd(true)}catch(_){}}}
@@ -3395,13 +3508,183 @@ document.addEventListener("click",e=>{
   const fl=e.target.closest("#ed-flag");if(fl){const p=$("#ed-pripop");p.hidden=!p.hidden;fl.setAttribute("aria-expanded",!p.hidden);if(!p.hidden){const s=p.querySelector('[aria-pressed="true"]');if(s)s.focus()}return}
   const pr=e.target.closest("[data-edpri]");if(pr){edPri=pr.dataset.edpri;paintPri();$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");paintEd();if(editing)edSave(true);return}
   if(!e.target.closest("#ed-pripop")&&!$("#ed-pripop").hidden){$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false")}
-  if(e.target.closest("#ed-more-b")){edMoreOpen=!edMoreOpen;paintEd();return}
+  if(e.target.closest("#ed-more-b")){edMoreOpen=!edMoreOpen;try{localStorage.setItem("edMore",edMoreOpen?"1":"0")}catch(_){}paintEd();return}
   const so=e.target.closest("[data-edopen]");if(so){const s=tasks.find(x=>x.id===so.dataset.edopen);if(s){edFlush();openEditor(s)}return}
   if(e.target.closest("#f-pri [data-p]")||e.target.closest("#f-rep button")){setTimeout(()=>{paintEd();if(editing)edSave(true)},0)}
   if(e.target.closest("#ed-delete")){clearTimeout(edT);edT=null}},true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#ed-pripop").hidden){e.stopImmediatePropagation();$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");$("#ed-flag").focus()}},true);
+const LONG_AT=6;let moreOpen=new Set();
+function listRows(key,list,opts){
+  const rows=l=>l.map(t=>row(t,opts)).join("");
+  if(!(opts&&opts.noArea)||list.length<=LONG_AT+1)return rows(list);
+  if(moreOpen.has(key))return rows(list)+`<button type="button" class="h-link more-l" data-more="${esc(key)}" aria-expanded="true">أقل</button>`;
+  return rows(list.slice(0,LONG_AT))+`<button type="button" class="h-link more-l" data-more="${esc(key)}" aria-expanded="false">عرض ${list.length-LONG_AT} كمان</button>`}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-more]");if(!b)return;const k=b.dataset.more;
+  moreOpen.has(k)?moreOpen.delete(k):moreOpen.add(k);render();
+  const nb=[...document.querySelectorAll("[data-more]")].find(x=>x.dataset.more===k);if(nb)nb.focus()});
+{const _g=goView;goView=function(){moreOpen.clear();return _g.apply(this,arguments)}}
+const LI={
+  note:'<path d="M6 3.5h9l3 3v14H6z"/><path d="M15 3.5v3h3M9 12h6M9 15.5h6"/>',
+  copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6A2.5 2.5 0 0 0 13 3.5H6A2.5 2.5 0 0 0 3.5 6v7A2.5 2.5 0 0 0 6 15.5h2.5"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/>',
+  dots:'<circle cx="5.5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
+  cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  calchk:'<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15.2l2.2 2.2 4-4.4"/>',
+  clock:'<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>'};
+const lsvg=(n,w=16)=>`<svg class="li" width="${w}" height="${w}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${LI[n]}</svg>`;
+let rtShow=false,hdMenuEl=null;
+const claudeNotes=()=>notes.filter(n=>n.by==="claude"&&!n.resolved).length;
+function closeHdMenu(){if(hdMenuEl){hdMenuEl.remove();hdMenuEl=null}const b=document.getElementById("hd-more");if(b)b.setAttribute("aria-expanded","false")}
+function openHdMenu(){const b=document.getElementById("hd-more");if(!b)return;closeHdMenu();
+  const n=claudeNotes(),it=(ic,t,a,x="")=>`<button type="button" role="menuitem" ${a}>${lsvg(ic,19)}<span>${t}</span>${x}</button>`;
+  const m=document.createElement("div");m.id="hd-menu";m.setAttribute("role","menu");m.setAttribute("aria-label","حاجات تانية");
+  m.innerHTML=it("note",n?"نوتس من كلود":"النوتس",'data-goto="notes"',n?`<i class="hd-n">${n}</i>`:"")+it("copy","انسخ للورقة",'data-paper="1"')+it("gear","الإعدادات",'data-hdset="1"');
+  document.body.appendChild(m);hdMenuEl=m;b.setAttribute("aria-expanded","true");
+  const r=b.getBoundingClientRect();m.style.top=Math.round(r.bottom+8)+"px";m.style.left=Math.max(10,Math.round(r.left))+"px";
+  const f=m.querySelector("button");if(f)f.focus()}
+document.addEventListener("click",e=>{
+  const mb=e.target.closest("#hd-more");if(mb){e.stopPropagation();hdMenuEl?closeHdMenu():openHdMenu();return}
+  const hs=e.target.closest("[data-hdset]");if(hs){closeHdMenu();document.getElementById("open-settings").click();return}
+  const rl=e.target.closest(".rt-l");if(rl&&!isDesk()){rtShow=!rtShow;render();const n=document.querySelector(".rt-l");if(n)n.focus();return}
+  if(hdMenuEl&&!e.target.closest("#hd-menu"))closeHdMenu();
+  else if(hdMenuEl)setTimeout(closeHdMenu,0)},true);
+/* leaving the quick box shrinks it; hold it open a moment so the tap that caused it still lands on the row under the finger */
+document.addEventListener("focusout",e=>{const q=e.target.closest&&e.target.closest(".qa2");if(q&&!isDesk()){q.classList.add("qa-hold");setTimeout(()=>q.classList.remove("qa-hold"),450)}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&hdMenuEl){closeHdMenu();const b=document.getElementById("hd-more");if(b)b.focus()}});
+function paintLighter(){
+  if(!document.getElementById("hd-more")){const s=document.getElementById("open-settings");if(s){
+    const b=document.createElement("button");b.type="button";b.className="gear";b.id="hd-more";b.setAttribute("aria-label","حاجات تانية");b.setAttribute("aria-haspopup","menu");b.setAttribute("aria-expanded","false");b.innerHTML=lsvg("dots",18);s.insertAdjacentElement("afterend",b)}}
+  document.querySelectorAll(".dprog:not(.has-ring)").forEach(d=>{const m=/(\d+)\D+(\d+)/.exec(d.getAttribute("aria-label")||"");if(!m)return;const n=+m[1],t=+m[2]||1,c=56.5;
+    d.classList.add("has-ring");d.insertAdjacentHTML("afterbegin",`<span class="dp-ring" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="var(--line)" stroke-width="3"/><circle cx="12" cy="12" r="9" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${(Math.min(n,t)/t*c).toFixed(1)} ${c}" transform="rotate(-90 12 12)"/></svg><b>${n}/${t}</b></span>`)});
+  document.querySelectorAll(".late-all:not(.la-done)").forEach(b=>{b.classList.add("la-done");b.setAttribute("aria-label","كلهم للنهارده");b.innerHTML=`<span class="la-i">${lsvg("calchk",21)}</span><span class="la-t">كلهم للنهارده</span>`});
+  const rs=document.querySelector(".rt-strip");if(rs){rs.classList.toggle("rt-open",rtShow);
+    const l=rs.querySelector(".rt-l");if(l&&l.tagName!=="BUTTON"){const dots=[...rs.querySelectorAll(".rt")].map(x=>`<i class="rt-d${x.getAttribute("aria-pressed")==="true"?" on":""}"></i>`).join("");
+      const sm=l.querySelector("small"),b=document.createElement("button");b.type="button";b.className="rt-l";b.setAttribute("aria-expanded",String(rtShow));
+      b.innerHTML=`<span class="rt-w">الروتين</span><span class="rt-ds" aria-hidden="true">${dots}</span>${sm?sm.outerHTML:""}`;l.replaceWith(b)}}
+  document.querySelectorAll("#view .task .meta .tag:not([data-li])").forEach(t=>{t.dataset.li="1";const x=t.textContent;
+    if(x.startsWith("⏱ "))t.innerHTML=lsvg("clock",14)+`<span>${esc(x.slice(2))}</span>`;
+    else if(x.startsWith("ديدلاين "))t.innerHTML=lsvg("cal",14)+`<span>${esc(x.slice(8))}</span>`;
+    else if(x.startsWith("متأجل من "))t.innerHTML=lsvg("cal",14)+`<span>${esc(x.slice(5))}</span>`;
+    else return;t.classList.add("tag-i")});
+  const q=document.getElementById("qa-title");if(q&&!isDesk())q.placeholder="ضيف تاسك…";
+  const mt=document.querySelector('#tabs [data-view="more"]');if(mt)mt.classList.toggle("has-dot",claudeNotes()>0)}
+{const _ri=renderInner;renderInner=function(){const r=_ri.apply(this,arguments);try{paintLighter()}catch(_){}return r}}
+{const _g=goView;goView=function(){closeHdMenu();return _g.apply(this,arguments)}}
+let tourEl=null,tourKeys=null;
+function startTour(o){o=o||{};if(tourEl)return;
+  if(typeof view==="string"&&view!=="today"){try{goView("today")}catch(_){}}
+  const desk=isDesk(),nav=k=>desk?`#side .nv[data-nav="${k}"]`:`#tabs [data-view="${k}"]`;
+  const S=[
+    {t:"أهلاً في دفترك",b:"ده مكان تفضّي فيه دماغك. هنفرجك عليه في دقيقة، وتقدر تتخطى في أي وقت."},
+    {sel:"#qa-title",t:"اكتب أي حاجة في دماغك",b:"اكتب التاسك هنا واضغط Enter. اكتب «بكره» أو اسم يوم عشان يتحط في يومه، واكتب «!» في أولها لو مهم جداً."},
+    {sel:"#view .task .check",t:"علّم لما تخلص",b:"دوس على الدايرة لما تخلص التاسك. ودوس على التاسك نفسه تفتح تفاصيله وتضيف تاسكات فرعية. الألوان: أحمر مهم جداً، أزرق أقل أهمية، أسود ممكن يتأجل."},
+    {sel:nav("today"),t:"النهارده",b:"اللي عليك النهارده بس. الباقي مستني في القوايم التانية."},
+    {sel:nav("upcoming"),t:"الجاي",b:"التسكات اللي ليها معاد في الأسبوعين الجايين."},
+    {sel:nav("all"),t:desk?"كل التسكات":"التسكات",b:"كل تسكاتك المفتوحة مقسّمة بالأقسام، فتلاقي أي حاجة بسرعة."},
+    {sel:nav("focus"),t:"تركيز",b:"تايمر للشغل: اختار تاسك وابدأ، والوقت اللي اشتغلته بيتسجل لوحده."},
+    desk?{sel:nav("notes"),t:"وتحتها كمان",b:"النوتس، واليوميات، ومتابعة الأسبوع، والعملاء، والمشاريع. مش لازم تستخدمهم كلهم، استخدم اللي يفيدك."}
+        :{sel:nav("more"),t:"المزيد",b:"هنا النوتس، واليوميات، ومتابعة الأسبوع، والعملاء، والمشاريع. مش لازم تستخدمهم كلهم."},
+    desk?null:{sel:"#hd-more",t:"النقط التلاتة",b:"فيها الإعدادات و«انسخ للورقة»، اللي بتطلّع خطة يومك كنص تنقله على ورقة."},
+    {sel:"#ai-fab",t:"المساعد",b:"قوله مثلاً «صحيت 10 الصبح وقدامي 8 ساعات، رتّبلي اليوم» وهو يقترح عليك خطة."},
+    {t:"جاهز",b:o.feedback?"ابدأ بأول تاسك. ولو حاجة لخبطتك أو عايز تغيّرها، دوس «ابعت رأيك» في آخر الصفحة. تقدر تشوف الجولة دي تاني من «حسابي»."
+                           :"ابدأ بأول تاسك. تقدر تشوف الجولة دي تاني من الإعدادات."}
+  ].filter(Boolean);
+  const el=document.createElement("div");el.id="tour";el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");el.setAttribute("aria-labelledby","tour-t");
+  el.innerHTML=`<div class="tour-hole" hidden></div><div class="tour-card"><div class="tour-n" id="tour-n"></div><h3 id="tour-t"></h3><p id="tour-b"></p>
+    <div class="tour-act"><button type="button" class="tour-skip">تخطّي</button><span></span><button type="button" class="tour-prev">رجوع</button><button type="button" class="tour-next">التالي</button></div></div>`;
+  document.body.appendChild(el);tourEl=el;
+  const hole=el.querySelector(".tour-hole"),card=el.querySelector(".tour-card"),nx=el.querySelector(".tour-next"),pv=el.querySelector(".tour-prev");
+  let i=0,dir=1;
+  const target=s=>{if(!s.sel)return null;const t=document.querySelector(s.sel);if(!t)return null;const r=t.getBoundingClientRect();return r.width>0&&r.height>0?t:null};
+  function place(s,t){
+    const w=Math.min(340,innerWidth-24);card.style.width=w+"px";
+    const h=card.offsetHeight;let top,left;
+    if(!t){hole.hidden=true;top=Math.max(12,(innerHeight-h)/2);left=(innerWidth-w)/2;el.classList.add("tour-dim")}
+    else{el.classList.remove("tour-dim");const r=t.getBoundingClientRect(),p=6;hole.hidden=false;
+      Object.assign(hole.style,{top:(r.top-p)+"px",left:(r.left-p)+"px",width:(r.width+2*p)+"px",height:(r.height+2*p)+"px"});
+      if(s.sel.startsWith("#side")){top=Math.min(Math.max(12,r.top+r.height/2-h/2),innerHeight-h-12);left=r.left-w-18;if(left<12)left=r.right+18}
+      else{left=r.left+r.width/2-w/2;
+        if(innerHeight-r.bottom-p>=h+14)top=r.bottom+p+10;else if(r.top-p>=h+14)top=r.top-p-10-h;else top=Math.max(12,(innerHeight-h)/2)}}
+    left=Math.min(Math.max(12,left),innerWidth-w-12);card.style.top=Math.round(top)+"px";card.style.left=Math.round(left)+"px"}
+  function show(){
+    while(i>=0&&i<S.length&&S[i].sel&&!target(S[i]))i+=dir;
+    if(i>=S.length||i<0){if(i<0){i=0;dir=1;return show()}return end()}
+    const s=S[i],t=target(s);
+    if(t&&!s.sel.startsWith("#tabs")&&!s.sel.startsWith("#side")){t.scrollIntoView({block:"center"})}
+    const shown=S.filter(x=>!x.sel||target(x));const pos=shown.indexOf(s)+1;
+    document.getElementById("tour-n").textContent=pos+" من "+shown.length;
+    document.getElementById("tour-t").textContent=s.t;document.getElementById("tour-b").textContent=s.b;
+    nx.textContent=i===S.length-1?"يلا نبدأ":"التالي";pv.hidden=pos===1;
+    place(s,t);nx.focus()}
+  function end(){if(!tourEl)return;tourEl.remove();tourEl=null;removeEventListener("resize",onR);document.removeEventListener("keydown",tourKeys,true);tourKeys=null;scrollTo(0,0);if(o.onDone)try{o.onDone()}catch(_){}}
+  const onR=()=>{if(tourEl){const s=S[i];place(s,target(s))}};
+  addEventListener("resize",onR);
+  tourKeys=e=>{if(e.key==="Escape"){e.preventDefault();end()}
+    else if(e.key==="Tab"){const b=[...card.querySelectorAll("button:not([hidden])")];const k=b.indexOf(document.activeElement);e.preventDefault();b[(k+(e.shiftKey?-1:1)+b.length)%b.length].focus()}};
+  document.addEventListener("keydown",tourKeys,true);
+  el.addEventListener("click",e=>{e.stopPropagation();
+    if(e.target.closest(".tour-skip"))end();
+    else if(e.target.closest(".tour-prev")){dir=-1;i--;show()}
+    else if(e.target.closest(".tour-next")){if(i>=S.length-1)end();else{dir=1;i++;show()}}},true);
+  show()}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-tour]");if(b){e.preventDefault();startTour()}});
+let detailMode="side";try{detailMode=localStorage.getItem("detailMode")==="popup"?"popup":"side"}catch(_){}
+let ideaDraft="";
+const dkMin=m=>m>=60?Math.floor(m/60)+" س"+(m%60?" "+(m%60)+" د":""):(m||0)+" د";
+function dockSummary(){
+  const t0=today(),open=tasks.filter(isOpen),tl=tasks.filter(inToday);
+  const dn=tasks.filter(t=>t.status==="done"&&t.doneDate===t0).filter(t=>!subsOf(t.id).length).length,tot=dn+tl.length;
+  const late=tl.filter(t=>t.planDate&&t.planDate<t0).length;
+  const m=upcoming()[0];
+  const tmin=sumMin(sessions.filter(s=>s.date===t0)),wmin=sumMin(sessions.filter(s=>s.date>=daysAgo(6)));
+  const dl=open.filter(t=>t.due&&isTop(t)).sort((a,b)=>a.due<b.due?-1:a.due>b.due?1:0).slice(0,4);
+  const rd=(routineDays[t0]||{}).done||{},rdn=routineItems.filter(i=>rd[i.id]).length;
+  const nts=notes.filter(n=>!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,3);
+  const when=d=>d===t0?"النهارده":d===plusDays(1)?"بكره":fmtShort(d);
+  return `<div class="ds"><div class="ds-top"><b>ملخص النهارده</b><span>${esc(fmtDay(t0))}</span></div>
+    ${m?`<div class="ds-card"><span><small>الميتنج الجاي</small><b>${esc(m.title)}</b><small>${when(m.date)} · ${fmtTime(m.time)}</small></span></div>`:""}
+    ${tmin?`<button type="button" class="ds-card" data-nav="focus"><span><small>التركيز</small><b>اشتغلت ${dkMin(tmin)} النهارده</b>${wmin?`<small>${dkMin(wmin)} آخر 7 أيام</small>`:""}</span></button>`:""}
+    ${dl.length?`<div class="ds-sec"><h4>أقرب ديدلاين</h4>${dl.map(t=>`<button type="button" class="ds-row" data-edit="${t.id}"><i class="ds-dot ds-${PRI_KEY(t)}"></i><span>${esc(clip(t.title,36))}</span><small class="${t.due<t0?"ds-late":""}">${when(t.due)}</small></button>`).join("")}</div>`:""}
+    <div class="ds-sec"><h4>فكرة في بالك؟</h4><textarea id="ds-idea" rows="2" maxlength="1000" placeholder="اكتبها هنا وهتتحفظ في النوتس" aria-label="فكرة سريعة"></textarea>
+      <div class="ds-act"><small>Enter يحفظ، وShift+Enter سطر جديد</small><button type="button" class="mini" data-ds-idea="1">احفظها</button></div>
+      </div>
+  </div>`}
+function paintDock(){const el=document.getElementById("dock-empty");if(!el||!document.body.classList.contains("dock-on"))return;
+  const a=document.activeElement,typing=!!(a&&el.contains(a)&&a.id==="ds-idea");if(typing&&a.value)return;
+  el.removeAttribute("aria-hidden");el.innerHTML=dockSummary();const i=document.getElementById("ds-idea");if(i){i.value=ideaDraft;if(typing)i.focus()}}
+function ensureDockToggle(){const sm=document.querySelector(".h-row .s-menu");if(!sm)return;let b=document.getElementById("dock-tgl");
+  if(!b){b=document.createElement("button");b.type="button";b.id="dock-tgl";b.className="s-menu";b.dataset.dockmode="1";
+    b.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/></svg>';sm.insertAdjacentElement("afterend",b)}
+  const p=detailMode==="popup";b.setAttribute("aria-pressed",String(!p));b.title=p?"رجّع تفاصيل التاسك للوحة اللي في الجنب":"خلّي تفاصيل التاسك نافذة منبثقة";b.setAttribute("aria-label",b.title)}
+function setDetailMode(m){detailMode=m==="popup"?"popup":"side";try{localStorage.setItem("detailMode",detailMode)}catch(_){}render()}
+{const _p2=paintShell2;paintShell2=function(){_p2();if(isDesk()&&detailMode==="popup")document.body.classList.remove("dock-on")}}
+{const _ps=paintShell;paintShell=function(){_ps();try{ensureDockToggle();paintDock()}catch(_){}}}
+async function saveIdea(){const i=document.getElementById("ds-idea"),text=((i?i.value:ideaDraft)||"").trim();if(!text)return;ideaDraft="";if(i)i.value="";
+  await writeNote("n"+sid(),{text:text.slice(0,1000),area:"",review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()},true);toast("اتحفظت في النوتس ✓")}
+document.addEventListener("input",e=>{if(e.target.id==="ds-idea")ideaDraft=e.target.value});
+document.addEventListener("keydown",e=>{if(e.target.id==="ds-idea"&&e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();saveIdea()}});
+document.addEventListener("change",e=>{if(e.target.id==="dock-sel")setDetailMode(e.target.value)});
+document.addEventListener("click",e=>{if(e.target.closest("[data-ds-idea]")){saveIdea();return}
+  const d=e.target.closest("[data-dockmode]");if(d){setDetailMode(detailMode==="popup"?"side":"popup")}});
+
+let edRepOpen=false,edRepLocked=false;
+{const _o=openEditor;openEditor=function(t){edRepOpen=false;edRepLocked=!!(t&&(t.parentId||subsOf(t.id).length||t.status==="done"||t.repeatOf));_o(t)}}   // locked: steps, done tasks and copies never repeat
+{const _p=paintEd;paintEd=function(){_p.apply(this,arguments);
+  const f=document.getElementById("rep-field");if(!f)return;
+  let a=document.getElementById("ed-rep-add");if(!a){a=document.createElement("button");a.type="button";a.id="ed-rep-add";a.className="ed-link";a.textContent="+ خليه يتكرر";f.after(a)}
+  if(edRepLocked){a.hidden=true;return}
+  if(edRep.length)edRepOpen=true;
+  f.hidden=!edRepOpen;a.hidden=edRepOpen}}
+document.addEventListener("click",e=>{if(!e.target.closest("#ed-rep-add"))return;edRepOpen=true;paintEd()});
+function tidyPages(){
+  document.querySelectorAll("h2").forEach(h=>{const t=h.textContent.trim();
+    if(t==="البومودورو"&&view==="focus")h.hidden=true;                                    // the page is already called «تركيز»
+    if(/^اللي خلص آخر 7 أيام/.test(t)&&/^0\s*تاسك/.test(t.replace(/^اللي خلص آخر 7 أيام\s*/,""))){      // nothing finished: one sentence, no five empty bars
+      const s=h.closest("section");if(s)[...s.children].forEach(c=>{if(c!==h&&!c.classList.contains("empty"))c.hidden=true})}});
+  document.querySelectorAll("a,button,.h-link").forEach(b=>{if(b.textContent.trim()==="إعدادات التايمر")b.hidden=true})}   // the timer settings live in الإعدادات
+{const _r=render;render=function(){_r.apply(this,arguments);try{tidyPages()}catch(_){}}}
 function section(title,list,opts,emptyMsg){
-  return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?list.map(t=>row(t,opts)).join(""):`<div class="empty">${emptyMsg}</div>`}</section>`;
+  return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?listRows("s:"+title,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
 
 function render(){
