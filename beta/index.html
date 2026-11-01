@@ -125,6 +125,8 @@ h1{font-family:var(--f-display);font-weight:700;font-size:30px;margin:0;line-hei
 .wl-card .btn{align-self:stretch;justify-content:center;padding:14px;min-height:50px;font-size:16px;font-weight:700}
 
 .wl-card .bt-in{font:inherit;font-size:16px;font-weight:500;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-height:48px;box-sizing:border-box;width:100%}
+.wl-card label.bt-show{flex-direction:row;align-items:center;gap:8px;font-weight:500;font-size:14px}
+.wl-card label.bt-show input{width:18px;height:18px;margin:0}
 .wl-card textarea.bt-in{resize:vertical;min-height:110px;line-height:1.6}
 .wl-card .bt-in:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .bt-sub{margin:0;color:var(--muted);font-size:14px;text-align:center;line-height:1.6}
@@ -135,6 +137,7 @@ h1{font-family:var(--f-display);font-weight:700;font-size:30px;margin:0;line-hei
 .bt-danger-zone{border-top:1px solid var(--line);padding-top:12px;display:flex}.bt-danger-zone .btn{flex:1}
 .btn.bt-danger{color:var(--red);border-color:var(--red)}
 #bt-login,#bt-acc,#bt-fb{overflow:auto}
+html body [data-nav="files"]{display:none!important}
 html body .wrap .foot{display:flex!important;padding:12px 0 6px}
 html body .wrap .foot button{min-height:40px;padding:0 10px}
 .test-flag{font-size:13px;background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:7px 10px}
@@ -2055,7 +2058,7 @@ function settingsView(){
     ${goalsSetHtml()}
     <section class="section">${pomoBox}</section>
     <section class="section"><h2>المساعد</h2><div class="sets"><div class="srow"><span style="flex:1">${aiCfg&&aiCfg.key?`متربط ✓ (${esc(AI_PROV[aiCfg.prov]?.name||"")} · ${esc(aiCfg.model||"")})`:"مش متربط. محتاج مفتاح مجاني مرة واحدة."}</span><button class="mini" type="button" data-aisetopen="1">${aiCfg&&aiCfg.key?"عدّل":"اربط"}</button></div></div></section>
-    <section class="section"><h2>الكالندر</h2><div class="sets"><div class="srow"><span style="flex:1">${calCfg?"متربط ✓ الميتنجات بتتضاف لوحدها.":"مش متربط. الميتنجات بتفتح الكالندر متكتبة."}</span><button class="mini" type="button" data-calsetup="1">${calCfg?"عدّل":"اربط"}</button></div></div></section>
+    
     <section class="section"><h2>المحذوفات<small>${tr.length}</small></h2>
       <div class="note" style="padding:0 16px 8px">أي حاجة بتمسحها بتفضل هنا أسبوع، وبعدها بتتمسح لوحدها.</div>
       ${tr.length?tr.map(x=>{const left=Math.max(1,Math.ceil((x.deletedAt+WEEK-now)/864e5));return `<div class="trash-row"><span class="tt">${esc(clip(x.title||"",70))}<small>${x.kind==="note"?"نوت":"تاسك"}${(x.subs||[]).length?` ومعاه ${x.subs.length} فرعي`:""} · هيتمسح خالص بعد ${left===1?"يوم":left+" أيام"}</small></span><button class="mini" type="button" data-restore="${x.id}">رجّعه</button></div>`}).join(""):`<div class="empty">مفيش حاجة ممسوحة.</div>`}</section>
@@ -4494,6 +4497,12 @@ class SupabaseDB{
     if(first||sbStable(f.docs)!==before){this.remember(name);this.emit(name)}
     if(Object.values(this.files).every(x=>x.loaded)&&!this.busy())setSync("","اتحفظ")}
   replay(name){const f=this.files[name];for(const op of this.pending[name]||[])this.apply(f.docs,op)}
+  applyOne(d,op){return op.t==="set"?clone(op.d):op.t==="update"?{...(d||{}),...clone(op.d)}:undefined}
+  async rowsByIds(name,ids){const out={};
+    for(let i=0;i<ids.length;i+=50){const part=ids.slice(i,i+50).map(x=>'"'+String(x).replace(/"/g,"")+'"').join(",");
+      const r=await sbRest("docs?select=id,data&col=eq."+encodeURIComponent(name)+"&id=in.("+encodeURIComponent(part)+")");
+      if(!r.ok)throw new Error("http "+r.status);(await r.json()).forEach(x=>{out[x.id]=x.data})}
+    return out}
   apply(docs,op){if(op.t==="set")docs[op.id]=clone(op.d);else if(op.t==="update")docs[op.id]={...(docs[op.id]||{}),...clone(op.d)};else if(op.t==="delete")delete docs[op.id]}
   remember(name){const f=this.files[name];this.cache[name]={docs:f.docs};sbLS.set(this.ck,this.cache)}
   savePending(){sbLS.set(this.pk,this.pending)}
@@ -4516,11 +4525,16 @@ class SupabaseDB{
     const ops=(this.pending[name]||[]).slice();if(!ops.length)return;
     f.inflight=true;setSync("busy","بيحفظ…");
     try{
-      const ids=[...new Set(ops.map(o=>o.id))],up=[],del=[];
-      ids.forEach(id=>{if(f.docs[id]!==undefined)up.push({user_id:this.uid,col:name,id,data:f.docs[id],updated_at:new Date().toISOString()});else del.push(id)});
+      const ids=[...new Set(ops.map(o=>o.id))],up=[],del=[],fresh={};
+      /* re-read the rows we are about to write and apply our changes on top, so an edit made on another device meanwhile is not overwritten by an older copy */
+      const remote=await this.rowsByIds(name,ids);
+      ids.forEach(id=>{let d=remote[id];for(const op of ops)if(op.id===id)d=this.applyOne(d,op);fresh[id]=d;
+        if(d!==undefined)up.push({user_id:this.uid,col:name,id,data:d,updated_at:new Date().toISOString()});else del.push(id)});
       if(up.length){const r=await sbRest("docs?on_conflict=user_id,col,id",{method:"POST",headers:{"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(up)});if(!r.ok)throw new Error("http "+r.status)}
       if(del.length){const r=await sbRest("docs?col=eq."+encodeURIComponent(name)+"&id=in.("+del.map(i=>'"'+String(i).replace(/"/g,"")+'"').join(",")+")",{method:"DELETE"});if(!r.ok)throw new Error("http "+r.status)}
-      this.pending[name]=(this.pending[name]||[]).slice(ops.length);this.savePending();this.remember(name);
+      const rest=(this.pending[name]||[]).slice(ops.length),later=new Set(rest.map(o=>o.id));let moved=false;
+      ids.forEach(id=>{if(later.has(id))return;if(sbStable(f.docs[id])!==sbStable(fresh[id])){if(fresh[id]===undefined)delete f.docs[id];else f.docs[id]=fresh[id];moved=true}});
+      this.pending[name]=rest;this.savePending();this.remember(name);if(moved)this.emit(name);
       f.retry=0;f.inflight=false;
       if(f.again||(this.pending[name]||[]).length){f.again=false;return this.flush(name)}
       if(!this.busy())setSync("","اتحفظ");
@@ -4542,6 +4556,7 @@ class SupabaseDB{
     return{onSnapshot:(fn,err)=>{const f=self.file(c);const s={fn,err,docId:id};f.subs.push(s);if(f.loaded)self.deliver(f,s);return()=>{f.subs=f.subs.filter(x=>x!==s)}}}}
 }
 
+const _bgv=goView;goView=function(k){return _bgv.call(this,k==="files"?"notes":k)};
 /* ----- sign in ----- */
 const BT_LOGO='<svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h11a1.5 1.5 0 0 1 1.5 1.5v14a1.5 1.5 0 0 1-1.5 1.5H6z"/><path d="M6 3.5v17M10.5 8.5h5M10.5 12h5"/></svg>';
 function btAsk(id,html,onForm){const w=document.createElement("div");w.className="welcome";w.id=id;w.setAttribute("role","dialog");w.setAttribute("aria-modal","true");w.innerHTML=html;document.body.appendChild(w);
@@ -4551,12 +4566,14 @@ function sbLoginScreen(){return new Promise(res=>{
   const w=btAsk("bt-login",`<form class="wl-card" id="bt-form" autocomplete="on"><div class="wl-top"><span class="wl-logo" aria-hidden="true">${BT_LOGO}</span><h2>دفتري</h2><p class="bt-sub">ادخل بالإيميل والباسورد اللي اتبعتولك.</p></div>
     <label>الإيميل<input class="bt-in" id="bt-email" type="email" inputmode="email" autocomplete="username" required dir="ltr" autocapitalize="off" spellcheck="false"></label>
     <label>الباسورد<input class="bt-in" id="bt-pw" type="password" autocomplete="current-password" required dir="ltr"></label>
+    <label class="bt-show"><input type="checkbox" id="bt-show"> اظهر الباسورد</label>
     <div class="bt-err" id="bt-err" role="alert"></div>
     <button class="btn primary" type="submit" id="bt-go">ادخل</button>
     <p class="bt-note">مفيش تسجيل جديد: الحسابات بيعملها مالك. لو معندكش حساب أو نسيت الباسورد كلّمه.</p></form>`,async(w)=>{
     const go=document.getElementById("bt-go"),er=document.getElementById("bt-err");er.textContent="";go.disabled=true;go.textContent="بيدخّل…";
     try{await sbSignIn(document.getElementById("bt-email").value.trim(),document.getElementById("bt-pw").value);w.remove();res()}
     catch(e){er.textContent=e.message==="bad"?"الإيميل أو الباسورد غلط.":e.message==="rate"?"محاولات كتير. استنى دقيقة وجرّب تاني.":"مفيش نت أو فيه مشكلة. جرّب تاني.";go.disabled=false;go.textContent="ادخل"}});
+  document.getElementById("bt-show").addEventListener("change",e=>{document.getElementById("bt-pw").type=e.target.checked?"text":"password"});
   setTimeout(()=>{const n=document.getElementById("bt-email");if(n)n.focus()},50)})}
 let sbRelogin=false;
 async function sbNeedLogin(){if(sbRelogin)return;sbRelogin=true;setSync("err","سجّل دخول تاني");
