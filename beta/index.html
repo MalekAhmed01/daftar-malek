@@ -302,6 +302,28 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+
+html body .set-nav{padding-inline:6px}
+
+
+html body .pj-add:not(:focus-within):has(input:placeholder-shown) button{display:none}
+html body .pj-add:not(:focus-within) input:placeholder-shown{border-color:transparent;background:none;box-shadow:none;color:var(--muted)}
+html body .goal-hint{background:none!important;font-size:13px;color:var(--muted)}
+html body .rt-w{margin-inline-end:8px}
+html body .dnav{margin-bottom:56px}
+
+
+html body #editor .ed-link{all:unset;cursor:pointer;color:var(--muted);font-size:13.5px;padding:8px 2px}
+html body #editor .ed-link:hover{color:var(--accent)}
+html body #editor .ed-link[hidden]{display:none}
+html body #editor #ed-delete,html body #editor #ed-ai{background:none!important;border:0!important;box-shadow:none!important;min-height:0;padding:6px 10px;font-size:13.5px;color:var(--muted)}
+html body #editor #ed-delete:hover{color:var(--red,#c0392b)}
+
+
+html body.lists-on #rail .rl:not(.rl-home):not([data-nav="settings"]){display:none}
+html body #rail [data-search],html body #rail [data-aiopen]{display:none!important}
+html body #dock-tgl{display:none!important}
+
 html body .fcard.m-focus .fbig{color:var(--ink)}
 html body #dock-tgl{display:none}
 @media (min-width:1280px){html body.dz #dock-tgl{display:inline-grid}}
@@ -532,6 +554,9 @@ html body #rail,html body #dock-empty{display:none}
   /* lists */
   html body.dz #side .nv{min-height:34px;font-size:14px;border-radius:7px;padding-inline:10px;gap:10px}
   html body.dz #side .nv[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  html body.dz #side .nh-b{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:0;cursor:pointer;font-family:inherit;text-align:start}
+  html body.dz #side .nh-b .nh-a{transition:transform .15s;opacity:.7}
+  html body.dz #side .nh-b[aria-expanded="false"] .nh-a{transform:rotate(90deg)}
   html body.dz #side .nh{font-size:12px;font-weight:600;color:var(--muted);padding:12px 10px 4px}
   html body.dz #side .hash{font-weight:400;color:var(--muted);width:18px;text-align:center;display:inline-block}
   html body.dz #side .nc{font-style:normal;font-size:12.5px;color:var(--muted);background:none;margin-inline-start:auto}
@@ -1680,6 +1705,7 @@ const parentOf=t=>t&&t.parentId?tasks.find(p=>p.id===t.parentId)||null:null;
 const isTop=t=>!parentOf(t);
 const clip=(s,n=40)=>s.length>n?s.slice(0,n)+"…":s;
 let expanded=new Set();try{LS.removeItem("expanded")}catch(_){}
+
 const saveExpanded=()=>{};
 const sortTasks=a=>a.slice().sort((x,y)=>(PRI_RANK[x.pri]??9)-(PRI_RANK[y.pri]??9)||(x.due||"9999").localeCompare(y.due||"9999")||(x.createdAt||0)-(y.createdAt||0));
 const isOpen=t=>t.status!=="done";
@@ -3431,12 +3457,15 @@ function paintRail2(){const r=document.getElementById("rail");if(!r)return;const
     <button type="button" class="rl" data-search="1" aria-label="دوّر" title="دوّر (Ctrl+K)"><span class="ni">${NI.search}</span></button>
     <button type="button" class="rl" data-aiopen="1" aria-label="المساعد" title="المساعد"><span class="ni">${SPARK}</span></button>
     <span class="rl-gap"></span>${it("settings","settings",NI.settings,"الإعدادات")}`}
+// 1 Nov (Malek): «الأقسام» and «المزيد» can be folded from their titles; the choice is remembered
+let sideFold={};try{sideFold=JSON.parse(LS.getItem("sideFold")||"{}")||{}}catch(_){}
+const secHead=(k,t)=>`<button type="button" class="nh nh-b" data-sidefold="${k}" aria-expanded="${!sideFold[k]}"><span>${t}</span><svg class="nh-a" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`;
 function paintLists(){const box=document.getElementById("side-list");if(!box)return;const c=navCounts(),cur=navKey();
   const it=(k,ic,name,n)=>`<button type="button" class="nv" data-nav="${k}" ${cur===k?'aria-current="page"':""}><span class="ni">${ic}</span><span class="nn">${esc(name)}</span>${n?`<i class="nc">${n}</i>`:""}</button>`;
   box.innerHTML=`<div class="ng">${it("today",NI.today,"النهارده",c.today)}${it("upcoming",NI.upcoming,"الجاي",c.upcoming||0)}${it("all",NI.all,"كل التسكات",c.all)}</div>
-    <div class="nh">الأقسام</div><div class="ng">${AREAS.map(([k,n])=>it("area:"+k,'<b class="hash">#</b>',n,c.areas[k]||0)).join("")}</div>
+    ${secHead("areas","الأقسام")}${sideFold.areas?"":`<div class="ng">${AREAS.map(([k,n])=>it("area:"+k,'<b class="hash">#</b>',n,c.areas[k]||0)).join("")}</div>`}
     <div class="ng">${it("clients",NI.clients,"العملاء",0)}${team.length?it("team",NI.team,"الفريق",0):""}${it("proj",NI.projects||NI.all,"المشاريع",0)}${it("focus",NI.focus,"تركيز",0)}${it("notes",NI.notes,"النوتس",0)}</div>
-    <div class="nh">المزيد</div><div class="ng">${it("week",NI.week,"الأسبوع",0)}${it("journal",NI.journal,"يوميات",0)}${it("files",NI.files,"ملفات",0)}</div>`}
+    ${secHead("more","المزيد")}${sideFold.more?"":`<div class="ng">${it("week",NI.week,"الأسبوع",0)}${it("journal",NI.journal,"يوميات",0)}${it("files",NI.files,"ملفات",0)}</div>`}`}
 function paintShell2(){const desk=isDesk();const cur=navKey();
   document.body.classList.toggle("dz",desk);
   if(!desk){document.body.classList.remove("lists-on","dock-on");return}
@@ -3449,6 +3478,7 @@ function paintShell2(){const desk=isDesk();const cur=navKey();
 {const _p=paintShell;paintShell=function(){_p();paintShell2()}}
 addEventListener("resize",()=>{try{paintShell2()}catch(_){}});
 document.addEventListener("click",e=>{
+  const fb=e.target.closest("[data-sidefold]");if(fb){e.stopImmediatePropagation();const k=fb.dataset.sidefold;sideFold[k]=!sideFold[k];try{LS.setItem("sideFold",JSON.stringify(sideFold))}catch(_){}paintShell2();return}
   const w=e.target.closest("[data-sidewide]");if(w&&isDesk()){e.stopImmediatePropagation();listsHidden=!listsHidden;try{LS.setItem("listsHidden",listsHidden?"1":"0")}catch(_){}paintShell2();return}
   if(e.target.closest("[data-aiopen]")){e.preventDefault();openAi();return}},true);
 // the detail panel: switching to another task saves the open one first
@@ -3494,8 +3524,9 @@ function paintEd(sync){const t=editing&&tasks.find(x=>x.id===editing.id);const e
   $("#ed-made").textContent=t&&t.createdAt?"اتعمل "+new Date(t.createdAt).toLocaleDateString("ar-u-nu-latn",{weekday:"long"}):"";
   const more=!t||edMoreOpen;$("#ed-more").hidden=!more;ed.classList.toggle("more-open",!!t&&more);$("#ed-more-b").setAttribute("aria-expanded",more);$("#ed-more-b").hidden=!t;
   edGrow()}
-let edMoreOpen=false;
-{const _o=openEditor;openEditor=function(t){clearTimeout(edT);edT=null;edMoreOpen=false;$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");_o(t);paintEd();
+// 1 Nov (Malek): the details behind ⋯ show open from the start; ⋯ hides them and the choice is remembered
+let edMoreOpen=true;try{edMoreOpen=LS.getItem("edMore")!=="0"}catch(_){}
+{const _o=openEditor;openEditor=function(t){clearTimeout(edT);edT=null;$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");_o(t);paintEd();
   if(t){setTimeout(()=>{const a=document.activeElement;if(a&&a.id==="f-title")a.blur()},40)}}}
 {const _c=closeEditor;closeEditor=function(){edFlush();_c()}}
 {const _r=render;render=function(){_r.apply(this,arguments);if(editing&&!$("#overlay").hidden)try{paintEd(true)}catch(_){}}}
@@ -3515,7 +3546,7 @@ document.addEventListener("click",e=>{
   const fl=e.target.closest("#ed-flag");if(fl){const p=$("#ed-pripop");p.hidden=!p.hidden;fl.setAttribute("aria-expanded",!p.hidden);if(!p.hidden){const s=p.querySelector('[aria-pressed="true"]');if(s)s.focus()}return}
   const pr=e.target.closest("[data-edpri]");if(pr){edPri=pr.dataset.edpri;paintPri();$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");paintEd();if(editing)edSave(true);return}
   if(!e.target.closest("#ed-pripop")&&!$("#ed-pripop").hidden){$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false")}
-  if(e.target.closest("#ed-more-b")){edMoreOpen=!edMoreOpen;paintEd();return}
+  if(e.target.closest("#ed-more-b")){edMoreOpen=!edMoreOpen;try{LS.setItem("edMore",edMoreOpen?"1":"0")}catch(_){}paintEd();return}
   const so=e.target.closest("[data-edopen]");if(so){const s=tasks.find(x=>x.id===so.dataset.edopen);if(s){edFlush();openEditor(s)}return}
   if(e.target.closest("#f-pri [data-p]")||e.target.closest("#f-rep button")){setTimeout(()=>{paintEd();if(editing)edSave(true)},0)}
   if(e.target.closest("#ed-delete")){clearTimeout(edT);edT=null}},true);
@@ -3649,14 +3680,12 @@ function dockSummary(){
   const nts=notes.filter(n=>!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,3);
   const when=d=>d===t0?"النهارده":d===plusDays(1)?"بكره":fmtShort(d);
   return `<div class="ds"><div class="ds-top"><b>ملخص النهارده</b><span>${esc(fmtDay(t0))}</span></div>
-    <button type="button" class="ds-card ds-prog" data-nav="today">${ringSvg(dn,tot)}<span><b>${tot?`خلصت ${dn} من ${tot}`:"يومك فاضي"}</b><small>${tot?(late?`${late} منهم متأخر`:tl.length?`فاضل ${tl.length}`:"خلصت كله"):"اكتب أول تاسك من الخانة السريعة"}</small></span></button>
     ${m?`<div class="ds-card"><span><small>الميتنج الجاي</small><b>${esc(m.title)}</b><small>${when(m.date)} · ${fmtTime(m.time)}</small></span></div>`:""}
-    <button type="button" class="ds-card" data-nav="focus"><span><small>التركيز</small><b>${tmin?`اشتغلت ${dkMin(tmin)} النهارده`:"لسه ماشتغلتش بالتايمر النهارده"}</b>${wmin?`<small>${dkMin(wmin)} آخر 7 أيام</small>`:""}</span></button>
+    ${tmin?`<button type="button" class="ds-card" data-nav="focus"><span><small>التركيز</small><b>اشتغلت ${dkMin(tmin)} النهارده</b>${wmin?`<small>${dkMin(wmin)} آخر 7 أيام</small>`:""}</span></button>`:""}
     ${dl.length?`<div class="ds-sec"><h4>أقرب ديدلاين</h4>${dl.map(t=>`<button type="button" class="ds-row" data-edit="${t.id}"><i class="ds-dot ds-${PRI_KEY(t)}"></i><span>${esc(clip(t.title,36))}</span><small class="${t.due<t0?"ds-late":""}">${when(t.due)}</small></button>`).join("")}</div>`:""}
-    ${routineItems.length?`<button type="button" class="ds-card" data-nav="today"><span><small>الروتين</small><b>${rdn} من ${routineItems.length} النهارده</b></span></button>`:""}
     <div class="ds-sec"><h4>فكرة في بالك؟</h4><textarea id="ds-idea" rows="2" maxlength="1000" placeholder="اكتبها هنا وهتتحفظ في النوتس" aria-label="فكرة سريعة"></textarea>
       <div class="ds-act"><small>Enter يحفظ، وShift+Enter سطر جديد</small><button type="button" class="mini" data-ds-idea="1">احفظها</button></div>
-      ${nts.map(n=>`<button type="button" class="ds-row ds-note" data-nav="notes"><span>${esc(clip(String(n.text||"").replace(/\s+/g," "),60))}</span></button>`).join("")}</div>
+      </div>
   </div>`}
 function paintDock(){const el=document.getElementById("dock-empty");if(!el||!document.body.classList.contains("dock-on"))return;
   const a=document.activeElement,typing=!!(a&&el.contains(a)&&a.id==="ds-idea");if(typing&&a.value)return;
@@ -3676,6 +3705,22 @@ document.addEventListener("change",e=>{if(e.target.id==="dock-sel")setDetailMode
 document.addEventListener("click",e=>{if(e.target.closest("[data-ds-idea]")){saveIdea();return}
   const d=e.target.closest("[data-dockmode]");if(d){setDetailMode(detailMode==="popup"?"side":"popup")}});
 
+let edRepOpen=false,edRepLocked=false;
+{const _o=openEditor;openEditor=function(t){edRepOpen=false;edRepLocked=!!(t&&(t.parentId||subsOf(t.id).length||t.status==="done"||t.repeatOf));_o(t)}}   // locked: steps, done tasks and copies never repeat
+{const _p=paintEd;paintEd=function(){_p.apply(this,arguments);
+  const f=document.getElementById("rep-field");if(!f)return;
+  let a=document.getElementById("ed-rep-add");if(!a){a=document.createElement("button");a.type="button";a.id="ed-rep-add";a.className="ed-link";a.textContent="+ خليه يتكرر";f.after(a)}
+  if(edRepLocked){a.hidden=true;return}
+  if(edRep.length)edRepOpen=true;
+  f.hidden=!edRepOpen;a.hidden=edRepOpen}}
+document.addEventListener("click",e=>{if(!e.target.closest("#ed-rep-add"))return;edRepOpen=true;paintEd()});
+function tidyPages(){
+  document.querySelectorAll("h2").forEach(h=>{const t=h.textContent.trim();
+    if(t==="البومودورو"&&view==="focus")h.hidden=true;                                    // the page is already called «تركيز»
+    if(/^اللي خلص آخر 7 أيام/.test(t)&&/^0\s*تاسك/.test(t.replace(/^اللي خلص آخر 7 أيام\s*/,""))){      // nothing finished: one sentence, no five empty bars
+      const s=h.closest("section");if(s)[...s.children].forEach(c=>{if(c!==h&&!c.classList.contains("empty"))c.hidden=true})}});
+  document.querySelectorAll("a,button,.h-link").forEach(b=>{if(b.textContent.trim()==="إعدادات التايمر")b.hidden=true})}   // the timer settings live in الإعدادات
+{const _r=render;render=function(){_r.apply(this,arguments);try{tidyPages()}catch(_){}}}
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?listRows("s:"+title,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -4693,7 +4738,8 @@ function btAccount(){if(document.getElementById("bt-acc"))return;
     <button class="btn" type="button" data-bt="chpw">غيّر الباسورد</button>
     <div class="bt-err" id="bt-ae" role="status"></div>
     <button class="btn" type="button" data-bt="tour">شوف الجولة التعريفية</button>
-    <div class="bt-row"><button class="btn" type="button" data-bt="export">نزّل داتاي</button><button class="btn" type="button" data-bt="logout">اخرج</button></div>
+    <div class="bt-row"><button class="btn" type="button" data-bt="export">نزّل داتاي</button></div>
+    <div class="bt-row"><button class="btn" type="button" data-bt="logout">اخرج</button></div>
     <div class="bt-danger-zone"><button class="btn bt-danger" type="button" data-bt="del">امسح حسابي وكل داتاي</button></div>
     <button class="btn" type="button" data-bt="close-acc">قفل</button></div>`)}
 const btMsg=(t,bad)=>{const e=document.getElementById("bt-ae");if(e){e.textContent=t;e.style.color=bad?"var(--red)":"var(--accent)"}};
