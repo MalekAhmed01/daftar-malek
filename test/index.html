@@ -267,6 +267,42 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+/* desktop keeps the old look: the new bits are hidden */
+html body .hd-more,html body #hd-more,html body #counts .dp-ring,html body .late-all .la-i,html body .rt-strip .rt-ds{display:none!important}
+html body .rt-l{all:unset;display:inline-flex;align-items:center;min-height:36px;font-size:14px;color:var(--muted);margin-inline-end:4px;cursor:default}
+html body .tag-i{display:inline-flex;align-items:center;gap:4px}
+html body #hd-menu{position:fixed;z-index:80;width:232px;box-sizing:border-box;padding:6px;border-radius:14px;background:var(--sheet);border:1px solid var(--line);box-shadow:0 14px 34px rgba(0,0,0,.28);display:flex;flex-direction:column}
+html body #hd-menu button{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:12px;min-height:48px;padding:0 12px;border-radius:10px;font-size:15px;font-weight:500;color:var(--ink);cursor:pointer}
+html body #hd-menu button:hover,html body #hd-menu button:focus-visible{background:var(--accent-soft)}
+html body #hd-menu button .li{color:var(--muted);flex:none}
+html body #hd-menu button span{flex:1}
+html body #hd-menu .hd-n{font-style:normal;min-width:22px;height:22px;padding:0 6px;box-sizing:border-box;border-radius:99px;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+@media (max-width:959px){
+  html body #open-settings{display:none!important}
+  html body #hd-more{display:grid!important}
+  html body .counts .ts-act{display:none!important}
+  html body .dprog .dp-t,html body .dprog .dp-bar{display:none!important}
+  html body #counts .dprog .dp-ring{display:inline-flex!important;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink)}
+  html body .late-all{all:unset;box-sizing:border-box;cursor:pointer;min-width:44px;min-height:40px;display:grid;place-items:center;color:var(--accent)}
+  html body .late-all:focus-visible{box-shadow:0 0 0 2px var(--accent);border-radius:8px}
+  html body .late-all .la-i{display:grid!important}html body .late-all .la-t{display:none!important}
+  html body .rt-strip:not(.rt-open) .rt{display:none!important}
+  html body .rt-strip{flex-wrap:wrap!important;overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
+  html body .rt-strip .rt-l{display:inline-flex;align-items:center;gap:10px;box-sizing:border-box;height:40px;padding:0 16px;margin:0;border-radius:999px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer}
+  html body .rt-strip .rt-l:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+  html body .rt-strip .rt-l small{color:var(--muted);font-size:13px;font-weight:500}
+  html body .rt-strip .rt-l .rt-w{display:inline!important}
+  html body .rt-strip .rt-ds{display:inline-flex!important;gap:4px}
+  html body .rt-strip .rt-d{width:10px;height:10px;border-radius:50%;box-sizing:border-box;border:1.8px solid var(--muted)}
+  html body .rt-strip .rt-d.on{background:var(--accent);border-color:var(--accent)}
+  /* the quick box: one line until you tap it */
+  html body .qa2:not(.qa-hold):not(:focus-within):not(:has([aria-expanded="true"])):has(#qa-title:placeholder-shown){flex-wrap:nowrap}
+  html body .qa2:not(.qa-hold):not(:focus-within):not(:has([aria-expanded="true"])):has(#qa-title:placeholder-shown) .qa-tools{display:contents}
+  html body .qa2:not(.qa-hold):not(:focus-within):not(:has([aria-expanded="true"])):has(#qa-title:placeholder-shown) .qa-tools>:not(.qa-pri){display:none!important}
+  html body .qa2:not(.qa-hold):not(:focus-within):not(:has([aria-expanded="true"])):has(#qa-title:placeholder-shown) .qa-pri{border:0!important;background:none!important}
+  html body .tabs [data-view="more"] .ti{position:relative}
+  html body .tabs [data-view="more"].has-dot .ti::after{content:"";position:absolute;top:-2px;inset-inline-end:-4px;width:9px;height:9px;border-radius:50%;background:var(--red)}
+}
 html body .more-l{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;width:100%;min-height:40px;margin-top:4px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--accent)}
 html body .more-l:hover{background:var(--accent-soft)}
 html body .more-l:focus-visible{box-shadow:0 0 0 2px var(--accent)}
@@ -3415,6 +3451,53 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-more]");if
   moreOpen.has(k)?moreOpen.delete(k):moreOpen.add(k);render();
   const nb=[...document.querySelectorAll("[data-more]")].find(x=>x.dataset.more===k);if(nb)nb.focus()});
 {const _g=goView;goView=function(){moreOpen.clear();return _g.apply(this,arguments)}}
+const LI={
+  note:'<path d="M6 3.5h9l3 3v14H6z"/><path d="M15 3.5v3h3M9 12h6M9 15.5h6"/>',
+  copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6A2.5 2.5 0 0 0 13 3.5H6A2.5 2.5 0 0 0 3.5 6v7A2.5 2.5 0 0 0 6 15.5h2.5"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/>',
+  dots:'<circle cx="5.5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
+  cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  calchk:'<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15.2l2.2 2.2 4-4.4"/>',
+  clock:'<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>'};
+const lsvg=(n,w=16)=>`<svg class="li" width="${w}" height="${w}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${LI[n]}</svg>`;
+let rtShow=false,hdMenuEl=null;
+const claudeNotes=()=>notes.filter(n=>n.by==="claude"&&!n.resolved).length;
+function closeHdMenu(){if(hdMenuEl){hdMenuEl.remove();hdMenuEl=null}const b=document.getElementById("hd-more");if(b)b.setAttribute("aria-expanded","false")}
+function openHdMenu(){const b=document.getElementById("hd-more");if(!b)return;closeHdMenu();
+  const n=claudeNotes(),it=(ic,t,a,x="")=>`<button type="button" role="menuitem" ${a}>${lsvg(ic,19)}<span>${t}</span>${x}</button>`;
+  const m=document.createElement("div");m.id="hd-menu";m.setAttribute("role","menu");m.setAttribute("aria-label","حاجات تانية");
+  m.innerHTML=it("note",n?"نوتس من كلود":"النوتس",'data-goto="notes"',n?`<i class="hd-n">${n}</i>`:"")+it("copy","انسخ للورقة",'data-paper="1"')+it("gear","الإعدادات",'data-hdset="1"');
+  document.body.appendChild(m);hdMenuEl=m;b.setAttribute("aria-expanded","true");
+  const r=b.getBoundingClientRect();m.style.top=Math.round(r.bottom+8)+"px";m.style.left=Math.max(10,Math.round(r.left))+"px";
+  const f=m.querySelector("button");if(f)f.focus()}
+document.addEventListener("click",e=>{
+  const mb=e.target.closest("#hd-more");if(mb){e.stopPropagation();hdMenuEl?closeHdMenu():openHdMenu();return}
+  const hs=e.target.closest("[data-hdset]");if(hs){closeHdMenu();document.getElementById("open-settings").click();return}
+  const rl=e.target.closest(".rt-l");if(rl&&!isDesk()){rtShow=!rtShow;render();const n=document.querySelector(".rt-l");if(n)n.focus();return}
+  if(hdMenuEl&&!e.target.closest("#hd-menu"))closeHdMenu();
+  else if(hdMenuEl)setTimeout(closeHdMenu,0)},true);
+/* leaving the quick box shrinks it; hold it open a moment so the tap that caused it still lands on the row under the finger */
+document.addEventListener("focusout",e=>{const q=e.target.closest&&e.target.closest(".qa2");if(q&&!isDesk()){q.classList.add("qa-hold");setTimeout(()=>q.classList.remove("qa-hold"),450)}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&hdMenuEl){closeHdMenu();const b=document.getElementById("hd-more");if(b)b.focus()}});
+function paintLighter(){
+  if(!document.getElementById("hd-more")){const s=document.getElementById("open-settings");if(s){
+    const b=document.createElement("button");b.type="button";b.className="gear";b.id="hd-more";b.setAttribute("aria-label","حاجات تانية");b.setAttribute("aria-haspopup","menu");b.setAttribute("aria-expanded","false");b.innerHTML=lsvg("dots",18);s.insertAdjacentElement("afterend",b)}}
+  document.querySelectorAll(".dprog:not(.has-ring)").forEach(d=>{const m=/(\d+)\D+(\d+)/.exec(d.getAttribute("aria-label")||"");if(!m)return;const n=+m[1],t=+m[2]||1,c=56.5;
+    d.classList.add("has-ring");d.insertAdjacentHTML("afterbegin",`<span class="dp-ring" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="var(--line)" stroke-width="3"/><circle cx="12" cy="12" r="9" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${(Math.min(n,t)/t*c).toFixed(1)} ${c}" transform="rotate(-90 12 12)"/></svg><b>${n}/${t}</b></span>`)});
+  document.querySelectorAll(".late-all:not(.la-done)").forEach(b=>{b.classList.add("la-done");b.setAttribute("aria-label","كلهم للنهارده");b.innerHTML=`<span class="la-i">${lsvg("calchk",21)}</span><span class="la-t">كلهم للنهارده</span>`});
+  const rs=document.querySelector(".rt-strip");if(rs){rs.classList.toggle("rt-open",rtShow);
+    const l=rs.querySelector(".rt-l");if(l&&l.tagName!=="BUTTON"){const dots=[...rs.querySelectorAll(".rt")].map(x=>`<i class="rt-d${x.getAttribute("aria-pressed")==="true"?" on":""}"></i>`).join("");
+      const sm=l.querySelector("small"),b=document.createElement("button");b.type="button";b.className="rt-l";b.setAttribute("aria-expanded",String(rtShow));
+      b.innerHTML=`<span class="rt-w">الروتين</span><span class="rt-ds" aria-hidden="true">${dots}</span>${sm?sm.outerHTML:""}`;l.replaceWith(b)}}
+  document.querySelectorAll("#view .task .meta .tag:not([data-li])").forEach(t=>{t.dataset.li="1";const x=t.textContent;
+    if(x.startsWith("⏱ "))t.innerHTML=lsvg("clock",14)+`<span>${esc(x.slice(2))}</span>`;
+    else if(x.startsWith("ديدلاين "))t.innerHTML=lsvg("cal",14)+`<span>${esc(x.slice(8))}</span>`;
+    else if(x.startsWith("متأجل من "))t.innerHTML=lsvg("cal",14)+`<span>${esc(x.slice(5))}</span>`;
+    else return;t.classList.add("tag-i")});
+  const q=document.getElementById("qa-title");if(q&&!isDesk())q.placeholder="ضيف تاسك…";
+  const mt=document.querySelector('#tabs [data-view="more"]');if(mt)mt.classList.toggle("has-dot",claudeNotes()>0)}
+{const _ri=renderInner;renderInner=function(){const r=_ri.apply(this,arguments);try{paintLighter()}catch(_){}return r}}
+{const _g=goView;goView=function(){closeHdMenu();return _g.apply(this,arguments)}}
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?listRows("s:"+title,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
