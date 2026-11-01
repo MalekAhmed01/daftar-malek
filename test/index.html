@@ -267,6 +267,33 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+html body .fcard.m-focus .fbig{color:var(--ink)}
+html body #dock-tgl{display:none}
+@media (min-width:1280px){html body.dz #dock-tgl{display:inline-grid}}
+html body.dz.dock-on aside#dock-empty{justify-content:flex-start;align-items:stretch;text-align:start;overflow-y:auto;color:var(--ink);padding:22px 20px 28px;font-size:15px}
+html body aside#dock-empty .ds{display:flex;flex-direction:column;gap:12px;width:100%}
+html body aside#dock-empty .ds-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+html body aside#dock-empty .ds-top b{font-size:18px;font-weight:700}
+html body aside#dock-empty .ds-top span{font-size:13px;color:var(--muted)}
+html body aside#dock-empty .ds-card{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);background:var(--sheet);border-radius:14px;cursor:default}
+html body aside#dock-empty button.ds-card{cursor:pointer}
+html body aside#dock-empty button.ds-card:hover,html body aside#dock-empty .ds-row:hover{background:var(--accent-soft)}
+html body aside#dock-empty .ds-card:focus-visible,html body aside#dock-empty .ds-row:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+html body aside#dock-empty .ds-card span{display:flex;flex-direction:column;gap:2px;min-width:0}
+html body aside#dock-empty .ds-card b{font-size:15.5px;font-weight:600}
+html body aside#dock-empty small{font-size:12.5px;color:var(--muted);font-weight:500}
+html body aside#dock-empty .ds-prog .ring{flex:none}
+html body aside#dock-empty .ds-sec{display:flex;flex-direction:column;gap:6px;padding-top:4px}
+html body aside#dock-empty .ds-sec h4{margin:0 0 2px;font-size:13px;font-weight:600;color:var(--muted)}
+html body aside#dock-empty .ds-row{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;min-height:40px;padding:6px 10px;border-radius:10px;cursor:pointer;font-size:14.5px}
+html body aside#dock-empty .ds-row span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body aside#dock-empty .ds-dot{width:10px;height:10px;border-radius:3px;flex:none;border:2px solid currentColor}
+html body aside#dock-empty .ds-red{color:var(--red);background:var(--red)}html body aside#dock-empty .ds-blue{color:var(--blue)}html body aside#dock-empty .ds-black{color:var(--black)}
+html body aside#dock-empty .ds-late{color:var(--red);font-weight:600}
+html body aside#dock-empty .ds-note{color:var(--muted)}
+html body aside#dock-empty textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--sheet);border:1px solid var(--line);border-radius:12px;padding:10px 12px;resize:vertical;min-height:64px;box-sizing:border-box;width:100%;line-height:1.6}
+html body aside#dock-empty textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+html body aside#dock-empty .ds-act{display:flex;align-items:center;justify-content:space-between;gap:8px}
 html body #tour{position:fixed;inset:0;z-index:95}
 html body #tour.tour-dim{background:rgba(10,14,28,.62)}
 html body #tour .tour-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 100vmax rgba(10,14,28,.62);outline:2px solid var(--accent);outline-offset:0;pointer-events:none}
@@ -2405,7 +2432,8 @@ function applyAppName(){const n=(appName||"").trim()||APP_DEFAULT;const h=docume
 function appSetHtml(){return `<section class="section"><h2>الدفتر</h2><div class="sets"><div class="srow"><label for="app-name-in" style="font-size:14px;color:var(--muted)">الاسم</label>
   <input type="text" id="app-name-in" value="${esc(appName||APP_DEFAULT)}" maxlength="30" aria-label="اسم الدفتر"></div><div class="note">بيظهر فوق وفي اسم التاب.</div>
   <div class="srow"><label class="sw"><input type="checkbox" id="snd-on" ${tickOn?"checked":""}> صوت لما أعلّم على تاسك</label><button type="button" class="mini" data-sndtest="1">اسمعه</button></div>
-  <div class="srow"><span>مش فاكر القوايم بتعمل إيه؟</span><button type="button" class="mini" data-tour="1">شوف الجولة التعريفية</button></div></div></section>`}
+  <div class="srow"><span>مش فاكر القوايم بتعمل إيه؟</span><button type="button" class="mini" data-tour="1">شوف الجولة التعريفية</button></div>
+  <div class="srow dk-set"><span>تفاصيل التاسك على الشاشات الكبيرة</span><select id="dock-sel" aria-label="تفاصيل التاسك"><option value="side" ${detailMode!=="popup"?"selected":""}>لوحة في الجنب</option><option value="popup" ${detailMode==="popup"?"selected":""}>نافذة منبثقة</option></select></div></div></section>`}
 document.addEventListener("change",async e=>{if(e.target.id!=="app-name-in")return;const v=e.target.value.trim()||APP_DEFAULT;appName=v;applyAppName();
   try{await db.collection("config").doc("app").set({name:v});toast("اتحفظ ✓")}catch(_){toast("ماتحفظش، جرّب تاني")}});
 
@@ -3571,6 +3599,47 @@ function startTour(o){o=o||{};if(tourEl)return;
     else if(e.target.closest(".tour-next")){if(i>=S.length-1)end();else{dir=1;i++;show()}}},true);
   show()}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-tour]");if(b){e.preventDefault();startTour()}});
+let detailMode="side";try{detailMode=LS.getItem("detailMode")==="popup"?"popup":"side"}catch(_){}
+let ideaDraft="";
+const dkMin=m=>m>=60?Math.floor(m/60)+" س"+(m%60?" "+(m%60)+" د":""):(m||0)+" د";
+function dockSummary(){
+  const t0=today(),open=tasks.filter(isOpen),tl=tasks.filter(inToday);
+  const dn=tasks.filter(t=>t.status==="done"&&t.doneDate===t0).filter(t=>!subsOf(t.id).length).length,tot=dn+tl.length;
+  const late=tl.filter(t=>t.planDate&&t.planDate<t0).length;
+  const m=upcoming()[0];
+  const tmin=sumMin(sessions.filter(s=>s.date===t0)),wmin=sumMin(sessions.filter(s=>s.date>=daysAgo(6)));
+  const dl=open.filter(t=>t.due&&isTop(t)).sort((a,b)=>a.due<b.due?-1:a.due>b.due?1:0).slice(0,4);
+  const rd=(routineDays[t0]||{}).done||{},rdn=routineItems.filter(i=>rd[i.id]).length;
+  const nts=notes.filter(n=>!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,3);
+  const when=d=>d===t0?"النهارده":d===plusDays(1)?"بكره":fmtShort(d);
+  return `<div class="ds"><div class="ds-top"><b>ملخص النهارده</b><span>${esc(fmtDay(t0))}</span></div>
+    <button type="button" class="ds-card ds-prog" data-nav="today">${ringSvg(dn,tot)}<span><b>${tot?`خلصت ${dn} من ${tot}`:"يومك فاضي"}</b><small>${tot?(late?`${late} منهم متأخر`:tl.length?`فاضل ${tl.length}`:"خلصت كله"):"اكتب أول تاسك من الخانة السريعة"}</small></span></button>
+    ${m?`<div class="ds-card"><span><small>الميتنج الجاي</small><b>${esc(m.title)}</b><small>${when(m.date)} · ${fmtTime(m.time)}</small></span></div>`:""}
+    <button type="button" class="ds-card" data-nav="focus"><span><small>التركيز</small><b>${tmin?`اشتغلت ${dkMin(tmin)} النهارده`:"لسه ماشتغلتش بالتايمر النهارده"}</b>${wmin?`<small>${dkMin(wmin)} آخر 7 أيام</small>`:""}</span></button>
+    ${dl.length?`<div class="ds-sec"><h4>أقرب ديدلاين</h4>${dl.map(t=>`<button type="button" class="ds-row" data-edit="${t.id}"><i class="ds-dot ds-${PRI_KEY(t)}"></i><span>${esc(clip(t.title,36))}</span><small class="${t.due<t0?"ds-late":""}">${when(t.due)}</small></button>`).join("")}</div>`:""}
+    ${routineItems.length?`<button type="button" class="ds-card" data-nav="today"><span><small>الروتين</small><b>${rdn} من ${routineItems.length} النهارده</b></span></button>`:""}
+    <div class="ds-sec"><h4>فكرة في بالك؟</h4><textarea id="ds-idea" rows="2" maxlength="1000" placeholder="اكتبها هنا وهتتحفظ في النوتس" aria-label="فكرة سريعة"></textarea>
+      <div class="ds-act"><small>Enter يحفظ، وShift+Enter سطر جديد</small><button type="button" class="mini" data-ds-idea="1">احفظها</button></div>
+      ${nts.map(n=>`<button type="button" class="ds-row ds-note" data-nav="notes"><span>${esc(clip(String(n.text||"").replace(/\s+/g," "),60))}</span></button>`).join("")}</div>
+  </div>`}
+function paintDock(){const el=document.getElementById("dock-empty");if(!el||!document.body.classList.contains("dock-on"))return;
+  const a=document.activeElement,typing=!!(a&&el.contains(a)&&a.id==="ds-idea");if(typing&&a.value)return;
+  el.removeAttribute("aria-hidden");el.innerHTML=dockSummary();const i=document.getElementById("ds-idea");if(i){i.value=ideaDraft;if(typing)i.focus()}}
+function ensureDockToggle(){const sm=document.querySelector(".h-row .s-menu");if(!sm)return;let b=document.getElementById("dock-tgl");
+  if(!b){b=document.createElement("button");b.type="button";b.id="dock-tgl";b.className="s-menu";b.dataset.dockmode="1";
+    b.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/></svg>';sm.insertAdjacentElement("afterend",b)}
+  const p=detailMode==="popup";b.setAttribute("aria-pressed",String(!p));b.title=p?"رجّع تفاصيل التاسك للوحة اللي في الجنب":"خلّي تفاصيل التاسك نافذة منبثقة";b.setAttribute("aria-label",b.title)}
+function setDetailMode(m){detailMode=m==="popup"?"popup":"side";try{LS.setItem("detailMode",detailMode)}catch(_){}render()}
+{const _p2=paintShell2;paintShell2=function(){_p2();if(isDesk()&&detailMode==="popup")document.body.classList.remove("dock-on")}}
+{const _ps=paintShell;paintShell=function(){_ps();try{ensureDockToggle();paintDock()}catch(_){}}}
+async function saveIdea(){const i=document.getElementById("ds-idea"),text=((i?i.value:ideaDraft)||"").trim();if(!text)return;ideaDraft="";if(i)i.value="";
+  await writeNote("n"+sid(),{text:text.slice(0,1000),area:"",review:false,resolved:false,by:"malek",d:today(),createdAt:Date.now()},true);toast("اتحفظت في النوتس ✓")}
+document.addEventListener("input",e=>{if(e.target.id==="ds-idea")ideaDraft=e.target.value});
+document.addEventListener("keydown",e=>{if(e.target.id==="ds-idea"&&e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();saveIdea()}});
+document.addEventListener("change",e=>{if(e.target.id==="dock-sel")setDetailMode(e.target.value)});
+document.addEventListener("click",e=>{if(e.target.closest("[data-ds-idea]")){saveIdea();return}
+  const d=e.target.closest("[data-dockmode]");if(d){setDetailMode(detailMode==="popup"?"side":"popup")}});
+
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?listRows("s:"+title,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
