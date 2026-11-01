@@ -267,6 +267,20 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold:hover .arr{background:var(--paper);color:var(--ink)}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
+html body #tour{position:fixed;inset:0;z-index:95}
+html body #tour.tour-dim{background:rgba(10,14,28,.62)}
+html body #tour .tour-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 100vmax rgba(10,14,28,.62);outline:2px solid var(--accent);outline-offset:0;pointer-events:none}
+html body #tour .tour-card{position:fixed;box-sizing:border-box;background:var(--sheet);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:16px 16px 12px;box-shadow:0 18px 48px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:8px}
+html body #tour .tour-n{font-size:12.5px;color:var(--muted);font-weight:600}
+html body #tour h3{margin:0;font-size:19px;font-weight:700;line-height:1.4}
+html body #tour p{margin:0;font-size:15px;line-height:1.75;color:var(--ink)}
+html body #tour .tour-act{display:flex;align-items:center;gap:8px;margin-top:6px}
+html body #tour .tour-act span{flex:1}
+html body #tour .tour-act button{font:inherit;font-size:15px;font-weight:600;min-height:44px;padding:0 16px;border-radius:12px;cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+html body #tour .tour-act .tour-skip{border:0;background:none;color:var(--muted);padding:0 6px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+html body #tour .tour-act .tour-next{background:var(--accent);border-color:var(--accent);color:#fff}
+html body #tour .tour-act button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+html body #tour .tour-act button[hidden]{display:none}
 /* desktop keeps the old look: the new bits are hidden */
 html body .hd-more,html body #hd-more,html body #counts .dp-ring,html body .late-all .la-i,html body .rt-strip .rt-ds{display:none!important}
 html body .rt-l{all:unset;display:inline-flex;align-items:center;min-height:36px;font-size:14px;color:var(--muted);margin-inline-end:4px;cursor:default}
@@ -2390,7 +2404,8 @@ function applyAppName(){const n=(appName||"").trim()||APP_DEFAULT;const h=docume
   const m=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(m)m.content=n}
 function appSetHtml(){return `<section class="section"><h2>الدفتر</h2><div class="sets"><div class="srow"><label for="app-name-in" style="font-size:14px;color:var(--muted)">الاسم</label>
   <input type="text" id="app-name-in" value="${esc(appName||APP_DEFAULT)}" maxlength="30" aria-label="اسم الدفتر"></div><div class="note">بيظهر فوق وفي اسم التاب.</div>
-  <div class="srow"><label class="sw"><input type="checkbox" id="snd-on" ${tickOn?"checked":""}> صوت لما أعلّم على تاسك</label><button type="button" class="mini" data-sndtest="1">اسمعه</button></div></div></section>`}
+  <div class="srow"><label class="sw"><input type="checkbox" id="snd-on" ${tickOn?"checked":""}> صوت لما أعلّم على تاسك</label><button type="button" class="mini" data-sndtest="1">اسمعه</button></div>
+  <div class="srow"><span>مش فاكر القوايم بتعمل إيه؟</span><button type="button" class="mini" data-tour="1">شوف الجولة التعريفية</button></div></div></section>`}
 document.addEventListener("change",async e=>{if(e.target.id!=="app-name-in")return;const v=e.target.value.trim()||APP_DEFAULT;appName=v;applyAppName();
   try{await db.collection("config").doc("app").set({name:v});toast("اتحفظ ✓")}catch(_){toast("ماتحفظش، جرّب تاني")}});
 
@@ -3498,6 +3513,64 @@ function paintLighter(){
   const mt=document.querySelector('#tabs [data-view="more"]');if(mt)mt.classList.toggle("has-dot",claudeNotes()>0)}
 {const _ri=renderInner;renderInner=function(){const r=_ri.apply(this,arguments);try{paintLighter()}catch(_){}return r}}
 {const _g=goView;goView=function(){closeHdMenu();return _g.apply(this,arguments)}}
+let tourEl=null,tourKeys=null;
+function startTour(o){o=o||{};if(tourEl)return;
+  if(typeof view==="string"&&view!=="today"){try{goView("today")}catch(_){}}
+  const desk=isDesk(),nav=k=>desk?`#side .nv[data-nav="${k}"]`:`#tabs [data-view="${k}"]`;
+  const S=[
+    {t:"أهلاً في دفترك",b:"ده مكان تفضّي فيه دماغك. هنفرجك عليه في دقيقة، وتقدر تتخطى في أي وقت."},
+    {sel:"#qa-title",t:"اكتب أي حاجة في دماغك",b:"اكتب التاسك هنا واضغط Enter. اكتب «بكره» أو اسم يوم عشان يتحط في يومه، واكتب «!» في أولها لو مهم جداً."},
+    {sel:"#view .task .check",t:"علّم لما تخلص",b:"دوس على الدايرة لما تخلص التاسك. ودوس على التاسك نفسه تفتح تفاصيله وتضيف تاسكات فرعية. الألوان: أحمر مهم جداً، أزرق أقل أهمية، أسود ممكن يتأجل."},
+    {sel:nav("today"),t:"النهارده",b:"اللي عليك النهارده بس. الباقي مستني في القوايم التانية."},
+    {sel:nav("upcoming"),t:"الجاي",b:"التسكات اللي ليها معاد في الأسبوعين الجايين."},
+    {sel:nav("all"),t:desk?"كل التسكات":"التسكات",b:"كل تسكاتك المفتوحة مقسّمة بالأقسام، فتلاقي أي حاجة بسرعة."},
+    {sel:nav("focus"),t:"تركيز",b:"تايمر للشغل: اختار تاسك وابدأ، والوقت اللي اشتغلته بيتسجل لوحده."},
+    desk?{sel:nav("notes"),t:"وتحتها كمان",b:"النوتس، واليوميات، ومتابعة الأسبوع، والعملاء، والمشاريع. مش لازم تستخدمهم كلهم، استخدم اللي يفيدك."}
+        :{sel:nav("more"),t:"المزيد",b:"هنا النوتس، واليوميات، ومتابعة الأسبوع، والعملاء، والمشاريع. مش لازم تستخدمهم كلهم."},
+    desk?null:{sel:"#hd-more",t:"النقط التلاتة",b:"فيها الإعدادات و«انسخ للورقة»، اللي بتطلّع خطة يومك كنص تنقله على ورقة."},
+    {sel:"#ai-fab",t:"المساعد",b:"قوله مثلاً «صحيت 10 الصبح وقدامي 8 ساعات، رتّبلي اليوم» وهو يقترح عليك خطة."},
+    {t:"جاهز",b:o.feedback?"ابدأ بأول تاسك. ولو حاجة لخبطتك أو عايز تغيّرها، دوس «ابعت رأيك» في آخر الصفحة. تقدر تشوف الجولة دي تاني من «حسابي»."
+                           :"ابدأ بأول تاسك. تقدر تشوف الجولة دي تاني من الإعدادات."}
+  ].filter(Boolean);
+  const el=document.createElement("div");el.id="tour";el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");el.setAttribute("aria-labelledby","tour-t");
+  el.innerHTML=`<div class="tour-hole" hidden></div><div class="tour-card"><div class="tour-n" id="tour-n"></div><h3 id="tour-t"></h3><p id="tour-b"></p>
+    <div class="tour-act"><button type="button" class="tour-skip">تخطّي</button><span></span><button type="button" class="tour-prev">رجوع</button><button type="button" class="tour-next">التالي</button></div></div>`;
+  document.body.appendChild(el);tourEl=el;
+  const hole=el.querySelector(".tour-hole"),card=el.querySelector(".tour-card"),nx=el.querySelector(".tour-next"),pv=el.querySelector(".tour-prev");
+  let i=0,dir=1;
+  const target=s=>{if(!s.sel)return null;const t=document.querySelector(s.sel);if(!t)return null;const r=t.getBoundingClientRect();return r.width>0&&r.height>0?t:null};
+  function place(s,t){
+    const w=Math.min(340,innerWidth-24);card.style.width=w+"px";
+    const h=card.offsetHeight;let top,left;
+    if(!t){hole.hidden=true;top=Math.max(12,(innerHeight-h)/2);left=(innerWidth-w)/2;el.classList.add("tour-dim")}
+    else{el.classList.remove("tour-dim");const r=t.getBoundingClientRect(),p=6;hole.hidden=false;
+      Object.assign(hole.style,{top:(r.top-p)+"px",left:(r.left-p)+"px",width:(r.width+2*p)+"px",height:(r.height+2*p)+"px"});
+      if(s.sel.startsWith("#side")){top=Math.min(Math.max(12,r.top+r.height/2-h/2),innerHeight-h-12);left=r.left-w-18;if(left<12)left=r.right+18}
+      else{left=r.left+r.width/2-w/2;
+        if(innerHeight-r.bottom-p>=h+14)top=r.bottom+p+10;else if(r.top-p>=h+14)top=r.top-p-10-h;else top=Math.max(12,(innerHeight-h)/2)}}
+    left=Math.min(Math.max(12,left),innerWidth-w-12);card.style.top=Math.round(top)+"px";card.style.left=Math.round(left)+"px"}
+  function show(){
+    while(i>=0&&i<S.length&&S[i].sel&&!target(S[i]))i+=dir;
+    if(i>=S.length||i<0){if(i<0){i=0;dir=1;return show()}return end()}
+    const s=S[i],t=target(s);
+    if(t&&!s.sel.startsWith("#tabs")&&!s.sel.startsWith("#side")){t.scrollIntoView({block:"center"})}
+    const shown=S.filter(x=>!x.sel||target(x));const pos=shown.indexOf(s)+1;
+    document.getElementById("tour-n").textContent=pos+" من "+shown.length;
+    document.getElementById("tour-t").textContent=s.t;document.getElementById("tour-b").textContent=s.b;
+    nx.textContent=i===S.length-1?"يلا نبدأ":"التالي";pv.hidden=pos===1;
+    place(s,t);nx.focus()}
+  function end(){if(!tourEl)return;tourEl.remove();tourEl=null;removeEventListener("resize",onR);document.removeEventListener("keydown",tourKeys,true);tourKeys=null;scrollTo(0,0);if(o.onDone)try{o.onDone()}catch(_){}}
+  const onR=()=>{if(tourEl){const s=S[i];place(s,target(s))}};
+  addEventListener("resize",onR);
+  tourKeys=e=>{if(e.key==="Escape"){e.preventDefault();end()}
+    else if(e.key==="Tab"){const b=[...card.querySelectorAll("button:not([hidden])")];const k=b.indexOf(document.activeElement);e.preventDefault();b[(k+(e.shiftKey?-1:1)+b.length)%b.length].focus()}};
+  document.addEventListener("keydown",tourKeys,true);
+  el.addEventListener("click",e=>{e.stopPropagation();
+    if(e.target.closest(".tour-skip"))end();
+    else if(e.target.closest(".tour-prev")){dir=-1;i--;show()}
+    else if(e.target.closest(".tour-next")){if(i>=S.length-1)end();else{dir=1;i++;show()}}},true);
+  show()}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-tour]");if(b){e.preventDefault();startTour()}});
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?listRows("s:"+title,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
