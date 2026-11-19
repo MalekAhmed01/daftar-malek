@@ -243,6 +243,7 @@ details.more summary{cursor:pointer;font-size:13px;color:var(--accent)}
 .editor .paper-out{min-height:min(62vh,560px);max-height:70vh;line-height:1.9;font-size:15px;resize:vertical}
 .paper-out{width:100%;min-height:200px;font:inherit;font-size:14px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;white-space:pre-wrap}
 @media (prefers-reduced-motion:no-preference){.task{transition:background .15s}.check{transition:background .15s}}
+.meet .meet-cal{display:inline-grid;place-items:center;color:var(--muted);text-decoration:none}.meet .meet-cal:hover{color:var(--accent)}
 </style>
 <style>
 /* refinement pass: plain sheets instead of graph paper, one type family with a weight scale */
@@ -1854,7 +1855,7 @@ function meetStrip(){const up=upcoming().filter(m=>m.date<=ymd(new Date(Date.now
   return `<section class="section meets"><h2>الميتنجات<small>${up.length}</small></h2>${up.map(m=>{const at=meetAt(m),now=Date.now(),live=at<=now;
     if(meetEdit===m.id)return `<form class="inline meet-ed" data-meetsave="${m.id}"><input id="me-title" value="${esc(m.title)}" maxlength="120" aria-label="اسم الميتنج"><input id="me-date" type="date" value="${m.date}" aria-label="اليوم"><input id="me-time" type="time" value="${m.time}" aria-label="الساعة"><button class="btn primary" type="submit">احفظ</button><button class="btn" type="button" data-meetcancel="1">إلغاء</button></form>`;
     return `<div class="meet ${at-now<3*3600e3?"soon":""}"><button type="button" class="meet-b" data-meetedit="${m.id}"><span class="meet-t">${esc(dayName(m.date))} ${fmtTime(m.time)}</span><span class="meet-n">${esc(m.title)}</span><span class="meet-w">${live?"شغال دلوقتي":inWords(at-now)}</span></button>
-      <button type="button" class="x" data-meetdel="${m.id}" aria-label="امسح الميتنج">×</button></div>`}).join("")}</section>`}
+      ${calCfg?"":`<a class="x meet-cal" href="${esc(calUrl(m))}" target="_blank" rel="noopener" aria-label="ضيفه لجوجل كالندر" title="ضيفه لجوجل كالندر"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M12 13v5M9.5 15.5h5"/></svg></a>`}<button type="button" class="x" data-meetdel="${m.id}" aria-label="امسح الميتنج">×</button></div>`}).join("")}</section>`}
 function askNotify(){try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission()}catch(_){}}
 let alerted=new Set();try{alerted=new Set(JSON.parse(LS.getItem("meetAlerted")||"[]"))}catch(_){}
 function meetAlerts(){const now=Date.now();const due=upcoming().filter(m=>{const at=meetAt(m);return at-now<=15*60000&&at>now-5*60000&&!alerted.has(m.id+m.date+m.time)});
@@ -1939,7 +1940,7 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-qmsave]"))$("#q
 // quick box: understand meetings as you type
 let qaState={t:"",d:"",tm:""};
 function meetPreview(){const m=parseMeet(qaState.t);if(!m)return "";
-  const to=`<span class="qm-to">${calCfg?"هيتضاف على الكالندر لوحده":`هيفتح الكالندر متكتب · <a href="#" data-calsetup="1">اربطه عشان يتضاف لوحده</a>`}</span>`;
+  const to=`<span class="qm-to">${calCfg?"هيتضاف على الكالندر لوحده":`هيفتح جوجل كالندر متكتب، دوس Save هناك. وتقدر تفتحه تاني من زرار الكالندر جنب الميتنج`}</span>`;
   if(m.partial)return `<b>ميتنج:</b> <span>${esc(m.title)}</span> <span class="qm-need">الساعة (اختياري):</span><input type="date" id="qm-date" value="${qaState.d||m.date}" min="${today()}" aria-label="يوم الميتنج"><input type="time" id="qm-time" value="${qaState.tm}" aria-label="ساعة الميتنج"><button class="mini" type="button" data-qmsave="1">ضيف</button><span class="qm-to">من غير ساعة هيتضاف تاسك عادي، وبالساعة هيتسجل ميتنج.</span>${to}`;
   return `<b>ميتنج:</b> ${meetLine(m)}${to}`}
 document.addEventListener("input",e=>{const id=e.target.id;
