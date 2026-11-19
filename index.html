@@ -1906,7 +1906,7 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-qmsave]"))$("#q
 let qaState={t:"",d:"",tm:""};
 function meetPreview(){const m=parseMeet(qaState.t);if(!m)return "";
   const to=`<span class="qm-to">${calCfg?"هيتضاف على الكالندر لوحده":`هيفتح الكالندر متكتب · <a href="#" data-calsetup="1">اربطه عشان يتضاف لوحده</a>`}</span>`;
-  if(m.partial)return `<b>ميتنج:</b> <span>${esc(m.title)}</span> <span class="qm-need">اختار الساعة:</span><input type="date" id="qm-date" value="${qaState.d||m.date}" min="${today()}" aria-label="يوم الميتنج"><input type="time" id="qm-time" value="${qaState.tm}" aria-label="ساعة الميتنج"><button class="mini" type="button" data-qmsave="1">سجّل الميتنج</button>${to}`;
+  if(m.partial)return `<b>ميتنج:</b> <span>${esc(m.title)}</span> <span class="qm-need">الساعة (اختياري):</span><input type="date" id="qm-date" value="${qaState.d||m.date}" min="${today()}" aria-label="يوم الميتنج"><input type="time" id="qm-time" value="${qaState.tm}" aria-label="ساعة الميتنج"><button class="mini" type="button" data-qmsave="1">ضيف</button><span class="qm-to">من غير ساعة هيتضاف تاسك عادي، وبالساعة هيتسجل ميتنج.</span>${to}`;
   return `<b>ميتنج:</b> ${meetLine(m)}${to}`}
 document.addEventListener("input",e=>{const id=e.target.id;
   if(id==="qm-date"){qaState.d=e.target.value;return}if(id==="qm-time"){qaState.tm=e.target.value;return}
@@ -3683,6 +3683,7 @@ function tidyPages(){
       const s=h.closest("section");if(s)[...s.children].forEach(c=>{if(c!==h&&!c.classList.contains("empty"))c.hidden=true})}});
   document.querySelectorAll("a,button,.h-link").forEach(b=>{if(b.textContent.trim()==="إعدادات التايمر")b.hidden=true})}   // the timer settings live in الإعدادات
 {const _r=render;render=function(){_r.apply(this,arguments);try{tidyPages()}catch(_){}}}
+const meetFull=s=>{const m=parseMeet(s);return m&&!m.partial?m:null};
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?listRows("s:"+title,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
@@ -3859,13 +3860,13 @@ document.addEventListener("change",e=>{if(e.target.id==="qa-area")try{localStora
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="quick-add")return;e.preventDefault();
   const inp=$("#qa-title");let title=inp.value.trim();if(!title)return;inp.value="";
-  let qaPri=qaPick;if(qaBang(title)&&!parseMeet(title.replace(/[!！]/g,""))){qaPri="red";title=title.replace(/^\s*[!！]+\s*|\s*[!！]+\s*$/g,"").trim();if(!title)return}
+  let qaPri=qaPick;if(qaBang(title)&&!meetFull(title.replace(/[!！]/g,""))){qaPri="red";title=title.replace(/^\s*[!！]+\s*|\s*[!！]+\s*$/g,"").trim();if(!title)return}
   qaPick="blue";justAdded=Date.now();
-  let qaDay=qaDaySel;{const [pd,rest]=qaParseDay(title);if(pd&&rest&&!parseMeet(title)){qaDay=pd;title=rest}}
+  let qaDay=qaDaySel;{const [pd,rest]=qaParseDay(title);if(pd&&rest&&!meetFull(title)){qaDay=pd;title=rest}}
   let mt=parseMeet(title);
   if(mt&&mt.partial){const tv=qaState.tm||($("#qm-time")&&$("#qm-time").value),dv=qaState.d||($("#qm-date")&&$("#qm-date").value);
-    if(!tv){inp.value=title;toast("اختار ساعة الميتنج الأول، أو اكتبها: «بكره الساعة 5»");const q=$("#qm-time");if(q)q.focus();return}
-    mt={title:mt.title,date:dv||mt.date,time:pmFix(dv||mt.date,tv)}}
+    if(!tv){mt=null;if(qaState.d)qaDay=qaState.d}
+    else mt={title:mt.title,date:dv||mt.date,time:pmFix(dv||mt.date,tv)}}
   qaState={t:"",d:"",tm:""};$("#qa-meet").hidden=true;$("#qa-meet").innerHTML="";
   if(mt){if(!calCfg)window.open(calUrl(mt),"_blank","noopener");askNotify();
     const id="m"+sid();await meetCol.doc(id).set({title:mt.title,date:mt.date,time:mt.time,calId:"",createdAt:Date.now()});
