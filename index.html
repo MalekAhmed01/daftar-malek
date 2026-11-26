@@ -268,6 +268,25 @@ h1{font-weight:700;font-size:32px;letter-spacing:0}
 .fold[aria-expanded="false"] .arr{transform:rotate(90deg)}
 .section.folded{padding-bottom:4px}
 
+html body.dz.dock-on.dk-w .wrap{--dock:var(--dockw)!important}
+html body.dz.dock-on.dk-w #dock-empty,html body.dz.dock-on.dk-w #overlay,html body.dz.dock-on.dk-w #overlay .editor{width:var(--dockw)!important}
+html body.dz.dock-on.dk-w header #ai-fab{inset-inline-end:calc(var(--dockw) + 22px)!important}
+html body.dz.dock-on.dk-w .ai-ov .ai-panel{margin-inline-end:calc(var(--dockw) + 22px)!important}
+#dk-grip,#dk-show{display:none}
+html body.dz.dock-on #dk-grip{display:block;position:fixed;top:0;bottom:0;left:calc(var(--dockw,400px) - 5px);width:10px;cursor:col-resize;z-index:32;touch-action:none}
+html body.dz.dock-on #dk-grip:hover,html body.dz.dock-on #dk-grip:focus-visible,html body.dk-drag #dk-grip{background:linear-gradient(90deg,transparent 4px,var(--accent) 4px,var(--accent) 6px,transparent 6px);outline:none}
+html body.dk-drag,html body.dk-drag *{cursor:col-resize!important;user-select:none!important}
+html body.dz.dock-off #dk-show{display:block;position:fixed;left:14px;top:12px;z-index:32;min-height:36px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font:inherit;font-size:13.5px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+html body .ds-top .dk-hide{float:left;margin-inline-start:8px}
+html body #editor #f-title{display:block;width:100%;resize:none;overflow:hidden;min-height:0;font-family:inherit;line-height:1.4;word-break:break-word}
+html body .task.long-line .pj-link{cursor:pointer;color:var(--accent);background:transparent;border:0;font:inherit;font-size:inherit;padding:0 2px}
+html body .pj-nx1{font-size:12.5px;color:var(--muted);margin-inline-start:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40%}
+html body .pj-learn .pj-lhint{font-size:13px;color:var(--muted);padding:2px 4px 6px}
+html body .pop .pop-date{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 12px;min-height:40px}
+html body .pop .pop-date input{width:auto;min-height:34px;font-size:14px}
+html body .pop .pop-del{color:var(--red,#c0392b)}
+
+
 html body .set-nav{padding-inline:6px}
 
 
@@ -1569,7 +1588,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
     </div>
     <span class="ed-crumb" id="ed-crumb"></span>
     <div class="ed-par" id="ed-par-row" hidden><div class="note parent-of" id="ed-parent" hidden></div><button class="mini" type="button" id="ed-promote">خليه تاسك أساسي</button></div>
-    <div class="field ed-tf"><label for="f-title">التاسك</label><input id="f-title" required maxlength="160" placeholder="مثلاً: تسليم فيديو الطعمية"></div>
+    <div class="field ed-tf"><label for="f-title">التاسك</label><textarea id="f-title" rows="1" required maxlength="160" placeholder="مثلاً: تسليم فيديو الطعمية"></textarea></div>
     <div class="field ed-nf" id="notes-wrap"><label for="f-notes" class="ed-sr">ملاحظات</label><textarea id="f-notes" maxlength="1000" rows="1" placeholder="ملاحظات"></textarea></div>
     <div class="ed-subs" id="ed-sublist"></div>
     <div class="ed-more" id="ed-more">
@@ -1577,6 +1596,7 @@ body.has-pomo .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
       <div class="field"><label for="f-area">القسم</label><select id="f-area"></select></div>
       <div class="field" id="kind-field"><label for="f-kind">النوع</label><select id="f-kind"></select></div>
     </div>
+    <div class="field" id="proj-field" hidden><label for="f-proj">تبع مشروع</label><select id="f-proj"></select></div>
     <label class="note" id="course-wrap" hidden style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="f-course" style="width:auto"> ده كورس (فصول ودروس)</label>
     <div class="field" id="who-field" hidden><label for="f-who">مع مين</label><select id="f-who"></select></div>
     <div class="field" id="client-field"><label for="f-client" id="client-lab">العميل</label><input id="f-client" maxlength="60" placeholder="اختياري" list="clients-list"><datalist id="clients-list"></datalist><span class="note" id="client-info" style="font-size:12.5px"></span><label class="note" id="nopkg-wrap" hidden style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-nopkg" style="width:auto"> مش محسوب من الباكدج (ميتنج، مراجعة…)</label></div>
@@ -1665,7 +1685,7 @@ function toast(m,undo){const t=$("#toast");t.textContent=m;if(undo){const b=docu
 
 const subsOf=id=>tasks.filter(t=>t.parentId===id).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
 const parentOf=t=>t&&t.parentId?tasks.find(p=>p.id===t.parentId)||null:null;
-const isTop=t=>!parentOf(t);
+const isTop=t=>!parentOf(t)&&!(t.lessonOf&&t.status!=="done"&&!t.planDate);
 const clip=(s,n=40)=>s.length>n?s.slice(0,n)+"…":s;
 let expanded=new Set();try{localStorage.removeItem("expanded")}catch(_){}
 
@@ -2833,7 +2853,7 @@ function todayView(todayList,doneToday){
   const late=todayList.filter(t=>!t.repeat&&!isLong(t)&&t.planDate&&t.planDate<today());
   const lateIds=new Set(late.map(t=>t.id));
   const now=todayList.filter(t=>!lateIds.has(t.id));lateFoldable=now.length>0;
-  const plan=sortTasks(now.filter(t=>!PERSONAL.has(t.area))), mine=sortTasks(now.filter(t=>PERSONAL.has(t.area)));
+  const plan=sortTasks(now), mine=[];
   const doneShown=doneToday.filter(t=>isTop(t)||!doneToday.some(p=>p.id===t.parentId));
   const rd=(routineDays[today()]||{}).done||{};const rdn=routineItems.filter(i=>rd[i.id]).length;
   const pendingReview=notes.filter(n=>n.by==="claude"&&!n.resolved).length;
@@ -2854,7 +2874,9 @@ document.addEventListener("click",async e=>{
       <button type="button" role="menuitem" data-plan="${t.id}"><span>${onT?(view==="today"?"أجّل (شيله من النهارده)":"شيله من يومه"):"حطه النهارده"}</span></button>
       ${!t.repeat&&t.planDate&&t.planDate<today()&&!isLong(t)?`<button type="button" role="menuitem" data-keeptoday="${t.id}"><span>النهارده</span></button>`:""}
       ${t.repeat?"":`<button type="button" role="menuitem" data-tomorrow="${t.id}"><span>بكره</span></button>`}
-      <button type="button" role="menuitem" data-edit="${t.id}"><span>افتح التفاصيل</span></button>`,"حاجات تانية");return}
+      ${t.repeat?"":`<button type="button" role="menuitem" data-dayother="${t.id}"><span>يوم تاني…</span></button>`}
+      <button type="button" role="menuitem" data-edit="${t.id}"><span>افتح التفاصيل</span></button>
+      <button type="button" role="menuitem" class="pop-del" data-rowdel="${t.id}"><span>امسح</span></button>`,"حاجات تانية");return}
   const tm=e.target.closest("[data-tomorrow]");if(tm){const t=tasks.find(x=>x.id===tm.dataset.tomorrow);if(!t)return;await write(t.id,{planDate:plusDays(1)});toast("اتنقل لبكره");render()}});
 
 document.addEventListener("change",e=>{if(e.target.id==="snd-on"){tickOn=e.target.checked;try{localStorage.setItem("tickSound",tickOn?"1":"0")}catch(_){}if(tickOn)sndDone()}});
@@ -2935,10 +2957,11 @@ function projectsView(){const all=projItems();const pj=all.filter(t=>!t.course&&
   const grp=(title,list,form,ph)=>`<section class="section pj-sec"><h2><span class="h-t">${title}</span><small>${list.length}</small></h2>
     <div class="pj-list">${list.map(projBlock).join("")||`<div class="empty">لسه مفيش.</div>`}</div>
     <form class="inline pj-add" data-pjadd="${form}"><input maxlength="160" placeholder="${ph}" aria-label="${ph}"><button class="btn" type="submit">أضف</button></form></section>`;
-  return grp("مشاريع",pj,"proj","مشروع جديد")+grp("كورسات",cs,"course","كورس جديد")+
+  const lrn=folded.has("pjo:learn");
+  return grp("مشاريع",pj,"proj","مشروع جديد")+`<section class="section pj-learn ${lrn?"":"folded"}"><h2><button type="button" class="fold" data-fold="pjo:learn" aria-expanded="${lrn}">${ARR}<span class="h-t">كورسات وكتب</span></button><small>${cs.length+bk.length}</small></h2>${lrn?"":`<div class="pj-lhint">الكورسات والكتب بتظهر في قسمها كمان. افتح هنا عشان تضيف كورس أو كتاب.</div>`}</section>`+(lrn?grp("كورسات",cs,"course","كورس جديد")+
     `<section class="section pj-sec"><h2><span class="h-t">كتب</span><small>${bk.length}</small></h2>
     <div class="pj-list">${bk.map(projBlock).join("")||`<div class="empty">لسه مفيش. ضيف الكتاب اللي بتقراه وعدد صفحاته.</div>`}</div>
-    <form class="inline pj-add bk-add" data-bkadd="1"><input id="bk-title" maxlength="160" placeholder="كتاب جديد" aria-label="اسم الكتاب"><input id="bk-total" type="number" min="1" max="5000" placeholder="كام صفحة" aria-label="عدد الصفحات"><button class="btn" type="submit">أضف</button></form></section>`}
+    <form class="inline pj-add bk-add" data-bkadd="1"><input id="bk-title" maxlength="160" placeholder="كتاب جديد" aria-label="اسم الكتاب"><input id="bk-total" type="number" min="1" max="5000" placeholder="كام صفحة" aria-label="عدد الصفحات"><button class="btn" type="submit">أضف</button></form></section>`:"")}
 function projectView(){const t=tasks.find(x=>x.id===projId);if(!t)return `<div class="empty big-empty">المشروع ده مش موجود. <button type="button" class="h-link" data-nav="proj">ارجع للمشاريع</button></div>`;
   const p=projProg(t);const pct=p.n?Math.round(p.d/p.n*100):0;
   let nextBtn="";
@@ -3367,7 +3390,7 @@ document.addEventListener("keydown",async e=>{const el=e.target;
   if(el.id==="klab-new"&&e.key==="Enter"){e.preventDefault();$("[data-klabadd]").click();return}
   if(e.key==="Escape"&&!$("#klab").hidden){e.preventDefault();e.stopPropagation();$("#klab").hidden=true;render()}},true);
 document.addEventListener("change",async e=>{const el=e.target;if(!el.dataset||el.dataset.klabren===undefined)return;await kRenameLabel(el.dataset.klabren,el.value);kLabelsWin()});
-function projBlock(t){const p=projProg(t),pct=p.n?Math.round(p.d/p.n*100):0,shut=folded.has("pj:"+t.id);let inner="";
+function projBlock(t){const p=projProg(t),pct=p.n?Math.round(p.d/p.n*100):0,shut=!folded.has("pjo:"+t.id);let inner="";
   if(!shut){
     if(t.book){const b=t.book,on=t.planDate===today();
       inner=`<form class="bk-log pj-in" data-bklog="${t.id}"><label for="bk-page-${t.id}">وصلت لصفحة</label><input id="bk-page-${t.id}" type="number" min="0" max="${b.total||5000}" value="${b.page||""}" placeholder="${b.page||0}" inputmode="numeric"><span class="bk-of">من ${b.total||0}</span><button class="btn" type="submit">سجّل</button><button type="button" class="c-today ${on?"on":""}" data-plan="${t.id}" aria-pressed="${on}">${on?"✓ النهارده":"+ النهارده"}</button></form>`}
@@ -3378,8 +3401,8 @@ function projBlock(t){const p=projProg(t),pct=p.n?Math.round(p.d/p.n*100):0,shut
       const fresh=Date.now()-120000,shown=open.filter((x,i)=>i<6||(x.createdAt||0)>fresh);
       inner=shown.map(s=>row(s,{timer:true,inProj:true,noArea:true})).join("")+(open.length>shown.length?`<button type="button" class="h-link pj-more" data-nav="project:${t.id}">كمان ${open.length-shown.length} ›</button>`:"")+
         `<form class="inline pj-add pj-in" data-addsub="${t.id}"><input maxlength="160" placeholder="خطوة جديدة في «${esc(clip(t.title,30))}»" aria-label="خطوة جديدة"><button class="btn" type="submit">أضف</button></form>`}}
-  return `<div class="pj-blk ${shut?"shut":""}"><div class="pj-bh"><button type="button" class="fold" data-fold="pj:${t.id}" aria-expanded="${!shut}">${ARR}<span class="pj-t">${esc(t.title)}</span></button>
-      <span class="pj-n">${p.n?`${p.d} من ${p.n}${p.unit?" "+p.unit:""}`:""}</span><button type="button" class="h-link pj-go" data-nav="project:${t.id}" aria-label="افتح ${esc(t.title)}">افتح ›</button></div>
+  return `<div class="pj-blk ${shut?"shut":""}"><div class="pj-bh"><button type="button" class="fold" data-fold="pjo:${t.id}" aria-expanded="${!shut}">${ARR}<span class="pj-t">${esc(t.title)}</span></button>
+      <span class="pj-n">${p.n?`${p.d} من ${p.n}${p.unit?" "+p.unit:""}`:""}</span>${shut&&p.next?`<span class="pj-next pj-nx1">الجاي: ${esc(clip(p.next,50))}</span>`:""}<button type="button" class="h-link pj-go" data-nav="project:${t.id}" aria-label="افتح ${esc(t.title)}">افتح ›</button></div>
     ${p.n?`<span class="pj-bar"><i style="width:${pct}%"></i></span>`:""}${inner}</div>`}
 const ROUTES={today:"today",upcoming:"upcoming",all:"all",clients:"clients",team:"team",proj:"projects",focus:"focus",week:"week",notes:"notes",journal:"journal",files:"files",settings:"settings"};
 function routeKey(){if(view==="project")return "project/"+projId;if(view==="all"&&areaFilter)return "area/"+areaFilter;
@@ -3435,7 +3458,8 @@ function paintShell2(){const desk=isDesk();const cur=navKey();
   paintRail2();
   const task=TASKV(cur)&&view!=="project";
   document.body.classList.toggle("lists-on",(task||LISTV(cur))&&!listsHidden);
-  document.body.classList.toggle("dock-on",task&&matchMedia("(min-width:1280px)").matches);
+  document.body.classList.toggle("dock-on",task&&!dockHidden&&matchMedia("(min-width:1280px)").matches);
+  document.body.classList.toggle("dock-off",task&&dockHidden&&matchMedia("(min-width:1280px)").matches);
   if(task||LISTV(cur))paintLists()}
 {const _p=paintShell;paintShell=function(){_p();paintShell2()}}
 addEventListener("resize",()=>{try{paintShell2()}catch(_){}});
@@ -3472,7 +3496,9 @@ function paintEd(sync){const t=editing&&tasks.find(x=>x.id===editing.id);const e
   const due=$("#f-due").value;$("#ed-due-t").textContent=due?"ديدلاين "+edDay(due):"ديدلاين";$("#ed-due").classList.toggle("on",!!due);
   $("#ed-due").classList.toggle("late",!!due&&!done&&due<today());$("#ed-due-x").hidden=!due;
   if(sync&&!edT&&t){$("#f-today").checked=!!(t.planDate&&t.planDate<=today());$("#f-done").value=done?(t.doneDate||""):"";$("#done-field").hidden=!done;paintDoneSum()}
-  const on=$("#f-today").checked;$("#ed-today").setAttribute("aria-pressed",on);$("#ed-today").textContent=on?"✓ النهارده":"النهارده";$("#ed-today").hidden=done;
+  const on=$("#f-today").checked;{const pd=t&&!t.repeat&&!edT?t.planDate:"";const fut=!on&&pd&&pd>today();
+  $("#ed-today").setAttribute("aria-pressed",on||!!fut);$("#ed-today").textContent=on?"✓ النهارده":fut?"✓ "+dayLabel(pd):t&&!t.repeat?"اختار يوم":"النهارده";
+  if(t&&!t.repeat){$("#ed-today").setAttribute("aria-haspopup","menu")}else $("#ed-today").removeAttribute("aria-haspopup")}$("#ed-today").hidden=done;
   const an=(AREAS.find(a=>a[0]===(t?t.area:$("#f-area").value))||[])[1]||"";
   $("#ed-crumb").textContent=t?(par?"↳ "+par.title:[an,t.client].filter(Boolean).join(" › ")):"";
   const subs=t&&!par?subsOf(t.id):[];const box=$("#ed-sublist");
@@ -3483,7 +3509,7 @@ function paintEd(sync){const t=editing&&tasks.find(x=>x.id===editing.id);const e
       `<div class="ed-sadd"><span aria-hidden="true">+</span><input id="ed-subin" maxlength="160" placeholder="تاسك فرعي" aria-label="تاسك فرعي جديد" enterkeyhint="done"></div>`;
     if(keep){const i=$("#ed-subin");i.value=kv;i.focus()}}
   const m=t?focusOf(t):0;$("#ed-pomo-t").textContent="ابدأ التايمر"+(m?" · "+fmtMin(m)+" اتسجلت":"");
-  $("#ed-made").textContent=t&&t.createdAt?"اتعمل "+new Date(t.createdAt).toLocaleDateString("ar-u-nu-latn",{weekday:"long"}):"";
+  $("#ed-made").textContent=t&&t.createdAt?"اتضاف يوم "+new Date(t.createdAt).toLocaleDateString("ar-u-nu-latn",{weekday:"long",day:"numeric",month:"long"}):"";
   const more=!t||edMoreOpen;$("#ed-more").hidden=!more;ed.classList.toggle("more-open",!!t&&more);$("#ed-more-b").setAttribute("aria-expanded",more);$("#ed-more-b").hidden=!t;
   edGrow()}
 // 1 Nov (Malek): the details behind ⋯ show open from the start; ⋯ hides them and the choice is remembered
@@ -3504,6 +3530,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("#ed-close")){closeEditor();return}
   if(e.target.closest("#ed-due-b")){const i=$("#f-due");try{i.showPicker()}catch(_){i.focus()}return}
   if(e.target.closest("#ed-due-x")){$("#f-due").value="";paintEd();if(editing)edSave(true);return}
+  if(e.target.closest("#ed-today")&&editing&&!editing.repeat){edDayMenu($("#ed-today"),editing.id);return}
   if(e.target.closest("#ed-today")){const c=$("#f-today");c.checked=!c.checked;paintEd();if(editing)edSave(true);return}
   const fl=e.target.closest("#ed-flag");if(fl){const p=$("#ed-pripop");p.hidden=!p.hidden;fl.setAttribute("aria-expanded",!p.hidden);if(!p.hidden){const s=p.querySelector('[aria-pressed="true"]');if(s)s.focus()}return}
   const pr=e.target.closest("[data-edpri]");if(pr){edPri=pr.dataset.edpri;paintPri();$("#ed-pripop").hidden=true;$("#ed-flag").setAttribute("aria-expanded","false");paintEd();if(editing)edSave(true);return}
@@ -3641,7 +3668,7 @@ function dockSummary(){
   const rd=(routineDays[t0]||{}).done||{},rdn=routineItems.filter(i=>rd[i.id]).length;
   const nts=notes.filter(n=>!n.resolved).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,3);
   const when=d=>d===t0?"النهارده":d===plusDays(1)?"بكره":fmtShort(d);
-  return `<div class="ds"><div class="ds-top"><b>ملخص النهارده</b><span>${esc(fmtDay(t0))}</span></div>
+  return `<div class="ds"><div class="ds-top"><button type="button" class="mini dk-hide" data-dkhide="1" title="اخفي اللوحة اللي في الجنب">اخفي</button><b>ملخص النهارده</b><span>${esc(fmtDay(t0))}</span></div>
     ${m?`<div class="ds-card"><span><small>الميتنج الجاي</small><b>${esc(m.title)}</b><small>${when(m.date)} · ${fmtTime(m.time)}</small></span></div>`:""}
     ${tmin?`<button type="button" class="ds-card" data-nav="focus"><span><small>التركيز</small><b>اشتغلت ${dkMin(tmin)} النهارده</b>${wmin?`<small>${dkMin(wmin)} آخر 7 أيام</small>`:""}</span></button>`:""}
     ${dl.length?`<div class="ds-sec"><h4>أقرب ديدلاين</h4>${dl.map(t=>`<button type="button" class="ds-row" data-edit="${t.id}"><i class="ds-dot ds-${PRI_KEY(t)}"></i><span>${esc(clip(t.title,36))}</span><small class="${t.due<t0?"ds-late":""}">${when(t.due)}</small></button>`).join("")}</div>`:""}
@@ -3684,6 +3711,85 @@ function tidyPages(){
   document.querySelectorAll("a,button,.h-link").forEach(b=>{if(b.textContent.trim()==="إعدادات التايمر")b.hidden=true})}   // the timer settings live in الإعدادات
 {const _r=render;render=function(){_r.apply(this,arguments);try{tidyPages()}catch(_){}}}
 const meetFull=s=>{const m=parseMeet(s);return m&&!m.partial?m:null};
+{const _row=row;row=function(t,o){const h=_row.apply(this,arguments);
+  if(view==="all"&&t&&!t.parentId&&t.status!=="done"&&isLong(t)&&!(o&&o.inProj))
+    return h.replace(`<div class="task `,`<div class="task long-line `).replace(`<div class="meta">`,`<div class="meta"><button type="button" class="tag pj-link" data-nav="project:${t.id}" aria-label="افتح صفحة ${esc(t.title)}">${t.course?"صفحة الكورس":t.book?"صفحة الكتاب":"صفحة المشروع"} ›</button>`);
+  return h}}
+document.addEventListener("click",e=>{
+  const f=e.target.closest('[data-fold^="cl:"]');
+  if(f&&clOpen&&f.dataset.fold==="cl:"+clOpen){e.preventDefault();e.stopImmediatePropagation();const n=clOpen;clOpen=null;render();
+    const b=[...document.querySelectorAll("[data-clopen]")].find(x=>x.dataset.clopen===n);if(b)b.focus()}},true);
+const projsIn=(area,selfId)=>tasks.filter(p=>isOpen(p)&&!p.parentId&&!p.course&&!p.book&&p.area===area&&p.id!==selfId&&(p.long||subsOf(p.id).length));
+function fillProj(){const f=$("#proj-field");if(!f)return;const t=editing&&tasks.find(x=>x.id===editing.id);
+  if(!t||t.lessonOf||t.repeat||subsOf(t.id).length||isLong(t)){f.hidden=true;return}
+  const par=parentOf(t),cur=par?par.id:"",area=par?par.area:$("#f-area").value;
+  const ps=projsIn(area,t.id);if(par&&!ps.some(p=>p.id===par.id))ps.unshift(par);
+  if(!ps.length){f.hidden=true;return}
+  f.hidden=false;$("#f-proj").innerHTML=`<option value="">مش تبع مشروع</option>`+ps.map(p=>`<option value="${p.id}">${esc(clip(p.title,44))}</option>`).join("");$("#f-proj").value=cur}
+{const _o=openEditor;openEditor=function(t){_o.apply(this,arguments);try{fillProj()}catch(_){}}}
+document.addEventListener("change",async e=>{
+  if(e.target.id==="f-area"){try{fillProj()}catch(_){}return}
+  if(e.target.id!=="f-proj"||!editing)return;const t=tasks.find(x=>x.id===editing.id);if(!t)return;
+  const old=t.parentId||"",nw=e.target.value;if(old===nw)return;
+  try{edFlush()}catch(_){}
+  const p=nw?tasks.find(x=>x.id===nw):null;
+  const ok=await write(t.id,p?{parentId:nw,area:p.area,client:p.client||"",kind:p.kind||""}:{parentId:""},false);if(!ok)return;
+  if(old)await syncParent(old);if(nw)await syncParent(nw);
+  toast(p?`بقى خطوة في «${clip(p.title,30)}»`:"بقى تاسك لوحده");
+  const fresh=tasks.find(x=>x.id===t.id);if(fresh&&!$("#overlay").hidden)openEditor(fresh);render()});
+function dayMenuHtml(id){const t=tasks.find(x=>x.id===id)||{};const cur=t.planDate||"";
+  const it=(d,l)=>`<button type="button" role="menuitemradio" aria-checked="${cur===d||(d===today()&&cur&&cur<today())}" data-setday="${id}|${d}"><span>${l}</span></button>`;
+  return it(today(),"النهارده")+it(plusDays(1),"بكره")+it(plusDays(2),"بعد بكره ("+new Date(plusDays(2)+"T12:00").toLocaleDateString("ar-u-nu-latn",{weekday:"long"})+")")+
+    `<label class="pop-date"><span>يوم تاني</span><input type="date" data-setdayin="${id}" min="${today()}" value="${cur&&cur>plusDays(2)?cur:""}" aria-label="اختار يوم"></label>`+
+    (cur?it("","من غير يوم"):"")}
+function edDayMenu(anchor,id){openMenu(anchor,dayMenuHtml(id),"يوم التاسك")}
+async function setDay(id,d){const t=tasks.find(x=>x.id===id);if(!t)return;closeMenu(true);
+  const inEd=editing&&editing.id===id&&!$("#overlay").hidden;if(inEd){try{edFlush()}catch(_){}}
+  if(!await write(id,{planDate:d},false))return;
+  if(inEd){const c=$("#f-today");if(c)c.checked=!!(d&&d<=today());try{paintEd()}catch(_){}}
+  toast(d?(d===today()?"اتحط في النهارده":"اتنقل لـ"+dayLabel(d)):"اتشال من يومه");render()}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-setday]");if(!b)return;e.preventDefault();e.stopPropagation();
+  const i=b.dataset.setday.indexOf("|");setDay(b.dataset.setday.slice(0,i),b.dataset.setday.slice(i+1))},true);
+document.addEventListener("change",e=>{const el=e.target;if(!el.dataset||!el.dataset.setdayin||!el.value)return;setDay(el.dataset.setdayin,el.value)});
+document.addEventListener("click",async e=>{
+  const dy=e.target.closest("[data-dayother]");if(dy){e.preventDefault();e.stopPropagation();const a=menuAnchor;const id=dy.dataset.dayother;
+    openMenu(a&&document.contains(a)?a:dy,dayMenuHtml(id),"يوم التاسك");return}
+  const del=e.target.closest("[data-rowdel]");if(!del)return;e.preventDefault();e.stopPropagation();
+  const id=del.dataset.rowdel,t=tasks.find(x=>x.id===id);closeMenu(true);if(!t)return;
+  const subs=subsOf(id),pid=t.parentId;if(editing&&editing.id===id)closeEditor();
+  try{await toTrash("task",t,subs);for(const s of subs)await col.doc(s.id).delete();await col.doc(id).delete();
+    tasks=tasks.filter(x=>x.id!==id&&x.parentId!==id);
+    toast("اتمسح",()=>{const tr=trash.filter(x=>x.kind==="task"&&x.oid===id).sort((a,b)=>b.deletedAt-a.deletedAt)[0];if(tr)restoreTrash(tr.id)});
+    if(pid)await syncParent(pid);else render()}catch(_){toast("ماتمسحش، جرّب تاني")}},true);
+document.addEventListener("contextmenu",e=>{if(e.shiftKey)return;const r=e.target.closest(".task,.sub");if(!r||e.target.closest("input,textarea,a"))return;
+  const b=r.querySelector("[data-rowmenu]");if(!b)return;e.preventDefault();b.click();
+  if(menuEl){const w=menuEl.offsetWidth,h=menuEl.offsetHeight;menuEl.style.position="fixed";menuEl.style.right="auto";menuEl.style.bottom="auto";
+    menuEl.style.left=Math.max(8,Math.min(e.clientX,innerWidth-w-8))+"px";menuEl.style.top=Math.max(8,Math.min(e.clientY,innerHeight-h-8))+"px"}});
+{const ti=document.getElementById("f-title");if(ti&&ti.tagName==="TEXTAREA"&&!ti.dataset.grow){ti.dataset.grow="1";
+  const g=()=>{ti.style.height="auto";ti.style.height=ti.scrollHeight+"px"};
+  ti.addEventListener("input",()=>{if(/[\r\n]/.test(ti.value)){const p=ti.selectionStart;ti.value=ti.value.replace(/[\r\n]+/g," ");try{ti.setSelectionRange(p,p)}catch(_){}}g()});
+  ti.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing&&!editing){e.preventDefault();try{$("#editor").requestSubmit()}catch(_){}}});
+  window.titleGrow=g}}
+{const _o=openEditor;openEditor=function(){_o.apply(this,arguments);setTimeout(()=>{try{titleGrow()}catch(_){}},0)}}
+let dockHidden=false,dockW=0;try{dockHidden=localStorage.getItem("dockHidden")==="1";dockW=+localStorage.getItem("dockW")||0}catch(_){}
+function dockApply(){const def=innerWidth>=1440?440:400;const w=Math.round(Math.max(320,Math.min(dockW||def,Math.min(760,innerWidth-560))));
+  document.body.style.setProperty("--dockw",w+"px");document.body.classList.add("dk-w")}
+addEventListener("resize",()=>{try{dockApply()}catch(_){}});
+document.addEventListener("DOMContentLoaded",()=>{try{dockApply()}catch(_){}});
+{const g=document.createElement("div");g.id="dk-grip";g.setAttribute("role","separator");g.setAttribute("aria-orientation","vertical");g.setAttribute("aria-label","غيّر عرض اللوحة");g.tabIndex=0;
+  const s=document.createElement("button");s.type="button";s.id="dk-show";s.textContent="اللوحة";s.title="رجّع اللوحة اللي في الجنب";
+  const add=()=>{document.body.appendChild(g);document.body.appendChild(s);dockApply()};document.body?add():document.addEventListener("DOMContentLoaded",add);
+  let drag=false;
+  g.addEventListener("pointerdown",e=>{drag=true;g.setPointerCapture(e.pointerId);document.body.classList.add("dk-drag");e.preventDefault()});
+  g.addEventListener("pointermove",e=>{if(!drag)return;dockW=e.clientX;dockApply()});
+  const end=()=>{if(!drag)return;drag=false;document.body.classList.remove("dk-drag");try{localStorage.setItem("dockW",String(Math.round(parseFloat(getComputedStyle(document.body).getPropertyValue("--dockw"))||0)))}catch(_){}};
+  g.addEventListener("pointerup",end);g.addEventListener("pointercancel",end);
+  g.addEventListener("dblclick",()=>{dockW=0;try{localStorage.removeItem("dockW")}catch(_){}dockApply()});
+  g.addEventListener("keydown",e=>{if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;e.preventDefault();
+    const cur=parseFloat(getComputedStyle(document.body).getPropertyValue("--dockw"))||400;dockW=cur+(e.key==="ArrowRight"?24:-24);dockApply();try{localStorage.setItem("dockW",String(dockW))}catch(_){}});
+  s.addEventListener("click",()=>{dockHidden=false;try{localStorage.setItem("dockHidden","0")}catch(_){}render()})}
+document.addEventListener("click",e=>{if(!e.target.closest("[data-dkhide]"))return;e.preventDefault();dockHidden=true;try{localStorage.setItem("dockHidden","1")}catch(_){}
+  toast("اللوحة اتخفت. زرار «اللوحة» فوق على الشمال يرجّعها");render()},true);
 function section(title,list,opts,emptyMsg){
   return `<section class="section"><h2>${title}<small>${list.length}</small></h2>${list.length?listRows("s:"+title,list,opts):`<div class="empty">${emptyMsg}</div>`}</section>`;
 }
